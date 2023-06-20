@@ -9,6 +9,8 @@ import DashboardLayout from './routes/DashboardLayout';
 import Root from './routes/Root';
 import ErrorPage from './routes/ErrorPage';
 
+import * as serviceWorkerRegistration from './serviceWorkerRegistration';
+
 const router = createBrowserRouter([
   {
     path: '/',
@@ -43,3 +45,5 @@ root.render(
     <RouterProvider router={router} />
   </React.StrictMode>
 );
+
+serviceWorkerRegistration.register();

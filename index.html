@@ -2,8 +2,12 @@
 <html lang="ko">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="theme-color" content="#343434" />
+    <link rel="icon" href="icons/logo-196.png" type="image/png" />
+    <link rel="alternate icon" href="icons/logo.ico" type="ico" sizes="16x16" />
+    <link rel="apple-touch-icon" href="icons/logo-152.png" sizes="180x180" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="manifest" href="/manifest.json" />
     <title>Dashify</title>
 
     <style>
@@ -23,5 +27,24 @@
     </noscript>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
+    <!-- <script>
+      if ('serviceWorker' in navigator) {
+        // Register a service worker hosted at the root of the
+        // site using the default scope.
+        navigator.serviceWorker
+          .register('/serviceWorker.js')
+          .then((registration) => {
+            console.log(
+              '[Service Worker] registration succeeded:',
+              registration
+            );
+          })
+          .catch((err) => {
+            console.error('[Service Worker] registration failed:', err);
+          });
+      } else {
+        console.warn('[Service Worker] servier worker are not supported.');
+      }
+    </script> -->
   </body>
 </html>
