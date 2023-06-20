@@ -1,9 +1,10 @@
 {
   "name": "Dashify",
   "short_name": "Dashify",
-  "start_url": "",
+  "start_url": "/",
   "display": "standalone",
   "background_color": "#3B86F8",
+  "scope": "/",
   "theme_color": "#343434",
   "description": "Easily and quickly monitor Minecraft servers",
   "icons": [
