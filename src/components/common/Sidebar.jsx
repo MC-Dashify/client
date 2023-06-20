@@ -1,4 +1,13 @@
-import { Link } from "react-router-dom";
+import { Link } from 'react-router-dom';
+import { styled } from 'styled-components';
+
+const Aside = styled.aside`  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  align-items: center;
+  justify-content: space-between;
+  padding: 32px 18px;
+`;
 
 const MenuLink = ({ to, label, icon }) => {
   return (
@@ -11,19 +20,19 @@ const MenuLink = ({ to, label, icon }) => {
 
 const Sidebar = () => {
   const menus = [
-    { path: "/dashboard", label: "Dashboard", icon: null },
-    { path: "/dashboard/stats", label: "Server Status", icon: null },
-    { path: "/dashboard/world", label: "World", icon: null },
-    { path: "/dashboard/player", label: "Player", icon: null },
-    { path: "/dashboard/traffic", label: "Traffic", icon: null },
-    { path: "/dashboard/console", label: "Console", icon: null },
-    { path: "/dashboard/settings", label: "Settings", icon: null },
+    { path: '/dashboard', label: 'Dashboard', icon: null },
+    { path: '/dashboard/stats', label: 'Server Status', icon: null },
+    { path: '/dashboard/world', label: 'World', icon: null },
+    { path: '/dashboard/player', label: 'Player', icon: null },
+    { path: '/dashboard/traffic', label: 'Traffic', icon: null },
+    { path: '/dashboard/console', label: 'Console', icon: null },
+    { path: '/dashboard/settings', label: 'Settings', icon: null }
   ];
 
   return (
-    <asdie>
+    <Aside>
       <div>
-        <img src="/logo.svg" alt="Dashify Logo" />
+        <img src='/logo.svg' alt='Dashify Logo' />
         <span>Dashify</span>
       </div>
 
@@ -37,7 +46,7 @@ const Sidebar = () => {
           />
         ))}
       </div>
-    </asdie>
+    </Aside>
   );
 };
 export default Sidebar;
