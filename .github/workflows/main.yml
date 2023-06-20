@@ -1,0 +1,40 @@
+name: Deploy Project
+
+on:
+  push:
+    paths:
+      - "VERSION"
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@master
+        with:
+          node-version: 16.x
+      - name: Cache node_modules
+        uses: actions/cache@v1
+        with:
+          path: node_modules
+          key: ${{runner.OS}}-build-${{hashFiles('**/yarn.lock')}}
+          restore-keys: |
+            ${{ runner.OS }}-build-${{ runner.OS }}-
+      - name: Install dependencies
+        run: yarn install --prod --pure-lockfile
+      - name: Build
+        run: yarn run build
+        env:
+          NODE_ENV: production
+          CI: false
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          # cname: dashify.io
+          publish_dir: ./build
+          github_token: ${{secrets.GITHUB_TOKEN}}
+          publish_branch: gh-pages
