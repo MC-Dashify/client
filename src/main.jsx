@@ -9,6 +9,14 @@ import DashboardLayout from './routes/DashboardLayout';
 import Root from './routes/Root';
 import ErrorPage from './routes/ErrorPage';
 
+import { registerSW } from 'virtual:pwa-register';
+
+const updateSW = registerSW({
+  onOfflineReady() {
+    console.log('Ready for offline mode');
+  }
+});
+
 const router = createBrowserRouter([
   {
     path: '/',
@@ -43,3 +51,5 @@ root.render(
     <RouterProvider router={router} />
   </React.StrictMode>
 );
+
+updateSW();

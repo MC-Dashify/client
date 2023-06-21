@@ -9,7 +9,7 @@ const data = {
     const _temp = localStorage.getItem(key);
     return _temp === null || _temp === ''
       ? null
-      : decodeURIComponent(atob(_temp));
+      : JSON.parse(decodeURIComponent(atob(_temp)));
   },
   /**
    * Set data to localStorage
@@ -21,7 +21,7 @@ const data = {
   set: (key, value) => {
     localStorage.setItem(
       key,
-      value === null ? '' : btoa(encodeURIComponent(`${value}`))
+      value === null ? '' : btoa(encodeURIComponent(JSON.stringify(value)))
     );
   },
   /**

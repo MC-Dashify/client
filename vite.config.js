@@ -3,7 +3,18 @@ import react from '@vitejs/plugin-react';
 import { VitePWA } from 'vite-plugin-pwa';
 
 const PWAConfig = {
-  registerType: 'prompt',
+  workbox: {
+    cleanupOutdatedCaches: true,
+    sourcemap: true
+  },
+
+  registerType: 'autoUpdate',
+
+  devOptions: {
+    enabled: true,
+    suppressWarnings: true
+  },
+
   includeAssets: [
     'icons/logo-152.png',
     'icons/logo-196.png',
