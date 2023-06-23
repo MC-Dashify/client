@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import styled from 'styled-components';
 import Select from 'react-select';
-import { Tooltip } from 'react-tooltip';
 
 import { EyeIcon, SlashedEyeIcon } from '../../assets/32x-icons';
 import Button from '../common/Button';
@@ -14,6 +13,9 @@ const Section = styled.section`
   gap: 24px;
   align-self: stretch;
   margin-bottom: 32px;
+  position: sticky;
+  left: 0;
+  z-index: 100;
 `;
 
 const TitleContainer = styled.div`
@@ -25,6 +27,7 @@ const TitleContainer = styled.div`
 
 const TitleTextContainer = styled.div`
   line-height: 100%;
+  width: max-content;
 `;
 
 const Title = styled.h1`
@@ -66,6 +69,7 @@ const AutoRefreshContainer = styled.div`
   display: flex;
   align-items: center;
   gap: 8px;
+  user-select: none;
 `;
 
 const AutoRefreshLabel = styled.span`
@@ -102,7 +106,7 @@ const DashboardPageTitle = ({ refreshFn }) => {
 
         <AddressHideIconButton
           onClick={toggleHideAddress}
-          data-tooltip-id='tooltip-toggle-address'
+          data-tooltip-id='dashify__tooltip'
           data-tooltip-content={
             hideAddress ? '앱에서 주소 표시하기' : '앱에서 주소 숨기기'
           }
@@ -126,8 +130,6 @@ const DashboardPageTitle = ({ refreshFn }) => {
       <Button styleType='outline' padding='8px 18px' onClick={refreshFn}>
         지금 새로 고침하기
       </Button>
-
-      <Tooltip id='tooltip-toggle-address' place='bottom' />
     </Section>
   );
 };

@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import GlobalStyle from './components/common/globalstyles';
+import { Tooltip } from 'react-tooltip';
 import './styles/font-settings.css';
 
 import Root from './routes/Root';
@@ -56,6 +57,7 @@ root.render(
   <React.StrictMode>
     <GlobalStyle />
     <RouterProvider router={router} />
+    <Tooltip id='dashify__tooltip' place='bottom' />
   </React.StrictMode>
 );
 

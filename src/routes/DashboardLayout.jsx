@@ -26,6 +26,7 @@ const Aside = styled.aside`
   width: 260px;
   background: #f9f9f9;
   border-right: 1px solid rgba(0, 0, 0, 0.1);
+  user-select: none;
 `;
 
 const AsideTopContainer = styled.div`
@@ -253,6 +254,8 @@ const PageContentContainer = styled.div`
 `;
 
 const OutletContainer = styled.div`
+  display: flex;
+  flex-direction: column;
   flex: 1;
   padding: 42px;
   height: 100%;
