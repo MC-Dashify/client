@@ -1,4 +1,4 @@
-const data = {
+const AppData = {
   /**
    * Get data from localStorage
    * key is the name of the key to get like ("foo") or ("foo.bar")
@@ -7,10 +7,12 @@ const data = {
    */
   get: (key) => {
     const _temp = localStorage.getItem(key);
+
     return _temp === null || _temp === ''
       ? null
       : JSON.parse(decodeURIComponent(atob(_temp)));
   },
+
   /**
    * Set data to localStorage
    * key is the name of the key to get like ("foo") or ("foo.bar")
@@ -24,6 +26,7 @@ const data = {
       value === null ? '' : btoa(encodeURIComponent(JSON.stringify(value)))
     );
   },
+
   /**
    * Delete data from localStorage
    * key is the name of the key to get like ("foo") or ("foo.bar")
@@ -34,4 +37,4 @@ const data = {
   }
 };
 
-export default data;
+export default AppData;

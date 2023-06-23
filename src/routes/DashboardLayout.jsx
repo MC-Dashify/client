@@ -1,8 +1,8 @@
+import { useState } from 'react';
 import { Outlet, Link, useLocation } from 'react-router-dom';
 import { css, styled } from 'styled-components';
 
-import imgLogoDark from '../assets/logo-dark.svg';
-import imgLogoText from '../assets/logo-text.svg';
+import { Logo, LogoText } from '../assets/logo';
 import {
   ChartIcon,
   ServerIcon,
@@ -13,18 +13,17 @@ import {
   CogIcon
 } from '../assets/24x-icons';
 import { ArrowRightAndLeftIcon } from '../assets/16x-icons';
+import DashboardPageTitle from '../components/dashboard/DashboardPageTitle';
 
 const Aside = styled.aside`
   display: flex;
+  z-index: 0;
   flex-direction: column;
   justify-content: space-between;
   padding: 32px 18px;
   gap: 4px;
-  position: fixed;
-  left: 0;
-  top: 0;
-  width: 260px;
   height: 100%;
+  width: 260px;
   background: #f9f9f9;
   border-right: 1px solid rgba(0, 0, 0, 0.1);
 `;
@@ -78,11 +77,6 @@ const AsideMenuLink = styled(Link)`
     /* property에 color가 없는 건 의도입니다 */
   }
 
-  svg {
-    width: 24px;
-    height: 24px;
-  }
-
   &::before {
     content: '';
     display: block;
@@ -94,8 +88,7 @@ const AsideMenuLink = styled(Link)`
     z-index: -1;
     background: linear-gradient(92.51deg, #3b86f8 0%, #87b7ff 100%);
     opacity: 0;
-    transition: opacity var(--transition-duration)
-      var(--transition-timing-function);
+    transition: opacity 0.4s var(--transition-timing-function);
   }
 
   &:hover,
@@ -111,13 +104,12 @@ const AsideMenuLink = styled(Link)`
     $activated &&
     css`
       font-weight: 700;
-      text-shadow: 2px 2px 2px gray;
       box-shadow: 0 0 24px rgba(0, 68, 169, 0.25);
 
       svg,
       span {
         color: white;
-        filter: drop-shadow(0px 0px 8px rgba(0, 0, 0, 0.2));
+        filter: drop-shadow(0px 0px 6px rgba(0, 0, 0, 0.4));
       }
 
       &::before {
@@ -142,13 +134,6 @@ const AsideBottomContainer = styled.div`
   flex-direction: column;
   align-items: center;
   gap: 10px;
-`;
-
-const AsideCopyright = styled.div`
-  font-size: 12px;
-  line-height: 100%;
-  opacity: 0.4;
-  user-select: none;
 `;
 
 const ProfileChangerBox = styled.button`
@@ -236,8 +221,8 @@ const Sidebar = () => {
     <Aside>
       <AsideTopContainer>
         <AsideLogoContainer>
-          <img draggable={false} src={imgLogoDark} alt='Dashify Logo' />
-          <img draggable={false} src={imgLogoText} alt='Dashify Text Logo' />
+          <Logo background='black' foreground='white' />
+          <LogoText />
         </AsideLogoContainer>
 
         <AsideMenuContainer>
@@ -253,8 +238,6 @@ const Sidebar = () => {
       </AsideTopContainer>
 
       <AsideBottomContainer>
-        <AsideCopyright>© 2023 “Dashify” Development Team</AsideCopyright>
-
         <ProfileChanger />
 
         <AsidePageMenu to='/settings' label='설정' icon={<CogIcon />} />
@@ -263,12 +246,32 @@ const Sidebar = () => {
   );
 };
 
+const PageContentContainer = styled.div`
+  display: flex;
+  height: 100%;
+  width: 100%;
+`;
+
+const OutletContainer = styled.div`
+  flex: 1;
+  padding: 42px;
+  height: 100%;
+  overflow: auto;
+`;
+
 const DashboardLayout = () => {
+  const [refreshFn, setRefreshFn] = useState(null);
+  // Outlet -> DashboardLayout로 새로 고침 함수를 전달해야 합니다
+
   return (
-    <>
+    <PageContentContainer>
       <Sidebar />
-      <Outlet />
-    </>
+
+      <OutletContainer>
+        <DashboardPageTitle refreshFn={refreshFn} />
+        <Outlet context={[refreshFn, setRefreshFn]} />
+      </OutletContainer>
+    </PageContentContainer>
   );
 };
 

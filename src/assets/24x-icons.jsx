@@ -1,5 +1,11 @@
 const ChartIcon = (props) => (
-  <svg xmlns='http://www.w3.org/2000/svg' fill='none' {...props}>
+  <svg
+    xmlns='http://www.w3.org/2000/svg'
+    width={24}
+    height={24}
+    fill='none'
+    {...props}
+  >
     <rect
       width={18}
       height={18}
@@ -24,7 +30,13 @@ const ChartIcon = (props) => (
 );
 
 const ServerIcon = (props) => (
-  <svg xmlns='http://www.w3.org/2000/svg' fill='none' {...props}>
+  <svg
+    xmlns='http://www.w3.org/2000/svg'
+    width={24}
+    height={24}
+    fill='none'
+    {...props}
+  >
     <rect
       width={14}
       height={18}
@@ -40,7 +52,13 @@ const ServerIcon = (props) => (
 );
 
 const EarthIcon = (props) => (
-  <svg xmlns='http://www.w3.org/2000/svg' fill='none' {...props}>
+  <svg
+    xmlns='http://www.w3.org/2000/svg'
+    width={24}
+    height={24}
+    fill='none'
+    {...props}
+  >
     <circle cx={12} cy={12} r={9} stroke='currentColor' strokeWidth={2} />
     <mask
       id='a'
@@ -65,7 +83,13 @@ const EarthIcon = (props) => (
 );
 
 const PeopleIcon = (props) => (
-  <svg xmlns='http://www.w3.org/2000/svg' fill='none' {...props}>
+  <svg
+    xmlns='http://www.w3.org/2000/svg'
+    width={24}
+    height={24}
+    fill='none'
+    {...props}
+  >
     <path
       fill='currentColor'
       fillRule='evenodd'
@@ -83,7 +107,13 @@ const PeopleIcon = (props) => (
 );
 
 const ConsoleIcon = (props) => (
-  <svg xmlns='http://www.w3.org/2000/svg' fill='none' {...props}>
+  <svg
+    xmlns='http://www.w3.org/2000/svg'
+    width={24}
+    height={24}
+    fill='none'
+    {...props}
+  >
     <rect
       width={18}
       height={18}
@@ -104,7 +134,13 @@ const ConsoleIcon = (props) => (
 );
 
 const TopBottomArrowIcon = (props) => (
-  <svg xmlns='http://www.w3.org/2000/svg' fill='none' {...props}>
+  <svg
+    xmlns='http://www.w3.org/2000/svg'
+    width={24}
+    height={24}
+    fill='none'
+    {...props}
+  >
     <path
       stroke='currentColor'
       strokeLinecap='round'
@@ -116,7 +152,13 @@ const TopBottomArrowIcon = (props) => (
 );
 
 const CogIcon = (props) => (
-  <svg xmlns='http://www.w3.org/2000/svg' fill='none' {...props}>
+  <svg
+    xmlns='http://www.w3.org/2000/svg'
+    width={24}
+    height={24}
+    fill='none'
+    {...props}
+  >
     <path
       fill='currentColor'
       d='M10 3.5A1.5 1.5 0 0 1 11.5 2h1A1.5 1.5 0 0 1 14 3.5V6h-4V3.5ZM14 20.5a1.5 1.5 0 0 1-1.5 1.5h-1a1.5 1.5 0 0 1-1.5-1.5V18h4v2.5ZM18.361 6.018a1.5 1.5 0 0 1 2.05.55l.5.865a1.5 1.5 0 0 1-.55 2.05l-2.165 1.25-2-3.465 2.165-1.25ZM5.639 17.982a1.5 1.5 0 0 1-2.05-.549l-.5-.866a1.5 1.5 0 0 1 .55-2.049l2.165-1.25 2 3.464-2.165 1.25ZM20.361 14.518a1.5 1.5 0 0 1 .55 2.05l-.5.865a1.5 1.5 0 0 1-2.05.55l-2.165-1.25 2-3.465 2.165 1.25ZM3.639 9.482a1.5 1.5 0 0 1-.55-2.049l.5-.866a1.5 1.5 0 0 1 2.05-.549l2.165 1.25-2 3.464-2.165-1.25Z'

@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useOutletContext } from 'react-router-dom';
 
-const Overview = () => {
+const Stats = () => {
   // eslint-disable-next-line no-unused-vars
   const [refreshFn, setRefreshFn] = useOutletContext();
 
@@ -11,7 +11,7 @@ const Overview = () => {
     setRefreshFn(() => console.log('refreshed'));
   }, [setRefreshFn]);
 
-  return <div>오버뷰</div>;
+  return <div>스탯</div>;
 };
 
-export default Overview;
+export default Stats;

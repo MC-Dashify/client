@@ -3,16 +3,20 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@vitejs/plugin-react": "^4.0.1",
+    "chart.js": "^4.3.0",
+    "framer-motion": "^10.12.17",
     "postcss-styled-components": "^0.2.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.13.0",
     "react-scripts": "5.0.1",
+    "react-select": "^5.7.3",
+    "react-tooltip": "^5.15.0",
     "styled-components": "^6.0.0-rc.3",
-    "vite-plugin-pwa": "^0.16.4",
-    "workbox-window": "^7.0.0",
     "vite": "^4.3.9",
-    "@vitejs/plugin-react": "^4.0.1"
+    "vite-plugin-pwa": "^0.16.4",
+    "workbox-window": "^7.0.0"
   },
   "scripts": {
     "dev": "vite",
