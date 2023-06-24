@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
 import { useOutletContext } from 'react-router-dom';
 import styled, { css } from 'styled-components';
+import { Doughnut } from 'react-chartjs-2';
 import { stringToBytes } from '../utils/convert';
-// import
+import Chart from '../components/common/Chart';
 
 const CardContainer = styled.div`
   display: flex;
@@ -130,7 +131,7 @@ const ChartCard = styled.div`
   display: flex;
   height: 70%;
   padding: 48px 56px;
-  gap: 48px;
+  gap: 32px;
   border-radius: 22px;
   background: linear-gradient(135deg, #fff 0%, #f0f0f0 100%);
   border: 2px solid rgba(0, 0, 0, 0.15);
@@ -141,16 +142,18 @@ const ChartSectionBox = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  gap: 32px;
+  gap: 8px;
   flex: 1 0 0;
   align-self: stretch;
   filter: drop-shadow(0px 0px 16px rgba(0, 0, 0, 0.15));
+  align-items: center;
 `;
 
 const ChartTextContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: 8px;
+  width: 100%;
 `;
 
 const ChartLabel = styled.div`
@@ -163,6 +166,7 @@ const ChartValue = styled.div`
   font-size: 56px;
   font-weight: 700;
   line-height: 120%;
+  overflow-wrap: anywhere;
 `;
 
 const ChartValueUnit = styled.span`
@@ -171,19 +175,32 @@ const ChartValueUnit = styled.span`
   opacity: 0.6;
 `;
 
-const ChartSection = ({ label, value, valueUnit, chartData }) => {
+/**
+ * @param {Object} props
+ * @param {string} props.label
+ * @param {string} props.valueUnit
+ * @param {string[]} props.chartLabels
+ * @param {number[]} props.chartData
+ */
+const ChartSection = ({ label, valueUnit, chartLabels, chartData }) => {
   return (
     <ChartSectionBox>
       <ChartTextContainer>
         <ChartLabel>{label}</ChartLabel>
 
         <ChartValue>
-          {value + ' '}
+          {Math.round(chartData.reduce((a, b) => a + b, 0) * 10) / 10 + ' '}
           <ChartValueUnit>{valueUnit}</ChartValueUnit>
         </ChartValue>
       </ChartTextContainer>
 
-      {/* <Chart chartData={chartData} /> */}
+      <Chart
+        ChartComponenet={Doughnut}
+        labels={chartLabels}
+        data={chartData}
+        width='100%'
+        flex='1 0 0'
+      />
     </ChartSectionBox>
   );
 };
@@ -195,7 +212,7 @@ const VerticalDivider = styled.div`
   opacity: 0.2;
 `;
 
-const tempData = {
+const tempStatsData = {
   jvm: {
     usedMemory: '815 MB',
     totalMemory: '2048 MB',
@@ -217,20 +234,43 @@ const tempData = {
   }
 };
 
+const tempWorldDatas = [0, 0, 0].map(() => {
+  return {
+    difficulty: 'EASY',
+    gamerule: {},
+    size: '17.8 MB',
+    entities: 207,
+    name: 'world',
+    loadedChunks: 774,
+    player: 1
+  };
+});
+
+/**
+ * @param {string} used
+ * @param {string} total
+ */
+const getUsedPercantage = (used, total) => {
+  return ((stringToBytes(used) / stringToBytes(total)) * 100).toFixed(1);
+};
+
+const colorType = (value, min = 0, max = 100, reverse = false) => {
+  const percentage = ((value - min) / (max - min)) * 100;
+
+  const colors = ['blue', 'green', 'yellow', 'red'];
+
+  if (percentage >= 86) return colors[reverse ? 0 : 3];
+  if (percentage >= 71) return colors[reverse ? 1 : 2];
+  if (percentage >= 31) return colors[reverse ? 2 : 1];
+  return colors[reverse ? 3 : 0];
+};
+
 const Overview = () => {
   // eslint-disable-next-line no-unused-vars
   const [refreshFn, setRefreshFn] = useOutletContext();
-  const [data, setData] = useState(tempData);
+  const [data, setData] = useState(tempStatsData);
 
   const { jvm, disk, mem, tps, cpu } = data;
-
-  /**
-   * @param {string} used
-   * @param {string} total
-   */
-  const getUsedPercantage = (used, total) => {
-    return ((stringToBytes(used) / stringToBytes(total)) * 100).toFixed(1);
-  };
 
   const cpuValue = cpu.cpuLoad.toFixed(1);
   const ramValue = getUsedPercantage(mem.usedMem, mem.totalMem);
@@ -238,16 +278,15 @@ const Overview = () => {
   const diskValue = getUsedPercantage(disk.freeSpace, disk.totalSpace);
   const tpsValue = (tps.reduce((a, b) => a + b, 0) / tps.length).toFixed(1);
 
-  const colorType = (value, min = 0, max = 100, reverse = false) => {
-    const percentage = ((value - min) / (max - min)) * 100;
+  const worldNames = tempWorldDatas.map((worldData) => worldData.name);
 
-    const colors = ['blue', 'green', 'yellow', 'red'];
+  const countOfEntities = tempWorldDatas.map((worldData) => worldData.entities);
+  const countOfPlayers = tempWorldDatas.map((worldData) => worldData.player);
+  const countOfSize = tempWorldDatas.map(
+    (worldData) => stringToBytes(worldData.size) / 1024 ** 3
+  );
 
-    if (percentage >= 86) return colors[reverse ? 0 : 3];
-    if (percentage >= 71) return colors[reverse ? 1 : 2];
-    if (percentage >= 31) return colors[reverse ? 2 : 1];
-    return colors[reverse ? 3 : 0];
-  };
+  console.log(tempWorldDatas, countOfEntities, countOfPlayers, countOfSize);
 
   useEffect(() => {
     // 이 컴포넌트에서 DashboardLayout으로 정보 새로 고침 함수를 넘겨야 합니다
@@ -290,11 +329,26 @@ const Overview = () => {
       </StatCardContainer>
 
       <ChartCard>
-        <ChartSection label='엔티티' value='1,000,000' valueUnit='개' />
+        <ChartSection
+          label='엔티티'
+          chartData={countOfEntities}
+          chartLabels={worldNames}
+          valueUnit='개'
+        />
         <VerticalDivider />
-        <ChartSection label='플레이어' value='1,000,000' valueUnit='명' />
+        <ChartSection
+          label='플레이어'
+          chartData={countOfPlayers}
+          chartLabels={worldNames}
+          valueUnit='명'
+        />
         <VerticalDivider />
-        <ChartSection label='용량' value='1,000' valueUnit='ZB' />
+        <ChartSection
+          label='용량'
+          chartData={countOfSize}
+          chartLabels={worldNames}
+          valueUnit='GB'
+        />
       </ChartCard>
     </CardContainer>
   );
