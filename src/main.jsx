@@ -16,6 +16,11 @@ import ErrorPage from './routes/ErrorPage';
 import DashboardLayout from './routes/DashboardLayout';
 import Overview from './routes/Overview';
 import Stats from './routes/Stats';
+import Worlds from './routes/Worlds';
+import Players from './routes/Players';
+import Traffic from './routes/Traffic';
+import Console from './routes/Console';
+
 import AppData from './storage/data';
 import GlobalStyle, {
   defaultFontFamily
@@ -48,10 +53,10 @@ const router = createBrowserRouter([
     children: [
       { index: true, element: <Overview /> },
       { path: 'stats', element: <Stats /> },
-      { path: 'world', element: <Overview /> },
-      { path: 'player', element: <Overview /> },
-      { path: 'traffic', element: <Overview /> },
-      { path: 'console', element: <Overview /> }
+      { path: 'world', element: <Worlds /> },
+      { path: 'player', element: <Players /> },
+      { path: 'traffic', element: <Traffic /> },
+      { path: 'console', element: <Console /> }
     ],
     errorElement: <ErrorPage />
   },
