@@ -1,5 +1,20 @@
-import { useEffect, useRef } from 'react';
-import styled from 'styled-components';
+import { useEffect, useRef } from "react";
+import styled from "styled-components";
+
+const backgroundColors = [
+  "#DC6B65",
+  "#F9C876",
+  "#389287",
+  "#026DB0",
+  "#6C37DD",
+  "#CF56DA",
+  "#7D211C",
+  "#935E06",
+  "#2A6F66",
+  "#014E7E",
+  "#2F136D",
+  "#761C7D",
+];
 
 const ChartWrapper = styled.div`
   ${({ $width }) => $width && `width: ${$width};`}
@@ -7,7 +22,7 @@ const ChartWrapper = styled.div`
   ${({ $flex }) => $flex && `flex: ${$flex};`}
 `;
 
-const Chart = ({ ChartComponenet, labels, data, height, width, flex }) => {
+const Chart = ({ ChartComponent, labels, datasets, data, height, width, flex, useLegend = true, scales = {}, tooltipCallbacks }) => {
   const chartRef = useRef(null);
 
   useEffect(() => {
@@ -19,77 +34,64 @@ const Chart = ({ ChartComponenet, labels, data, height, width, flex }) => {
       }
     };
 
-    window.addEventListener('resize', eventCallback);
+    window.addEventListener("resize", eventCallback);
 
     return () => {
-      window.removeEventListener('resize', eventCallback);
+      window.removeEventListener("resize", eventCallback);
     };
   }, [chartRef]);
 
+  const legend = useLegend
+    ? {
+        position: "bottom",
+        color: "rgba(0, 0, 0, 0.6)",
+        labels: {
+          padding: 20,
+          useBorderRadius: true,
+          borderRadius: 4,
+          boxHeight: 18,
+          boxWidth: 18,
+          font: {
+            size: 18,
+            weight: 700,
+          },
+        },
+      }
+    : null;
+
   return (
     <ChartWrapper $width={width} $height={height} $flex={flex}>
-      <ChartComponenet
+      <ChartComponent
         ref={chartRef}
         options={{
           maintainAspectRatio: false,
 
           elements: {
-            arc: {
-              weight: 10000,
-              borderWidth: 0,
-              hoverBorderWidth: 0,
-              hoverOffset: 0
-            }
+            arc: { weight: 10000, borderWidth: 0, hoverBorderWidth: 0, hoverOffset: 0 },
           },
-
           plugins: {
-            legend: {
-              position: 'bottom',
-              color: 'rgba(0, 0, 0, 0.6)',
-              labels: {
-                padding: 20,
-                useBorderRadius: true,
-                borderRadius: 4,
-                boxHeight: 18,
-                boxWidth: 18,
-                font: {
-                  size: 18,
-                  weight: 700
-                }
-              }
-            },
+            legend,
             tooltip: {
               caretSize: 8,
               titleFont: { size: 18 },
               padding: { x: 20, y: 16 },
-              boxPadding: 6
-            }
+              boxPadding: 6,
+              callbacks: tooltipCallbacks
+            },
           },
           layout: {
-            padding: 20
-          }
+            padding: 20,
+          },
+          scales,
         }}
         data={{
           labels: labels,
-          datasets: [
+          datasets: datasets?.map((set, index) => ({ ...set, backgroundColor: backgroundColors[index] })) ?? [
             {
               data: data,
-              backgroundColor: [
-                '#DC6B65',
-                '#F9C876',
-                '#389287',
-                '#026DB0',
-                '#6C37DD',
-                '#CF56DA',
-                '#7D211C',
-                '#935E06',
-                '#2A6F66',
-                '#014E7E',
-                '#2F136D',
-                '#761C7D'
-              ]
-            }
-          ]
+              backgroundColor: backgroundColors
+            },
+          ],
         }}
       />
     </ChartWrapper>

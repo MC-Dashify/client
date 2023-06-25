@@ -167,6 +167,53 @@ const CogIcon = (props) => (
   </svg>
 );
 
+const ComputerChipIcon = (props) => (
+  <svg
+    xmlns='http://www.w3.org/2000/svg'
+    width={24}
+    height={24}
+    fill='none'
+    {...props}
+  >
+    <rect
+      x={6}
+      y={6}
+      width={12}
+      height={12}
+      rx={1}
+      stroke='black'
+      strokeWidth={2}
+    />
+    <rect
+      x={8} y={3} width={3} height={4} rx={1} fill='black'
+    />
+    <rect
+      x={8} y={17} width={3} height={4} rx={1} fill='black'
+    />
+    <rect
+      x={13} y={3} width={3} height={4} rx={1} fill='black'
+    />
+    <rect
+      x={13} y={17} width={3} height={4} rx={1} fill='black'
+    />
+    <rect
+      x={21} y={8} width={3} height={4} rx={1} transform='rotate(90 21 8)' fill='black'
+    />
+    <rect
+      x={7} y={8} width={3} height={4} rx={1} transform='rotate(90 7 8)' fill='black'
+    />
+    <rect
+      x={21} y={13} width={3} height={4} rx={1} transform='rotate(90 21 13)' fill='black'
+    />
+    <rect
+      x={7} y={13} width={3} height={4} rx={1} transform='rotate(90 7 13)' fill='black'
+    />
+    <rect
+      opacity={0.4} x={9} y={9} width={6} height={6} rx={1} fill='black'
+    />
+  </svg>
+);
+
 export {
   ChartIcon,
   ServerIcon,
@@ -174,5 +221,6 @@ export {
   PeopleIcon,
   ConsoleIcon,
   TopBottomArrowIcon,
-  CogIcon
+  CogIcon,
+  ComputerChipIcon
 };

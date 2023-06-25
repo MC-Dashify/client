@@ -195,7 +195,7 @@ const ChartSection = ({ label, valueUnit, chartLabels, chartData }) => {
       </ChartTextContainer>
 
       <Chart
-        ChartComponenet={Doughnut}
+        ChartComponent={Doughnut}
         labels={chartLabels}
         data={chartData}
         width='100%'

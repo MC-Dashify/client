@@ -4,7 +4,11 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { Tooltip as ReactTooltip } from 'react-tooltip';
 import {
   Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
   ArcElement,
+  PointElement,
+  LineElement,
   Tooltip,
   Legend,
   defaults as chartDefaults
@@ -27,7 +31,7 @@ import GlobalStyle, {
 } from './components/common/globalstyles';
 import './styles/font-settings.css';
 
-ChartJS.register(ArcElement, Tooltip, Legend);
+ChartJS.register(ArcElement, Tooltip, Legend, CategoryScale, LinearScale, PointElement, LineElement);
 chartDefaults.font.family = defaultFontFamily;
 chartDefaults.font.size = 16;
 
