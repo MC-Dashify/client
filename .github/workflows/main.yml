@@ -35,6 +35,6 @@ jobs:
         uses: peaceiris/actions-gh-pages@v3
         with:
           cname: dashify.cc
-          publish_dir: ./build
+          publish_dir: ./dist
           github_token: ${{secrets.GITHUB_TOKEN}}
           publish_branch: gh-pages
