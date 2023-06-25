@@ -6,7 +6,7 @@
 <p align="center">별도의 설치 없이 실행되는 Standalone 모니터링 시스템</p>
 <p align="center">
   <a href="https://github.com/MC-Dashify/web/actions/workflows/main.yml">
-    <img src="https://github.com/MC-Dashify/web/actions/workflows/main.yml/badge.svg" alt="Build & Publish to Release" />
+    <img src="https://github.com/MC-Dashify/web/actions/workflows/main.yml/badge.svg" alt="Deploy" />
   </a>
 </p>
 

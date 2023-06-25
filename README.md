@@ -6,7 +6,7 @@
 <p align="center">Standalone monitoring system without any additional installation</p>
 <p align="center">
   <a href="https://github.com/MC-Dashify/web/actions/workflows/main.yml">
-    <img src="https://github.com/MC-Dashify/web/actions/workflows/main.yml/badge.svg" alt="Build & Publish to Release" />
+    <img src="https://github.com/MC-Dashify/web/actions/workflows/main.yml/badge.svg" alt="Deploy" />
   </a>
 </p>
 
