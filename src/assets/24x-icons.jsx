@@ -181,35 +181,35 @@ const ComputerChipIcon = (props) => (
       width={12}
       height={12}
       rx={1}
-      stroke='black'
+      stroke='currentColor'
       strokeWidth={2}
     />
     <rect
-      x={8} y={3} width={3} height={4} rx={1} fill='black'
+      x={8} y={3} width={3} height={4} rx={1} fill='currentColor'
     />
     <rect
-      x={8} y={17} width={3} height={4} rx={1} fill='black'
+      x={8} y={17} width={3} height={4} rx={1} fill='currentColor'
     />
     <rect
-      x={13} y={3} width={3} height={4} rx={1} fill='black'
+      x={13} y={3} width={3} height={4} rx={1} fill='currentColor'
     />
     <rect
-      x={13} y={17} width={3} height={4} rx={1} fill='black'
+      x={13} y={17} width={3} height={4} rx={1} fill='currentColor'
     />
     <rect
-      x={21} y={8} width={3} height={4} rx={1} transform='rotate(90 21 8)' fill='black'
+      x={21} y={8} width={3} height={4} rx={1} transform='rotate(90 21 8)' fill='currentColor'
     />
     <rect
-      x={7} y={8} width={3} height={4} rx={1} transform='rotate(90 7 8)' fill='black'
+      x={7} y={8} width={3} height={4} rx={1} transform='rotate(90 7 8)' fill='currentColor'
     />
     <rect
-      x={21} y={13} width={3} height={4} rx={1} transform='rotate(90 21 13)' fill='black'
+      x={21} y={13} width={3} height={4} rx={1} transform='rotate(90 21 13)' fill='currentColor'
     />
     <rect
-      x={7} y={13} width={3} height={4} rx={1} transform='rotate(90 7 13)' fill='black'
+      x={7} y={13} width={3} height={4} rx={1} transform='rotate(90 7 13)' fill='currentColor'
     />
     <rect
-      opacity={0.4} x={9} y={9} width={6} height={6} rx={1} fill='black'
+      opacity={0.4} x={9} y={9} width={6} height={6} rx={1} fill='currentColor'
     />
   </svg>
 );
