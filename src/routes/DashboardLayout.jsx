@@ -14,6 +14,11 @@ import {
 } from '../assets/24x-icons';
 import { ArrowRightAndLeftIcon } from '../assets/16x-icons';
 import DashboardPageTitle from '../components/dashboard/DashboardPageTitle';
+import Swal from 'sweetalert2';
+import withReactContent from 'sweetalert2-react-content';
+import Button from '../components/common/Button';
+
+const SettingsModal = withReactContent(Swal);
 
 const Aside = styled.aside`
   display: flex;
@@ -119,6 +124,76 @@ const AsideMenuLink = styled(Link)`
     `}
 `;
 
+const AsideMenuDiv = styled.div`
+  --transition-duration: 0.2s;
+  --transition-timing-function: cubic-bezier(0, 0.2, 0.3, 0.95);
+
+  cursor: pointer;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  padding: 10px 16px;
+  gap: 10px;
+  text-decoration: none;
+  color: #000;
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 100%;
+  border-radius: 14px;
+  transition: all var(--transition-duration) var(--transition-timing-function);
+  box-shadow: 0 0 0 rgba(0, 68, 169, 0);
+  transition-property: background-color, box-shadow;
+  overflow: hidden;
+  position: relative;
+
+  svg,
+  span {
+    transition: all var(--transition-duration) var(--transition-timing-function);
+    transition-property: font-weight, filter;
+    /* property에 color가 없는 건 의도입니다 */
+  }
+
+  &::before {
+    content: '';
+    display: block;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    background: linear-gradient(92.51deg, #3b86f8 0%, #87b7ff 100%);
+    opacity: 0;
+    transition: opacity 0.4s var(--transition-timing-function);
+  }
+
+  &:hover,
+  &:focus {
+    background-color: rgba(0, 0, 0, 0.05);
+  }
+
+  &:active {
+    background-color: rgba(0, 0, 0, 0.1);
+  }
+
+  ${({ $activated }) =>
+    $activated &&
+    css`
+      font-weight: 700;
+      box-shadow: 0 0 24px rgba(0, 68, 169, 0.25);
+
+      svg,
+      span {
+        color: white;
+        filter: drop-shadow(0px 0px 6px rgba(0, 0, 0, 0.4));
+      }
+
+      &::before {
+        opacity: 1;
+      }
+    `}
+`;
+
 const AsidePageMenu = ({ to, label, icon }) => {
   const location = useLocation();
 
@@ -127,6 +202,15 @@ const AsidePageMenu = ({ to, label, icon }) => {
       {icon}
       <span>{label}</span>
     </AsideMenuLink>
+  );
+};
+
+const AsideNonlinkMenu = ({ onclick, label, icon }) => {
+  return (
+    <AsideMenuDiv onClick={onclick}>
+      {icon}
+      <span>{label}</span>
+    </AsideMenuDiv>
   );
 };
 
@@ -191,6 +275,48 @@ const ProfileAddress = styled.div`
   font-size: 12px;
 `;
 
+const SettingsModalHeader = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: start;
+  align-self: stretch;
+`;
+
+const SettingsSectionContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  align-self: center;
+  padding: 8px 0;
+`;
+
+const SettingsButtonContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-self: stretch;
+  align-items: center;
+  justify-content: stretch;
+  flex: 1;
+`;
+
+const SettingsLogoVersionContainer = styled.div`
+  display: block;
+`;
+
+const SettingsModalLabel = styled.div`
+  font-weight: 700;
+  font-size: 24px;
+  color: #000;
+`;
+
+const LogoWrapper = styled.div`
+  svg {
+    fill: ${({ fill }) => fill};
+    height: ${({ height }) => height};
+    width: ${({ width }) => width};
+  }
+`;
+
 const ProfileChanger = () => {
   return (
     <ProfileChangerBox>
@@ -202,6 +328,44 @@ const ProfileChanger = () => {
       <ArrowRightAndLeftIcon />
     </ProfileChangerBox>
   );
+};
+
+const onSettingsClicked = () => {
+  SettingsModal.fire({
+    html: (
+      <>
+        <SettingsModalHeader>
+          <SettingsModalLabel>설정</SettingsModalLabel>
+        </SettingsModalHeader>
+        <hr />
+        <SettingsSectionContainer>
+          <LogoWrapper height='80px' width='80px'>
+            <Logo
+              background='black'
+              foreground='white'
+              style={{ height: '80px', width: '80px' }}
+            />
+          </LogoWrapper>
+          <SettingsLogoVersionContainer>
+            <LogoWrapper height='80px' width='80px'>
+              <LogoText />
+            </LogoWrapper>
+            <div>Version 1.0.0</div>
+          </SettingsLogoVersionContainer>
+          <SettingsButtonContainer>
+            <Button>
+              <div>GitHub 레포지토리 방문</div>
+            </Button>
+          </SettingsButtonContainer>
+        </SettingsSectionContainer>
+      </>
+    ),
+    width: '50rem',
+    showConfirmButton: false,
+    showCancelButton: false,
+    showCloseButton: true,
+    allowOutsideClick: true
+  });
 };
 
 const Sidebar = () => {
@@ -241,7 +405,11 @@ const Sidebar = () => {
       <AsideBottomContainer>
         <ProfileChanger />
 
-        <AsidePageMenu to='/settings' label='설정' icon={<CogIcon />} />
+        <AsideNonlinkMenu
+          onclick={onSettingsClicked}
+          label='설정'
+          icon={<CogIcon />}
+        />
       </AsideBottomContainer>
     </Aside>
   );

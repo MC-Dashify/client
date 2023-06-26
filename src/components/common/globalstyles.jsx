@@ -26,6 +26,34 @@ const GlobalStyle = styled.createGlobalStyle`
     margin: 0;
     padding: 0;
   }
+
+  .swal2-html-container {
+    margin: 0.5em 1.6em;
+    user-select: none;
+  }
+
+  .swal2-modal {
+    border-radius: 16px;
+  }
+
+  .swal2-html-container hr {
+    border: none;
+    background: rgba(0, 0, 0, 0.2);
+    height: 1px;
+  }
+
+  .swal2-actions {
+    margin: 0 auto;
+  }
+
+  .swal2-shown > [aria-hidden='true'] {
+    transition: 0.1s filter;
+    filter: blur(10px);
+  }
+
+  body.swal2-height-auto {
+    height: 100% !important;
+  }
 `;
 
 export default GlobalStyle;

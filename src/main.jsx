@@ -30,8 +30,17 @@ import GlobalStyle, {
   defaultFontFamily
 } from './components/common/globalstyles';
 import './styles/font-settings.css';
+import Swal from 'sweetalert2';
 
-ChartJS.register(ArcElement, Tooltip, Legend, CategoryScale, LinearScale, PointElement, LineElement);
+ChartJS.register(
+  ArcElement,
+  Tooltip,
+  Legend,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement
+);
 chartDefaults.font.family = defaultFontFamily;
 chartDefaults.font.size = 16;
 
@@ -41,6 +50,21 @@ AppData.set('etc.version', VERSION);
 
 const updateSW = registerSW({
   onOfflineReady() {
+    const Toast = Swal.mixin({
+      toast: true,
+      position: 'bottom',
+      width: '250',
+      showConfirmButton: false,
+      iconColor: 'white',
+      timer: 2000,
+      html: '<span style="color:#ffffff">오프라인 준비 완료</span>',
+      grow: 'row',
+      timerProgressBar: true,
+      background: '#3B86F8'
+    });
+    Toast.fire({
+      icon: 'success'
+    });
     console.log('Ready for offline mode.');
   }
 });
@@ -62,11 +86,6 @@ const router = createBrowserRouter([
       { path: 'traffic', element: <Traffic /> },
       { path: 'console', element: <Console /> }
     ],
-    errorElement: <ErrorPage />
-  },
-  {
-    path: '/settings',
-    element: <Root />,
     errorElement: <ErrorPage />
   }
 ]);

@@ -286,8 +286,6 @@ const Overview = () => {
     (worldData) => stringToBytes(worldData.size) / 1024 ** 3
   );
 
-  console.log(tempWorldDatas, countOfEntities, countOfPlayers, countOfSize);
-
   useEffect(() => {
     // 이 컴포넌트에서 DashboardLayout으로 정보 새로 고침 함수를 넘겨야 합니다
     // TODO 정보 새로 고침
