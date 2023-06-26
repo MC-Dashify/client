@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useOutletContext } from 'react-router-dom';
 import styled from 'styled-components';
-import Dropdown from '../components/common/Dropdown';
+import Select from 'react-select';
 
 const WorldsContainer = styled.div`
   display: flex;
@@ -38,11 +38,8 @@ const OverviewDataValueDisplay = styled.div`
 `;
 
 const WorldsListContainer = styled.div`
-  color: #000;
-  font-size: 28px;
-  font-weight: 700;
-  line-height: 100%;
-  letter-spacing: -0.56px;
+  display: flex;
+  flex-direction: column;
 `;
 
 const OverviewData = ({ label, value }) => {
@@ -56,7 +53,7 @@ const OverviewData = ({ label, value }) => {
 
 const WorldsListBar = styled.div`
   display: flex;
-  padding: 12px 0;
+  padding: 8px 20px 8px 0;
   align-items: center;
   gap: 14px;
   align-self: stretch;
@@ -67,8 +64,32 @@ const WorldsListBar = styled.div`
   box-sizing: border-box;
 
   width: 100%;
+`;
 
-  border-bottom-left-radius: ${({ $isExpanded }) => ($isExpanded ? '' : '')};
+const Separator = styled.div`
+  width: 1px;
+  align-self: stretch;
+  opacity: 0.1;
+  background: #000;
+`;
+
+const Searchbar = styled.input`
+  width: 100%;
+
+  color: #000;
+  text-shadow: 0px 0px 16px 0px rgba(0, 0, 0, 0.15);
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 100%;
+  letter-spacing: -0.176px;
+
+  background-color: transparent;
+  outline: none;
+  border: none;
+
+  &::placeholder {
+    opacity: 0.6;
+  }
 `;
 
 const tempWorldsData = {
@@ -97,15 +118,50 @@ const Worlds = () => {
       </OverviewContainer>
       <WorldsListContainer>
         <WorldsListBar>
-          <Dropdown
-            style={{
-              paddingLeft: '20px',
-              boxSizing: 'border-box'
+          <Select
+            styles={{
+              control: (baseStyles, state) => ({
+                ...baseStyles,
+                backgroundColor: 'transparent',
+                border: 'none',
+                borderRadius: '12px',
+                height: '44px',
+                width: '94px',
+                boxSizing: 'content-box',
+                paddingLeft: '10px',
+
+                color: '#000',
+                textShadow: '0px 0px 16px 0px rgba(0, 0, 0, 0.15)',
+                fontSize: '16px',
+                fontWeight: 500,
+                lineHeight: '100%',
+                letterSpacing: '-0.176px'
+              }),
+              option: (styles, { data, isFocused }) => ({
+                ...styles,
+                color: 'black',
+                backgroundColor: (isFocused) ? '#e7e7e7' : '#f7f7f7',
+                '&:hover, &:active': {
+                  backgroundColor: '#e7e7e7'
+                }
+              }),
+              menu: (styles) => ({
+                ...styles,
+                backgroundColor: '#f7f7f7'
+              })
             }}
-            height='44px'
-            options={['이름']}
-            onExpand={() => {}}
+            options={[
+              { value: 'name', label: '이름' },
+              { value: 'uid', label: 'UID' },
+            ]}
+            components={{
+              IndicatorSeparator: () => null,
+            }}
+            isSearchable={false}
+            defaultValue={{ value: 'name', label: '이름' }}
           />
+          <Separator />
+          <Searchbar placeholder='검색' />
         </WorldsListBar>
       </WorldsListContainer>
     </WorldsContainer>
