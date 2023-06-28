@@ -13,6 +13,7 @@
     "react-router-dom": "^6.13.0",
     "react-scripts": "5.0.1",
     "react-select": "^5.7.3",
+    "react-syntax-highlighter": "^15.5.0",
     "react-tooltip": "^5.15.0",
     "styled-components": "^6.0.0-rc.3",
     "sweetalert2": "^11.7.12",

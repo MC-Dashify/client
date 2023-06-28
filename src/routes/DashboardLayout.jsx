@@ -98,7 +98,7 @@ const AsideMenuLink = styled(Link)`
   }
 
   &:hover,
-  &:focus {
+  &:focus-visible {
     background-color: rgba(0, 0, 0, 0.05);
   }
 
@@ -168,7 +168,7 @@ const AsideMenuDiv = styled.div`
   }
 
   &:hover,
-  &:focus {
+  &:focus-visible {
     background-color: rgba(0, 0, 0, 0.05);
   }
 
@@ -241,7 +241,7 @@ const ProfileChangerBox = styled.button`
   }
 
   &:hover,
-  &:focus {
+  &:focus-visible {
     background-color: #d9e4f5;
   }
 

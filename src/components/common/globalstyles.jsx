@@ -28,15 +28,45 @@ const GlobalStyle = styled.createGlobalStyle`
   }
 
   .swal2-html-container {
-    margin: 0.5em 1.6em;
+    margin: 0 !important;
     user-select: none;
   }
 
   .swal2-modal {
     border-radius: 16px;
+    background: #FFF;
+    box-shadow: 0px 0px 14px 0px rgba(0, 0, 0, 0.20);
+    padding: 42px;
   }
 
-  .swal2-html-container hr {
+  .swal2-close {
+    width: 16px;
+    height: 16px;
+    opacity: 0.4;
+
+    color: #000;
+    
+    user-select: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+
+    position: absolute;
+    transform: translateX(-46px) translateY(46px) !important;
+
+    &:hover {
+      color: #888;
+    }
+
+    &:focus {
+      box-shadow: none;
+    }
+
+    &:focus-visible {
+      color: #888;
+    }
+  }
+
+  .swal2-html-container hr, .swal2-html-container div hr {
     border: none;
     background: rgba(0, 0, 0, 0.2);
     height: 1px;

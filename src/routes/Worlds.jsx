@@ -1,7 +1,8 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useOutletContext } from 'react-router-dom';
 import styled from 'styled-components';
 import Select from 'react-select';
+import { showModal } from '../utils/modal';
 
 const WorldsContainer = styled.div`
   display: flex;
@@ -40,6 +41,8 @@ const OverviewDataValueDisplay = styled.div`
 const WorldsListContainer = styled.div`
   display: flex;
   flex-direction: column;
+
+  gap: 12px;
 `;
 
 const OverviewData = ({ label, value }) => {
@@ -92,6 +95,135 @@ const Searchbar = styled.input`
   }
 `;
 
+const WorldContainer = styled.button`
+  display: flex;
+  flex-direction: column;
+  padding: 24px 32px;
+  justify-content: center;
+  gap: 8px;
+  align-self: stretch;
+  border-radius: 24px;
+
+  background-color: transparent;
+  border: none;
+  transition: background-color 0.2s ease-in;
+
+  cursor: pointer;
+  
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.05) ;
+  }
+`;
+
+const UIDDisplay = styled.div`
+  color: #000;
+  font-size: 14px;
+  font-family: 'JetBrains Mono';
+  line-height: 100%;
+  letter-spacing: -0.28px;
+  opacity: 0.6;
+`;
+
+const NameDisplay = styled.div`
+  color: #000;
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 100%;
+  letter-spacing: -0.48px;
+`;
+
+const WorldInfoContainer = ({ uuid, name, key }) => {
+  return <WorldContainer key={key} onClick={() => {
+    
+    showModal(
+      <WorldInfoModal uuid={uuid} name={name} />,
+      '62.5rem'
+    );
+  }}>
+    <UIDDisplay>{uuid}</UIDDisplay>
+    <NameDisplay>{name}</NameDisplay>
+  </WorldContainer>;
+};
+
+const ModalContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 24px;
+  overflow: hidden;
+`;
+
+const ModalTopContainer = styled.div`
+  display: flex;
+  padding: 0px 0px 10px 0px;
+  align-items: center;
+  align-self: stretch;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.20);
+  height: 34px;
+`;
+
+const WorldNameDisplay = styled.div`
+  color: #000;
+  font-size: 32px;
+  font-weight: 500;
+  line-height: 100%;
+  letter-spacing: -0.64px;
+  width: 100%;
+  text-align: left;
+`;
+
+const ModalBodyContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 42px;
+  flex: 1 0 0;
+  align-self: stretch;
+`;
+
+const WorldInfoModal = ({ uuid, name }) => {
+  return (
+    <ModalContainer>
+      <ModalTopContainer>
+        <UIDDisplay style={{ opacity: 0.4, lineHeight: '14px' }}>{uuid}</UIDDisplay>
+      </ModalTopContainer>
+      <WorldNameDisplay>{name}</WorldNameDisplay>
+      <ModalBodyContainer>
+        <ModalHeading>상태</ModalHeading>
+      </ModalBodyContainer>
+    </ModalContainer>
+  );
+};
+
+const ModalHeadingContainer = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  align-self: stretch;
+`;
+
+const ModalHeadingTitle = styled.div`
+  color: #000;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 100%;
+  letter-spacing: -0.32px;
+`;
+
+const ModalHeadingSeparator = styled.div`
+  width: 878px;
+  height: 1px;
+  opacity: 0.2;
+  background: #000;
+`;
+
+const ModalHeading = ({ children }) => {
+  return <ModalHeadingContainer>
+    <ModalHeadingTitle>{children}</ModalHeadingTitle>
+    <ModalHeadingSeparator />
+  </ModalHeadingContainer>;
+}
+
 const tempWorldsData = {
   worlds: [
     { uuid: 'c8e62c4f-0882-404f-ba25-abfd4a19e07f', name: 'world' },
@@ -104,6 +236,8 @@ const tempWorldsData = {
 const Worlds = () => {
   // eslint-disable-next-line no-unused-vars
   const [refreshFn, setRefreshFn] = useOutletContext();
+  const [selectedFilter, setSelectedFilter] = useState({ value: 'name', label: '이름' });
+  const [searchValue, setSearchValue] = useState('');
 
   useEffect(() => {
     // 이 컴포넌트에서 DashboardLayout으로 정보 새로 고침 함수를 넘겨야 합니다
@@ -126,7 +260,7 @@ const Worlds = () => {
                 border: 'none',
                 borderRadius: '12px',
                 height: '44px',
-                width: '94px',
+                width: '98px',
                 boxSizing: 'content-box',
                 paddingLeft: '10px',
 
@@ -152,17 +286,27 @@ const Worlds = () => {
             }}
             options={[
               { value: 'name', label: '이름' },
-              { value: 'uid', label: 'UID' },
+              { value: 'uuid', label: 'UUID' },
             ]}
             components={{
               IndicatorSeparator: () => null,
             }}
             isSearchable={false}
-            defaultValue={{ value: 'name', label: '이름' }}
+            value={selectedFilter}
+            onChange={(value) => setSelectedFilter(value)}
           />
           <Separator />
-          <Searchbar placeholder='검색' />
+          <Searchbar placeholder='검색' onChange={(event) => {
+            setSearchValue(event.target.value);
+          }} value={searchValue} />
         </WorldsListBar>
+        {tempWorldsData.worlds.filter(world => {
+          if (selectedFilter.value === 'name') return world.name.includes(searchValue);
+          if (selectedFilter.value === 'uuid') return world.uuid.replace(/-/g, '').includes(searchValue.replace(/-/g, ''));
+          return true;
+        }).map(({ uuid, name }, index) => (
+          <WorldInfoContainer key={index} uuid={uuid} name={name} />
+        ))}
       </WorldsListContainer>
     </WorldsContainer>
   );

@@ -20,7 +20,7 @@ const ButtonBox = styled.button`
     $additionalStyle ||
     css`
       &:hover,
-      &:focus {
+      &:focus-visible {
         background-color: rgba(0, 0, 0, 0.05);
       }
 
@@ -38,7 +38,7 @@ const styles = {
     transition-property: box-shadow, background-color, transform;
 
     &:hover,
-    &:focus {
+    &:focus-visible {
       box-shadow: 0px 0px 12px 0px rgba(0, 0, 0, 0.2);
     }
 
