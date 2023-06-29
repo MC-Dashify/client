@@ -3,6 +3,7 @@ import { useOutletContext } from 'react-router-dom';
 import styled from 'styled-components';
 import Select from 'react-select';
 import { showModal } from '../utils/modal';
+import OverviewDataDisplay from '../components/common/OverviewDataDisplay';
 
 const WorldsContainer = styled.div`
   display: flex;
@@ -16,43 +17,12 @@ const OverviewContainer = styled.div`
   flex-direction: row;
 `;
 
-const OverviewDataContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-`;
-
-const OverviewDataLabel = styled.div`
-  color: #000;
-  font-size: 16px;
-  font-weight: 500;
-  line-height: 100%;
-  letter-spacing: -0.32px;
-`;
-
-const OverviewDataValueDisplay = styled.div`
-  color: #000;
-  font-size: 28px;
-  font-weight: 700;
-  line-height: 100%;
-  letter-spacing: -0.56px;
-`;
-
 const WorldsListContainer = styled.div`
   display: flex;
   flex-direction: column;
 
   gap: 12px;
 `;
-
-const OverviewData = ({ label, value }) => {
-  return (
-    <OverviewDataContainer>
-      <OverviewDataLabel>{label}</OverviewDataLabel>
-      <OverviewDataValueDisplay>{value}</OverviewDataValueDisplay>
-    </OverviewDataContainer>
-  );
-};
 
 const WorldsListBar = styled.div`
   display: flex;
@@ -432,7 +402,7 @@ const Worlds = () => {
   return (
     <WorldsContainer>
       <OverviewContainer>
-        <OverviewData label='세계 개수' value={tempWorldsData.worlds.length} />
+        <OverviewDataDisplay label='세계 개수' value={tempWorldsData.worlds.length} />
       </OverviewContainer>
       <WorldsListContainer>
         <WorldsListBar>
