@@ -132,8 +132,8 @@ const NameDisplay = styled.div`
   letter-spacing: -0.48px;
 `;
 
-const WorldInfoContainer = ({ uuid, name, key }) => {
-  return <WorldContainer key={key} onClick={() => {
+const WorldInfoContainer = ({ uuid, name }) => {
+  return <WorldContainer onClick={() => {
     
     showModal(
       <WorldInfoModal uuid={uuid} name={name} />,
@@ -181,16 +181,96 @@ const ModalBodyContainer = styled.div`
   align-self: stretch;
 `;
 
+const ModalStatsContainer = styled.div`
+  display: flex;
+  padding: 36px 40px;
+  align-items: flex-start;
+  gap: 32px;
+  align-self: stretch;
+
+  border-radius: 24px;
+  background: #FDFDFD;
+  box-shadow: 0px 0px 24px 0px rgba(0, 0, 0, 0.05) inset;
+
+  width: 100%;
+`;
+
+const ModalGamerulesContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  gap: 24px;
+  width: 100%;
+`;
+
+const ModalGamerulesInnerContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+  align-self: stretch;
+  ${({ $noFlex }) => !$noFlex && 'flex: 1 0 0'};
+`;
+
+const ModalGamerulesSeparator = styled.div`
+  width: 1px;
+  height: 18px;
+  opacity: 0.2;
+  background-color: #000;
+`;
+
 const WorldInfoModal = ({ uuid, name }) => {
+  const [world, setWorld] = useState(undefined);
+  const [rightGamerules, setRightGamerules] = useState([]);
+  const [leftGamerules, setLeftGamerules] = useState([]);
+  
+  useEffect(() => {
+    const fetchData = async () => {
+      const world = await getWorldInfo(uuid);
+      setWorld(world);
+
+      const left = Object.keys(world.gamerule);
+      const right = left.splice(left.length / 2);
+
+      setLeftGamerules(left);
+      setRightGamerules(right);
+
+      console.log(left);
+      console.log(right);
+    };
+    fetchData();
+  }, [uuid]);
+
   return (
     <ModalContainer>
       <ModalTopContainer>
         <UIDDisplay style={{ opacity: 0.4, lineHeight: '14px' }}>{uuid}</UIDDisplay>
       </ModalTopContainer>
       <WorldNameDisplay>{name}</WorldNameDisplay>
-      <ModalBodyContainer>
+      {(world ? <ModalBodyContainer>
         <ModalHeading>상태</ModalHeading>
-      </ModalBodyContainer>
+        <ModalStatsContainer>
+          <ModalStatsDisplay name='크기' value={world.size} />
+          <ModalStatsDisplay name='엔티티 개수' value={world.entities} />
+          <ModalStatsDisplay name='플레이어 수' value={world.player} />
+          <ModalStatsDisplay name='불러운 청크 수' value={world.loadedChunks} />
+        </ModalStatsContainer>
+        <ModalHeading>설정</ModalHeading>
+        <ModalStatsContainer>
+          <ModalStatsDisplay name='난이도' value={world.difficulty} />
+        </ModalStatsContainer>
+        <ModalHeading>게임규칙</ModalHeading>
+        <ModalGamerulesContainer>
+          <ModalGamerulesInnerContainer>
+            {leftGamerules.map((gamerule, index) => <GameruleDisplay key={index} name={gamerule} value={world.gamerule[gamerule]} />)}
+          </ModalGamerulesInnerContainer>
+          <ModalGamerulesInnerContainer $noFlex>
+            {leftGamerules.map((_, index) => <ModalGamerulesSeparator key={index} />)}
+          </ModalGamerulesInnerContainer>
+          <ModalGamerulesInnerContainer>
+            {rightGamerules.map((gamerule, index) => <GameruleDisplay key={index} name={gamerule} value={world.gamerule[gamerule]} />)}
+          </ModalGamerulesInnerContainer>
+        </ModalGamerulesContainer>
+      </ModalBodyContainer> : <WorldNameDisplay>월드 정보를 불러오지 못했습니다</WorldNameDisplay>)}
     </ModalContainer>
   );
 };
@@ -211,7 +291,7 @@ const ModalHeadingTitle = styled.div`
 `;
 
 const ModalHeadingSeparator = styled.div`
-  width: 878px;
+  flex: 1 0;
   height: 1px;
   opacity: 0.2;
   background: #000;
@@ -224,6 +304,80 @@ const ModalHeading = ({ children }) => {
   </ModalHeadingContainer>;
 }
 
+const ModalStatsDisplayContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  flex: 1 0 0;
+`;
+
+const ModalStatsNameDisplay = styled.div`
+  color: #000;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 100%;
+  letter-spacing: -0.32px;
+`;
+
+const ModalStatsValueDisplay = styled.div`
+  color: #000;
+  font-size: 28px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 100%;
+  letter-spacing: -0.56px;
+`;
+
+const ModalStatsDisplay = ({ name, value }) => (
+  <ModalStatsDisplayContainer>
+    <ModalStatsNameDisplay>{name}</ModalStatsNameDisplay>
+    <ModalStatsValueDisplay>{value}</ModalStatsValueDisplay>
+  </ModalStatsDisplayContainer>
+);
+
+const GameruleDisplayContainer = styled.div`
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  width: 100%;
+`;
+
+const GameruleNameDisplay = styled.div`
+  color: #000;
+  font-size: 18px;
+  font-family: JetBrains Mono;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 100%;
+  letter-spacing: -0.36px;
+
+  flex: 1 0 0;
+  text-align: left;
+`;
+
+const GameruleValueDisplay = styled.div`
+  color: ${({ $color }) => $color};
+  font-size: 18px;
+  font-family: JetBrains Mono;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 100%;
+  letter-spacing: -0.36px;
+  width: 128px;
+  text-align: left;
+`;
+
+const GameruleDisplay = ({ name, value }) => {
+  return <GameruleDisplayContainer>
+    <GameruleNameDisplay>{name}</GameruleNameDisplay>
+    <GameruleValueDisplay $color={
+      typeof value === 'boolean' ? (value ? '#338EE2' : '#D04038') : '#000'
+    }>{`${value}`}</GameruleValueDisplay>
+  </GameruleDisplayContainer>;
+}
+
 const tempWorldsData = {
   worlds: [
     { uuid: 'c8e62c4f-0882-404f-ba25-abfd4a19e07f', name: 'world' },
@@ -232,6 +386,36 @@ const tempWorldsData = {
     { uuid: 'a4037ad8-76b7-48a7-bfc1-24da5f773c3f', name: 'lobby' }
   ]
 };
+
+const getWorldInfo = async (uuid) => ({
+  "name": tempWorldsData.worlds.find((world) => world.uuid === uuid).name,
+  "loadedChunks": 774,
+  "entities": 207,
+  "player": 1,
+  "gamerule": {
+    "doWardenSpawning": true,
+    "tntExplosionDropDecay": false,
+    "maxCommandChainLength": 65536,
+    "fireDamage": true,
+    "waterSourceConversion": true,
+    "lavaSourceConversion": false,
+    "drowningDamage": true,
+    "forgiveDeadPlayers": true,
+    "maxEntityCramming": true,
+
+    "globalSoundEvents": true,
+    "doFireTick": true,
+    "doVinesSpread": true,
+    "reducedDebugInfo": false,
+    "disableElytraMovementCheck": false,
+    "announceAdvancements": true,
+    "commandBlockOutput": true,
+    "doMobSpawning": true,
+    "disableRaids": false,
+  },
+  size: '20.3 MB',
+  difficulty: 'peaceful'
+});
 
 const Worlds = () => {
   // eslint-disable-next-line no-unused-vars

@@ -37,6 +37,9 @@ const GlobalStyle = styled.createGlobalStyle`
     background: #FFF;
     box-shadow: 0px 0px 14px 0px rgba(0, 0, 0, 0.20);
     padding: 42px;
+
+    max-height: 90vh;
+    overflow-y: scroll;
   }
 
   .swal2-close {
