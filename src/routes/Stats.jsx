@@ -14,7 +14,6 @@ const StatContainer = styled.div`
     'disk tps tps';
   grid-template-columns: repeat(3, 1fr);
   grid-template-rows: repeat(2, 1fr);
-  flex-direction: column;
   gap: 24px;
   flex: 1 0 0;
   filter: drop-shadow(0px 14px 32px rgba(0, 0, 0, 0.1))
@@ -47,7 +46,6 @@ const StatChartHeaderTitle = styled.div`
 const StatChartLabel = styled.div`
   font-weight: 700;
   font-size: 24px;
-  color: #000;
 `;
 
 const StatChartCurrentValue = styled.div`
