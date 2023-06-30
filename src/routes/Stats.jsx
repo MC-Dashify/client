@@ -23,17 +23,6 @@ const StatContainer = styled.div`
   min-width: fit-content;
 `;
 
-// const StatCardsContainer = styled.div`
-//   display: flex;
-//   flex-direction: row;
-//   width: 100%;
-//   gap: 32px;
-//   flex: 1 0 0;
-//   filter: drop-shadow(0px 14px 32px rgba(0, 0, 0, 0.1))
-//     drop-shadow(0px 0px 12px rgba(0, 0, 0, 0.1));
-//   min-width: fit-content;
-// `;
-
 const StatChartBox = styled.div`
   display: flex;
   padding: 18px;
@@ -91,7 +80,7 @@ const StatChartCard = ({
   minY,
   maxY,
   useLegend = false,
-  callback = (item) => addCommasToNumbers(item.raw),
+  callback = (item) => item.raw.toLocaleString(),
   style = {}
 }) => {
   return (
@@ -106,6 +95,7 @@ const StatChartCard = ({
           <StatChartIcon>{icon}</StatChartIcon>
           <StatChartLabel>{label}</StatChartLabel>
         </StatChartHeaderLeft>
+
         <StatChartSummary>{summary}</StatChartSummary>
       </StatChartHeader>
 
@@ -141,7 +131,6 @@ const StatChartCard = ({
 
 const CPUSummaryContainer = styled.div`
   display: flex;
-  flex-direction: row;
   gap: 12px;
   align-items: flex-start;
 `;
@@ -202,7 +191,7 @@ const FractionSummary = ({ value, max }) => (
 
 const stringToMegabytes = (value) => stringToBytes(value) / 1024 ** 2;
 const stringToMegabytesWithCommas = (value) =>
-  addCommasToNumbers(stringToMegabytes(value));
+  stringToMegabytes(value).toLocaleString();
 
 const tempStatsData = {
   jvm: {
