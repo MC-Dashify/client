@@ -52,23 +52,21 @@ const Chart = ({
     };
   }, [chartRef]);
 
-  const legend = useLegend
-    ? {
-        position: 'bottom',
-        color: 'rgba(0, 0, 0, 0.6)',
-        labels: {
-          padding: 20,
-          useBorderRadius: true,
-          borderRadius: 4,
-          boxHeight: 18,
-          boxWidth: 18,
-          font: {
-            size: 18,
-            weight: 700
-          }
-        }
+  const legendOptions = useLegend && {
+    position: 'bottom',
+    color: 'rgba(0, 0, 0, 0.6)',
+    labels: {
+      padding: 20,
+      useBorderRadius: true,
+      borderRadius: 4,
+      boxHeight: 18,
+      boxWidth: 18,
+      font: {
+        size: 18,
+        weight: 700
       }
-    : null;
+    }
+  };
 
   return (
     <ChartWrapper $width={width} $height={height} $flex={flex}>
@@ -86,7 +84,7 @@ const Chart = ({
             }
           },
           plugins: {
-            legend,
+            legend: legendOptions,
             tooltip: {
               caretSize: 8,
               titleFont: { size: 18 },
@@ -102,9 +100,9 @@ const Chart = ({
         }}
         data={{
           labels: labels,
-          datasets: datasets?.map((set, index) => ({
-            ...set,
-            backgroundColor: backgroundColors[index]
+          datasets: datasets?.map((dataset, index) => ({
+            ...dataset,
+            backgroundColor: backgroundColors[index % backgroundColors.length]
           })) ?? [
             {
               data: data,
