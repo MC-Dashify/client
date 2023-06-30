@@ -15,7 +15,7 @@ const StatContainer = styled.div`
   grid-template-columns: repeat(3, 1fr);
   grid-template-rows: repeat(2, 1fr);
   flex-direction: column;
-  gap: 32px;
+  gap: 24px;
   flex: 1 0 0;
   filter: drop-shadow(0px 14px 32px rgba(0, 0, 0, 0.1))
     drop-shadow(0px 0px 12px rgba(0, 0, 0, 0.1));
