@@ -12,8 +12,8 @@ const StatContainer = styled.div`
   grid-template-areas:
     'cpu mem jvm'
     'disk tps tps';
-  grid-template-columns: 1fr 1fr 1fr;
-  grid-template-rows: 1fr 1fr;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(2, 1fr);
   flex-direction: column;
   gap: 32px;
   flex: 1 0 0;
@@ -27,33 +27,21 @@ const StatChartBox = styled.div`
   display: flex;
   padding: 18px;
   flex-direction: column;
-  align-items: flex-start;
   gap: 18px;
-  flex: 1 0 0;
-  align-self: stretch;
   border-radius: 12px;
   background: #fbfbfb;
 `;
 
 const StatChartHeader = styled.div`
   display: flex;
-  flex-direction: row;
   align-items: center;
-  align-self: stretch;
 `;
 
-const StatChartHeaderLeft = styled.div`
+const StatChartHeaderTitle = styled.div`
   display: flex;
-  flex-direction: row;
   gap: 12px;
   align-items: center;
-  align-self: stretch;
   flex: 1;
-`;
-
-const StatChartIcon = styled.div`
-  width: 24px;
-  height: 24px;
 `;
 
 const StatChartLabel = styled.div`
@@ -62,11 +50,9 @@ const StatChartLabel = styled.div`
   color: #000;
 `;
 
-const StatChartSummary = styled.div`
+const StatChartCurrentValue = styled.div`
   display: flex;
-  flex-direction: row;
   gap: 8px;
-  align-items: flex-start;
 `;
 
 const StatChartCard = ({
@@ -76,12 +62,12 @@ const StatChartCard = ({
   chartLabels,
   chartData,
   chartDatasets,
-  summary,
-  minY,
+  currentValue,
+  minY = 0,
   maxY,
   useLegend = false,
   callback = (item) => item.raw.toLocaleString(),
-  style = {}
+  style
 }) => {
   return (
     <StatChartBox
@@ -91,17 +77,17 @@ const StatChartCard = ({
       }}
     >
       <StatChartHeader>
-        <StatChartHeaderLeft>
-          <StatChartIcon>{icon}</StatChartIcon>
+        <StatChartHeaderTitle>
+          {icon}
           <StatChartLabel>{label}</StatChartLabel>
-        </StatChartHeaderLeft>
+        </StatChartHeaderTitle>
 
-        <StatChartSummary>{summary}</StatChartSummary>
+        <StatChartCurrentValue>{currentValue}</StatChartCurrentValue>
       </StatChartHeader>
 
       <Chart
         ChartComponent={Line}
-        labels={chartLabels}
+        labels={chartLabels || ['']}
         datasets={chartDatasets}
         data={chartData}
         width='100%'
@@ -129,65 +115,42 @@ const StatChartCard = ({
   );
 };
 
-const CPUSummaryContainer = styled.div`
+const CurrentValueContainer = styled.div`
   display: flex;
-  gap: 12px;
-  align-items: flex-start;
+  align-items: center;
+  line-height: 100%;
+  font-size: 18px;
+  gap: 8px;
 `;
 
-const CPUCoresDisplay = styled.div`
-  color: #000;
-  font-size: 18px;
-  line-height: 100%;
-  letter-spacing: -0.198px;
+const CurrentValueAdditional = styled.div`
   opacity: 0.4;
+  margin-right: 8px;
 `;
 
-const CPULoadDisplay = styled.div`
-  color: #000;
+const CurrentValueValue = styled.div`
   font-size: 24px;
-  line-height: 100%;
   font-weight: 700;
-  letter-spacing: -0.264px;
 `;
 
-const CPUChartSummary = ({ cpu: { cpuCores, cpuLoad } }) => (
-  <CPUSummaryContainer>
-    <CPUCoresDisplay>{cpuCores} 코어</CPUCoresDisplay>
-    <CPULoadDisplay>{cpuLoad}</CPULoadDisplay>
-  </CPUSummaryContainer>
-);
+const CurrentValue = ({ additional, value, max }) => {
+  return (
+    <CurrentValueContainer>
+      {additional && (
+        <CurrentValueAdditional>{additional}</CurrentValueAdditional>
+      )}
 
-const NumeratorDisplay = styled.div`
-  color: #000;
-  font-size: 24px;
-  line-height: 100%;
-  font-weight: 700;
-  letter-spacing: -0.264px;
-`;
+      <CurrentValueValue>{value}</CurrentValueValue>
 
-const FractionSignDisplay = styled.div`
-  color: #000;
-  font-size: 18px;
-  line-height: 100%;
-  letter-spacing: -0.198px;
-  opacity: 0.4;
-`;
-
-const DenominatorDisplay = styled.div`
-  color: #000;
-  font-size: 18px;
-  line-height: 100%;
-  letter-spacing: -0.198px;
-`;
-
-const FractionSummary = ({ value, max }) => (
-  <>
-    <NumeratorDisplay>{value}</NumeratorDisplay>
-    <FractionSignDisplay>/</FractionSignDisplay>
-    <DenominatorDisplay>{max}</DenominatorDisplay>
-  </>
-);
+      {max && (
+        <>
+          <div style={{ opacity: 0.4 }}>/</div>
+          {max}
+        </>
+      )}
+    </CurrentValueContainer>
+  );
+};
 
 const stringToMegabytes = (value) => stringToBytes(value) / 1024 ** 2;
 const stringToMegabytesWithCommas = (value) =>
@@ -243,82 +206,81 @@ const Stats = () => {
         icon={<ComputerChipIcon />}
         chartLabels={[1]}
         chartData={[cpu.cpuLoad]}
-        summary={<CPUChartSummary cpu={cpu} />}
-        minY={0}
+        currentValue={
+          <CurrentValue
+            additional={`${cpu.cpuCores} 코어`}
+            value={floorDecimal(cpu.cpuLoad, 2)}
+          />
+        }
         maxY={100}
       />
+
       <StatChartCard
         id='mem'
         label='메모리(MB)'
         icon={<ComputerChipIcon />}
         chartLabels={[1]}
         chartData={[stringToMegabytes(mem.usedMem)]}
-        summary={
-          <FractionSummary
+        currentValue={
+          <CurrentValue
             value={stringToMegabytesWithCommas(mem.usedMem)}
             max={stringToMegabytesWithCommas(mem.totalMem)}
           />
         }
-        minY={0}
         maxY={stringToMegabytes(mem.totalMem)}
       />
+
       <StatChartCard
         id='jvm'
         label='JVM 메모리(MB)'
         icon={<ComputerChipIcon />}
         chartLabels={[1]}
         chartData={[stringToMegabytes(jvm.usedMemory)]}
-        summary={
-          <FractionSummary
+        currentValue={
+          <CurrentValue
             value={stringToMegabytesWithCommas(jvm.usedMemory)}
             max={stringToMegabytesWithCommas(jvm.totalMemory)}
           />
         }
-        minY={0}
         maxY={stringToMegabytes(jvm.totalMemory)}
       />
-      {/* </StatCardsContainer>
-    <StatCardsContainer> */}
+
       <StatChartCard
         id='disk'
         label='디스크(MB)'
         icon={<ComputerChipIcon />}
         chartLabels={[1]}
         chartData={[stringToMegabytes(disk.freeSpace)]}
-        summary={
-          <FractionSummary
+        currentValue={
+          <CurrentValue
             value={stringToMegabytesWithCommas(disk.freeSpace)}
             max={stringToMegabytesWithCommas(disk.totalSpace)}
           />
         }
-        minY={0}
         maxY={stringToMegabytes(disk.totalSpace)}
-        style={{
-          flex: '1 0 0'
-        }}
       />
+
       <StatChartCard
         id='tps'
         label='TPS'
         icon={<ComputerChipIcon />}
         chartLabels={[1]}
         chartDatasets={[
-          { data: [tps[0]], label: '1분' },
-          { data: [tps[1]], label: '5분' },
-          { data: [tps[2]], label: '15분' }
+          { data: [tps[0], tps[0], tps[0]], label: '1분' },
+          { data: [tps[1], tps[1], tps[1]], label: '5분' },
+          { data: [tps[2], tps[2], tps[2]], label: '15분' }
         ]}
-        summary={
-          <FractionSummary value={floorDecimal(tps[0], 2)} max={'20.00'} />
+        currentValue={
+          <CurrentValue
+            additional='(평균값)'
+            value={floorDecimal(tps[0], 2)}
+            max={'20.00'}
+          />
         }
-        minY={0}
         maxY={20}
         useLegend={true}
         callback={(item) => floorDecimal(item.raw, 2)}
-        style={{
-          flex: '2 0 0'
-        }}
       />
-      {/* </StatCardsContainer> */}
     </StatContainer>
   );
 };
