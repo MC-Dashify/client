@@ -214,6 +214,34 @@ const ComputerChipIcon = (props) => (
   </svg>
 );
 
+const KickIcon = (props) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width={24}
+    height={24}
+    viewBox="0 0 24 24"
+    fill="none"
+    {...props}
+  >
+    <circle opacity={0.6} cx={10} cy={7} r={3} stroke="currentColor" stroke-width={2} />
+    <path opacity={0.6} fill-rule="evenodd" clip-rule="evenodd" d="M12 15H7C5.89543 15 5 15.8954 5 17V20H12V22H5H3V20V17C3 14.7909 4.79086 13 7 13H12V15Z" fill="currentColor" />
+    <path d="M20 15L15 20M15 15L20 20" stroke="currentColor" stroke-width={2} stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>
+);
+
+const BanIcon = (props) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width={24}
+    height={24}
+    viewBox="0 0 24 24"
+    fill="none"
+  >
+    <circle cx={12} cy={12} r={8} stroke="currentColor" stroke-width={2}/>
+    <path opacity={0.6} d="M7 7L17 17" stroke="currentColor" stroke-width={2} stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>
+);
+
 export {
   ChartIcon,
   ServerIcon,
@@ -222,5 +250,7 @@ export {
   ConsoleIcon,
   TopBottomArrowIcon,
   CogIcon,
-  ComputerChipIcon
+  ComputerChipIcon,
+  KickIcon,
+  BanIcon
 };
