@@ -42,55 +42,65 @@ const Searchbox = styled.input`
   }
 `;
 
-const Searchbar = ({ selectedValue, setSelectedValue, searchValue, setSearchValue, options }) => {
-    return (
-        <SearchbarContainer>
-            <Select
-                styles={{
-                    control: (baseStyles, state) => ({
-                        ...baseStyles,
-                        backgroundColor: 'transparent',
-                        border: 'none',
-                        borderRadius: '12px',
-                        height: '44px',
-                        width: '98px',
-                        boxSizing: 'content-box',
-                        paddingLeft: '10px',
+const Searchbar = ({
+  selectedValue,
+  setSelectedValue,
+  searchValue,
+  setSearchValue,
+  options
+}) => {
+  return (
+    <SearchbarContainer>
+      <Select
+        styles={{
+          control: (baseStyles, state) => ({
+            ...baseStyles,
+            backgroundColor: 'transparent',
+            border: 'none',
+            borderRadius: '12px',
+            height: '44px',
+            width: '98px',
+            boxSizing: 'content-box',
+            paddingLeft: '10px',
 
-                        color: '#000',
-                        textShadow: '0px 0px 16px 0px rgba(0, 0, 0, 0.15)',
-                        fontSize: '16px',
-                        fontWeight: 500,
-                        lineHeight: '100%',
-                        letterSpacing: '-0.176px'
-                    }),
-                    option: (styles, { data, isFocused }) => ({
-                        ...styles,
-                        color: 'black',
-                        backgroundColor: (isFocused) ? '#e7e7e7' : '#f7f7f7',
-                        '&:hover, &:active': {
-                            backgroundColor: '#e7e7e7'
-                        }
-                    }),
-                    menu: (styles) => ({
-                        ...styles,
-                        backgroundColor: '#f7f7f7'
-                    })
-                }}
-                options={options}
-                components={{
-                    IndicatorSeparator: () => null,
-                }}
-                isSearchable={false}
-                value={selectedValue}
-                onChange={(value) => setSelectedValue(value)}
-            />
-            <Separator />
-            <Searchbox placeholder='검색' onChange={(event) => {
-                setSearchValue(event.target.value);
-            }} value={searchValue} />
-        </SearchbarContainer>
-    );
+            color: '#000',
+            textShadow: '0px 0px 16px 0px rgba(0, 0, 0, 0.15)',
+            fontSize: '16px',
+            fontWeight: 500,
+            lineHeight: '100%',
+            letterSpacing: '-0.176px'
+          }),
+          option: (styles, { data, isFocused }) => ({
+            ...styles,
+            color: 'black',
+            backgroundColor: isFocused ? '#e7e7e7' : '#f7f7f7',
+            '&:hover, &:active': {
+              backgroundColor: '#e7e7e7'
+            }
+          }),
+          menu: (styles) => ({
+            ...styles,
+            backgroundColor: '#f7f7f7'
+          })
+        }}
+        options={options}
+        components={{
+          IndicatorSeparator: () => null
+        }}
+        isSearchable={false}
+        value={selectedValue}
+        onChange={(value) => setSelectedValue(value)}
+      />
+      <Separator />
+      <Searchbox
+        placeholder='검색'
+        onChange={(event) => {
+          setSearchValue(event.target.value);
+        }}
+        value={searchValue}
+      />
+    </SearchbarContainer>
+  );
 };
 
 export default Searchbar;

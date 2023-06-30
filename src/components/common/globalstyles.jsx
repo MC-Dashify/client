@@ -34,8 +34,8 @@ const GlobalStyle = styled.createGlobalStyle`
 
   .swal2-modal {
     border-radius: 16px;
-    background: #FFF;
-    box-shadow: 0px 0px 14px 0px rgba(0, 0, 0, 0.20);
+    background: #fff;
+    box-shadow: 0px 0px 14px 0px rgba(0, 0, 0, 0.2);
     padding: 42px;
 
     max-height: 90vh;
@@ -48,7 +48,7 @@ const GlobalStyle = styled.createGlobalStyle`
     opacity: 0.4;
 
     color: #000;
-    
+
     user-select: none;
     -moz-user-select: none;
     -webkit-user-select: none;
@@ -69,7 +69,8 @@ const GlobalStyle = styled.createGlobalStyle`
     }
   }
 
-  .swal2-html-container hr, .swal2-html-container div hr {
+  .swal2-html-container hr,
+  .swal2-html-container div hr {
     border: none;
     background: rgba(0, 0, 0, 0.2);
     height: 1px;

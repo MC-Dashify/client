@@ -1,19 +1,19 @@
-import { useEffect, useRef } from "react";
-import styled from "styled-components";
+import { useEffect, useRef } from 'react';
+import styled from 'styled-components';
 
 const backgroundColors = [
-  "#DC6B65",
-  "#F9C876",
-  "#389287",
-  "#026DB0",
-  "#6C37DD",
-  "#CF56DA",
-  "#7D211C",
-  "#935E06",
-  "#2A6F66",
-  "#014E7E",
-  "#2F136D",
-  "#761C7D",
+  '#DC6B65',
+  '#F9C876',
+  '#389287',
+  '#026DB0',
+  '#6C37DD',
+  '#CF56DA',
+  '#7D211C',
+  '#935E06',
+  '#2A6F66',
+  '#014E7E',
+  '#2F136D',
+  '#761C7D'
 ];
 
 const ChartWrapper = styled.div`
@@ -22,7 +22,18 @@ const ChartWrapper = styled.div`
   ${({ $flex }) => $flex && `flex: ${$flex};`}
 `;
 
-const Chart = ({ ChartComponent, labels, datasets, data, height, width, flex, useLegend = true, scales = {}, tooltipCallbacks }) => {
+const Chart = ({
+  ChartComponent,
+  labels,
+  datasets,
+  data,
+  height,
+  width,
+  flex,
+  useLegend = true,
+  scales = {},
+  tooltipCallbacks
+}) => {
   const chartRef = useRef(null);
 
   useEffect(() => {
@@ -34,17 +45,17 @@ const Chart = ({ ChartComponent, labels, datasets, data, height, width, flex, us
       }
     };
 
-    window.addEventListener("resize", eventCallback);
+    window.addEventListener('resize', eventCallback);
 
     return () => {
-      window.removeEventListener("resize", eventCallback);
+      window.removeEventListener('resize', eventCallback);
     };
   }, [chartRef]);
 
   const legend = useLegend
     ? {
-        position: "bottom",
-        color: "rgba(0, 0, 0, 0.6)",
+        position: 'bottom',
+        color: 'rgba(0, 0, 0, 0.6)',
         labels: {
           padding: 20,
           useBorderRadius: true,
@@ -53,9 +64,9 @@ const Chart = ({ ChartComponent, labels, datasets, data, height, width, flex, us
           boxWidth: 18,
           font: {
             size: 18,
-            weight: 700,
-          },
-        },
+            weight: 700
+          }
+        }
       }
     : null;
 
@@ -67,7 +78,12 @@ const Chart = ({ ChartComponent, labels, datasets, data, height, width, flex, us
           maintainAspectRatio: false,
 
           elements: {
-            arc: { weight: 10000, borderWidth: 0, hoverBorderWidth: 0, hoverOffset: 0 },
+            arc: {
+              weight: 10000,
+              borderWidth: 0,
+              hoverBorderWidth: 0,
+              hoverOffset: 0
+            }
           },
           plugins: {
             legend,
@@ -77,21 +93,24 @@ const Chart = ({ ChartComponent, labels, datasets, data, height, width, flex, us
               padding: { x: 20, y: 16 },
               boxPadding: 6,
               callbacks: tooltipCallbacks
-            },
+            }
           },
           layout: {
-            padding: 20,
+            padding: 20
           },
-          scales,
+          scales
         }}
         data={{
           labels: labels,
-          datasets: datasets?.map((set, index) => ({ ...set, backgroundColor: backgroundColors[index] })) ?? [
+          datasets: datasets?.map((set, index) => ({
+            ...set,
+            backgroundColor: backgroundColors[index]
+          })) ?? [
             {
               data: data,
               backgroundColor: backgroundColors
-            },
-          ],
+            }
+          ]
         }}
       />
     </ChartWrapper>

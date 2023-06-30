@@ -16,20 +16,18 @@ const PlayersListContainer = styled.div`
   flex-direction: column;
 
   gap: 12px;
-`
+`;
 
 const tempPlayerData = {
-  "players": [
-      { uuid: "762dea11-9c45-4b18-95fc-a86aab3b39ee", name: "aroxu" }
-  ]
+  players: [{ uuid: '762dea11-9c45-4b18-95fc-a86aab3b39ee', name: 'aroxu' }]
 };
 
 const getPlayerData = async (uuid) => ({
   ping: 0,
   name: 'aroxu',
-  clientBrandName: "vanilla",
-  avatar: "https://crafatar.com/avatars/762dea11-9c45-4b18-95fc-a86aab3b39ee",
-  uuid: "762dea11-9c45-4b18-95fc-a86aab3b39ee"
+  clientBrandName: 'vanilla',
+  avatar: 'https://crafatar.com/avatars/762dea11-9c45-4b18-95fc-a86aab3b39ee',
+  uuid: '762dea11-9c45-4b18-95fc-a86aab3b39ee'
 });
 
 const PlayerContainer = styled.div`
@@ -53,7 +51,8 @@ const HeadDisplay = styled.div`
   flex-direction: column;
   align-items: flex-start;
   border-radius: 6px;
-  background: url(${({ $src }) => $src}?size=46), lightgray 50% / contain no-repeat;
+  background: url(${({ $src }) => $src}?size=46),
+    lightgray 50% / contain no-repeat;
 `;
 
 const PlayerDataDisplayContainer = styled.div`
@@ -71,7 +70,8 @@ const PlayerDataTopDisplay = styled.div`
   line-height: 100%;
   letter-spacing: -0.28px;
   opacity: 0.6;
-  ${({ $useMonospacedFont }) => $useMonospacedFont && 'font-family: \'JetBrains Mono\';'}
+  ${({ $useMonospacedFont }) =>
+    $useMonospacedFont && "font-family: 'JetBrains Mono';"}
 `;
 
 const PlayerDataBottomDisplay = styled.div`
@@ -82,9 +82,16 @@ const PlayerDataBottomDisplay = styled.div`
   letter-spacing: -0.48px;
 `;
 
-const PlayerDataDisplay = ({ topText, bottomText, extraStyle = 'flex: 1 0 0;', useMonospacedFont = false }) => (
+const PlayerDataDisplay = ({
+  topText,
+  bottomText,
+  extraStyle = 'flex: 1 0 0;',
+  useMonospacedFont = false
+}) => (
   <PlayerDataDisplayContainer $extraStyle={extraStyle}>
-    <PlayerDataTopDisplay $useMonospacedFont={useMonospacedFont}>{topText}</PlayerDataTopDisplay>
+    <PlayerDataTopDisplay $useMonospacedFont={useMonospacedFont}>
+      {topText}
+    </PlayerDataTopDisplay>
     <PlayerDataBottomDisplay>{bottomText}</PlayerDataBottomDisplay>
   </PlayerDataDisplayContainer>
 );
@@ -101,23 +108,24 @@ const PlayerButton = styled.button`
   align-items: flex-start;
   gap: 10px;
   border-radius: 6px;
-  border: 1px solid rgba(216, 65, 58, 0.20);
+  border: 1px solid rgba(216, 65, 58, 0.2);
   background-color: rgba(216, 65, 58, 0);
   cursor: pointer;
 
   svg {
-    color: #D8413A;
+    color: #d8413a;
   }
 
-  &:hover, &:focus-visible {
+  &:hover,
+  &:focus-visible {
     border: 1px solid transparent;
-    background-color: rgba(216, 65, 58, 0.20);
+    background-color: rgba(216, 65, 58, 0.2);
     outline: none;
   }
 
   &:active {
-    border: 1px solid rgba(216, 65, 58, 0.20);
-    background: #D8413A;
+    border: 1px solid rgba(216, 65, 58, 0.2);
+    background: #d8413a;
   }
 
   &:active svg {
@@ -127,7 +135,7 @@ const PlayerButton = styled.button`
 
 const PlayerInfoContainer = ({ uuid, name }) => {
   const [player, setPlayer] = useState(undefined);
-  
+
   useEffect(() => {
     const fetchData = async () => {
       const player = await getPlayerData(uuid);
@@ -136,22 +144,45 @@ const PlayerInfoContainer = ({ uuid, name }) => {
     fetchData();
   }, [uuid]);
 
-  return player ? <PlayerContainer>
-    <HeadDisplay $src={player.avatar} />
-    <PlayerDataDisplay topText={uuid} bottomText={name} useMonospacedFont={true} />
-    <PlayerDataDisplay topText='사용하는 클라이언트' bottomText={player.clientBrandName} extraStyle='width: 360px;' />
-    <PlayerDataDisplay topText='핑(ms)' bottomText={player.ping} extraStyle='width: 140px;' />
-    <ButtonsContainer>
-      <PlayerButton><KickIcon /></PlayerButton>
-      <PlayerButton><BanIcon /></PlayerButton>
-    </ButtonsContainer>
-  </PlayerContainer> : <></>;
+  return player ? (
+    <PlayerContainer>
+      <HeadDisplay $src={player.avatar} />
+      <PlayerDataDisplay
+        topText={uuid}
+        bottomText={name}
+        useMonospacedFont={true}
+      />
+      <PlayerDataDisplay
+        topText='사용하는 클라이언트'
+        bottomText={player.clientBrandName}
+        extraStyle='width: 360px;'
+      />
+      <PlayerDataDisplay
+        topText='핑(ms)'
+        bottomText={player.ping}
+        extraStyle='width: 140px;'
+      />
+      <ButtonsContainer>
+        <PlayerButton>
+          <KickIcon />
+        </PlayerButton>
+        <PlayerButton>
+          <BanIcon />
+        </PlayerButton>
+      </ButtonsContainer>
+    </PlayerContainer>
+  ) : (
+    <></>
+  );
 };
 
 const Players = () => {
   // eslint-disable-next-line no-unused-vars
   const [refreshFn, setRefreshFn] = useOutletContext();
-  const [selectedValue, setSelectedValue] = useState({ value: 'name', label: '이름' });
+  const [selectedValue, setSelectedValue] = useState({
+    value: 'name',
+    label: '이름'
+  });
   const [searchValue, setSearchValue] = useState('');
 
   useEffect(() => {
@@ -160,28 +191,39 @@ const Players = () => {
     setRefreshFn(() => console.log('refreshed'));
   }, [setRefreshFn]);
 
-  return <PlayersContainer>
-    <OverviewDataDisplay label='플레이어 수' value={tempPlayerData.players.length} />
-    <PlayersListContainer>
-      <Searchbar
-        searchValue={searchValue}
-        setSearchValue={setSearchValue}
-        selectedValue={selectedValue}
-        setSelectedValue={setSelectedValue}
-        options={[
-          { value: 'name', label: '이름' },
-          { value: 'uuid', label: 'UUID' },
-        ]}
+  return (
+    <PlayersContainer>
+      <OverviewDataDisplay
+        label='플레이어 수'
+        value={tempPlayerData.players.length}
       />
-      {tempPlayerData.players.filter(player => {
-        if (selectedValue.value === 'name') return player.name.includes(searchValue);
-        if (selectedValue.value === 'uuid') return player.uuid.replace(/-/g, '').includes(searchValue.replace(/-/g, ''));
-        return true;
-      }).map(({ uuid, name }, index) => (
-        <PlayerInfoContainer key={index} uuid={uuid} name={name} />
-      ))}
-    </PlayersListContainer>
-  </PlayersContainer>;
+      <PlayersListContainer>
+        <Searchbar
+          searchValue={searchValue}
+          setSearchValue={setSearchValue}
+          selectedValue={selectedValue}
+          setSelectedValue={setSelectedValue}
+          options={[
+            { value: 'name', label: '이름' },
+            { value: 'uuid', label: 'UUID' }
+          ]}
+        />
+        {tempPlayerData.players
+          .filter((player) => {
+            if (selectedValue.value === 'name')
+              return player.name.includes(searchValue);
+            if (selectedValue.value === 'uuid')
+              return player.uuid
+                .replace(/-/g, '')
+                .includes(searchValue.replace(/-/g, ''));
+            return true;
+          })
+          .map(({ uuid, name }, index) => (
+            <PlayerInfoContainer key={index} uuid={uuid} name={name} />
+          ))}
+      </PlayersListContainer>
+    </PlayersContainer>
+  );
 };
 
 export default Players;

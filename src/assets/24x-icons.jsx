@@ -184,61 +184,109 @@ const ComputerChipIcon = (props) => (
       stroke='currentColor'
       strokeWidth={2}
     />
+    <rect x={8} y={3} width={3} height={4} rx={1} fill='currentColor' />
+    <rect x={8} y={17} width={3} height={4} rx={1} fill='currentColor' />
+    <rect x={13} y={3} width={3} height={4} rx={1} fill='currentColor' />
+    <rect x={13} y={17} width={3} height={4} rx={1} fill='currentColor' />
     <rect
-      x={8} y={3} width={3} height={4} rx={1} fill='currentColor'
+      x={21}
+      y={8}
+      width={3}
+      height={4}
+      rx={1}
+      transform='rotate(90 21 8)'
+      fill='currentColor'
     />
     <rect
-      x={8} y={17} width={3} height={4} rx={1} fill='currentColor'
+      x={7}
+      y={8}
+      width={3}
+      height={4}
+      rx={1}
+      transform='rotate(90 7 8)'
+      fill='currentColor'
     />
     <rect
-      x={13} y={3} width={3} height={4} rx={1} fill='currentColor'
+      x={21}
+      y={13}
+      width={3}
+      height={4}
+      rx={1}
+      transform='rotate(90 21 13)'
+      fill='currentColor'
     />
     <rect
-      x={13} y={17} width={3} height={4} rx={1} fill='currentColor'
+      x={7}
+      y={13}
+      width={3}
+      height={4}
+      rx={1}
+      transform='rotate(90 7 13)'
+      fill='currentColor'
     />
     <rect
-      x={21} y={8} width={3} height={4} rx={1} transform='rotate(90 21 8)' fill='currentColor'
-    />
-    <rect
-      x={7} y={8} width={3} height={4} rx={1} transform='rotate(90 7 8)' fill='currentColor'
-    />
-    <rect
-      x={21} y={13} width={3} height={4} rx={1} transform='rotate(90 21 13)' fill='currentColor'
-    />
-    <rect
-      x={7} y={13} width={3} height={4} rx={1} transform='rotate(90 7 13)' fill='currentColor'
-    />
-    <rect
-      opacity={0.4} x={9} y={9} width={6} height={6} rx={1} fill='currentColor'
+      opacity={0.4}
+      x={9}
+      y={9}
+      width={6}
+      height={6}
+      rx={1}
+      fill='currentColor'
     />
   </svg>
 );
 
 const KickIcon = (props) => (
   <svg
-    xmlns="http://www.w3.org/2000/svg"
+    xmlns='http://www.w3.org/2000/svg'
     width={24}
     height={24}
-    viewBox="0 0 24 24"
-    fill="none"
+    viewBox='0 0 24 24'
+    fill='none'
     {...props}
   >
-    <circle opacity={0.6} cx={10} cy={7} r={3} stroke="currentColor" stroke-width={2} />
-    <path opacity={0.6} fill-rule="evenodd" clip-rule="evenodd" d="M12 15H7C5.89543 15 5 15.8954 5 17V20H12V22H5H3V20V17C3 14.7909 4.79086 13 7 13H12V15Z" fill="currentColor" />
-    <path d="M20 15L15 20M15 15L20 20" stroke="currentColor" stroke-width={2} stroke-linecap="round" stroke-linejoin="round"/>
+    <circle
+      opacity={0.6}
+      cx={10}
+      cy={7}
+      r={3}
+      stroke='currentColor'
+      stroke-width={2}
+    />
+    <path
+      opacity={0.6}
+      fill-rule='evenodd'
+      clip-rule='evenodd'
+      d='M12 15H7C5.89543 15 5 15.8954 5 17V20H12V22H5H3V20V17C3 14.7909 4.79086 13 7 13H12V15Z'
+      fill='currentColor'
+    />
+    <path
+      d='M20 15L15 20M15 15L20 20'
+      stroke='currentColor'
+      stroke-width={2}
+      stroke-linecap='round'
+      stroke-linejoin='round'
+    />
   </svg>
 );
 
 const BanIcon = (props) => (
   <svg
-    xmlns="http://www.w3.org/2000/svg"
+    xmlns='http://www.w3.org/2000/svg'
     width={24}
     height={24}
-    viewBox="0 0 24 24"
-    fill="none"
+    viewBox='0 0 24 24'
+    fill='none'
   >
-    <circle cx={12} cy={12} r={8} stroke="currentColor" stroke-width={2}/>
-    <path opacity={0.6} d="M7 7L17 17" stroke="currentColor" stroke-width={2} stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx={12} cy={12} r={8} stroke='currentColor' stroke-width={2} />
+    <path
+      opacity={0.6}
+      d='M7 7L17 17'
+      stroke='currentColor'
+      stroke-width={2}
+      stroke-linecap='round'
+      stroke-linejoin='round'
+    />
   </svg>
 );
 

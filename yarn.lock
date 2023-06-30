@@ -8182,7 +8182,7 @@ react-refresh@^0.14.0:
   resolved "https://registry.yarnpkg.com/react-refresh/-/react-refresh-0.14.0.tgz#4e02825378a5f227079554d4284889354e5f553e"
   integrity sha512-wViHqhAd8OHeLS/IRMJjTSDHF3U9eWi62F/MledQGPdJGDhodXJ9PBLNGr6WWL7qlH12Mt3TyTpbS+hGXMjCzQ==
 
-react-router-dom@^6.13.0:
+react-router-dom@^6.14.0:
   version "6.14.0"
   resolved "https://registry.yarnpkg.com/react-router-dom/-/react-router-dom-6.14.0.tgz#7ce6c3f73549e4d40216ba150253d3bf30812b33"
   integrity sha512-YEwlApKwzMMMbGbhh+Q7MsloTldcwMgHxUY/1g0uA62+B1hZo2jsybCWIDCL8zvIDB1FA0pBKY9chHbZHt+2dQ==
@@ -8278,7 +8278,7 @@ react-syntax-highlighter@^15.5.0:
     prismjs "^1.27.0"
     refractor "^3.6.0"
 
-react-tooltip@^5.15.0:
+react-tooltip@^5.16.1:
   version "5.16.1"
   resolved "https://registry.yarnpkg.com/react-tooltip/-/react-tooltip-5.16.1.tgz#dafb42170c50d93eaa06e26581ba8e6f7ceb2c48"
   integrity sha512-z3IKJppX4llW8wQLQB3o5qUutVul79HVXI+Ncjf/5FMHbniCYPnxS1oCLpOhOEG9lV2QZRrQe9+l/pLEPOrrXA==
@@ -9136,7 +9136,7 @@ style-search@^0.1.0:
   resolved "https://registry.yarnpkg.com/style-search/-/style-search-0.1.0.tgz#7958c793e47e32e07d2b5cafe5c0bf8e12e77902"
   integrity sha512-Dj1Okke1C3uKKwQcetra4jSuk0DqbzbYtXipzFlFMZtowbF1x7BKJwB9AayVMyFARvU8EDrZdcax4At/452cAg==
 
-styled-components@^6.0.0-rc.3:
+styled-components@^6.0.1:
   version "6.0.1"
   resolved "https://registry.yarnpkg.com/styled-components/-/styled-components-6.0.1.tgz#f4db3195e5e510ff3cd0909b1a7b103f4440cbbc"
   integrity sha512-6VAlf5A9KZJOnX54becRCLnBFSfeqP+q3raTCdPDPFg4HOy7MNlnWFqAq3sHlQVDdZh5jcsDwK06vTU3NMO6yQ==
@@ -9201,7 +9201,7 @@ stylelint-prettier@^3.0.0:
   dependencies:
     prettier-linter-helpers "^1.0.0"
 
-stylelint@^15.8.0:
+stylelint@^15.9.0:
   version "15.9.0"
   resolved "https://registry.yarnpkg.com/stylelint/-/stylelint-15.9.0.tgz#f5522fac58f806b59ebddbca360ed470dc5b419c"
   integrity sha512-sXtAZi64CllWr6A+8ymDWnlIaYwuAa7XRmGnJxLQXFNnLjd3Izm4HAD+loKVaZ7cpK6SLxhAUX1lwPJKGCn0mg==

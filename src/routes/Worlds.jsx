@@ -38,9 +38,9 @@ const WorldContainer = styled.button`
   transition: background-color 0.2s ease-in;
 
   cursor: pointer;
-  
+
   &:hover {
-    background-color: rgba(0, 0, 0, 0.05) ;
+    background-color: rgba(0, 0, 0, 0.05);
   }
 `;
 
@@ -62,16 +62,16 @@ const NameDisplay = styled.div`
 `;
 
 const WorldInfoContainer = ({ uuid, name }) => {
-  return <WorldContainer onClick={() => {
-    
-    showModal(
-      <WorldInfoModal uuid={uuid} name={name} />,
-      '62.5rem'
-    );
-  }}>
-    <UIDDisplay>{uuid}</UIDDisplay>
-    <NameDisplay>{name}</NameDisplay>
-  </WorldContainer>;
+  return (
+    <WorldContainer
+      onClick={() => {
+        showModal(<WorldInfoModal uuid={uuid} name={name} />, '62.5rem');
+      }}
+    >
+      <UIDDisplay>{uuid}</UIDDisplay>
+      <NameDisplay>{name}</NameDisplay>
+    </WorldContainer>
+  );
 };
 
 const ModalContainer = styled.div`
@@ -87,7 +87,7 @@ const ModalTopContainer = styled.div`
   padding: 0px 0px 10px 0px;
   align-items: center;
   align-self: stretch;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.20);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.2);
   height: 34px;
 `;
 
@@ -118,7 +118,7 @@ const ModalStatsContainer = styled.div`
   align-self: stretch;
 
   border-radius: 24px;
-  background: #FDFDFD;
+  background: #fdfdfd;
   box-shadow: 0px 0px 24px 0px rgba(0, 0, 0, 0.05) inset;
 
   width: 100%;
@@ -151,7 +151,7 @@ const WorldInfoModal = ({ uuid, name }) => {
   const [world, setWorld] = useState(undefined);
   const [rightGamerules, setRightGamerules] = useState([]);
   const [leftGamerules, setLeftGamerules] = useState([]);
-  
+
   useEffect(() => {
     const fetchData = async () => {
       const world = await getWorldInfo(uuid);
@@ -172,34 +172,57 @@ const WorldInfoModal = ({ uuid, name }) => {
   return (
     <ModalContainer>
       <ModalTopContainer>
-        <UIDDisplay style={{ opacity: 0.4, lineHeight: '14px' }}>{uuid}</UIDDisplay>
+        <UIDDisplay style={{ opacity: 0.4, lineHeight: '14px' }}>
+          {uuid}
+        </UIDDisplay>
       </ModalTopContainer>
       <WorldNameDisplay>{name}</WorldNameDisplay>
-      {(world ? <ModalBodyContainer>
-        <ModalHeading>상태</ModalHeading>
-        <ModalStatsContainer>
-          <ModalStatsDisplay name='크기' value={world.size} />
-          <ModalStatsDisplay name='엔티티 개수' value={world.entities} />
-          <ModalStatsDisplay name='플레이어 수' value={world.player} />
-          <ModalStatsDisplay name='불러운 청크 수' value={world.loadedChunks} />
-        </ModalStatsContainer>
-        <ModalHeading>설정</ModalHeading>
-        <ModalStatsContainer>
-          <ModalStatsDisplay name='난이도' value={world.difficulty} />
-        </ModalStatsContainer>
-        <ModalHeading>게임규칙</ModalHeading>
-        <ModalGamerulesContainer>
-          <ModalGamerulesInnerContainer>
-            {leftGamerules.map((gamerule, index) => <GameruleDisplay key={index} name={gamerule} value={world.gamerule[gamerule]} />)}
-          </ModalGamerulesInnerContainer>
-          <ModalGamerulesInnerContainer $noFlex>
-            {leftGamerules.map((_, index) => <ModalGamerulesSeparator key={index} />)}
-          </ModalGamerulesInnerContainer>
-          <ModalGamerulesInnerContainer>
-            {rightGamerules.map((gamerule, index) => <GameruleDisplay key={index} name={gamerule} value={world.gamerule[gamerule]} />)}
-          </ModalGamerulesInnerContainer>
-        </ModalGamerulesContainer>
-      </ModalBodyContainer> : <WorldNameDisplay>월드 정보를 불러오지 못했습니다</WorldNameDisplay>)}
+      {world ? (
+        <ModalBodyContainer>
+          <ModalHeading>상태</ModalHeading>
+          <ModalStatsContainer>
+            <ModalStatsDisplay name='크기' value={world.size} />
+            <ModalStatsDisplay name='엔티티 개수' value={world.entities} />
+            <ModalStatsDisplay name='플레이어 수' value={world.player} />
+            <ModalStatsDisplay
+              name='불러운 청크 수'
+              value={world.loadedChunks}
+            />
+          </ModalStatsContainer>
+          <ModalHeading>설정</ModalHeading>
+          <ModalStatsContainer>
+            <ModalStatsDisplay name='난이도' value={world.difficulty} />
+          </ModalStatsContainer>
+          <ModalHeading>게임규칙</ModalHeading>
+          <ModalGamerulesContainer>
+            <ModalGamerulesInnerContainer>
+              {leftGamerules.map((gamerule, index) => (
+                <GameruleDisplay
+                  key={index}
+                  name={gamerule}
+                  value={world.gamerule[gamerule]}
+                />
+              ))}
+            </ModalGamerulesInnerContainer>
+            <ModalGamerulesInnerContainer $noFlex>
+              {leftGamerules.map((_, index) => (
+                <ModalGamerulesSeparator key={index} />
+              ))}
+            </ModalGamerulesInnerContainer>
+            <ModalGamerulesInnerContainer>
+              {rightGamerules.map((gamerule, index) => (
+                <GameruleDisplay
+                  key={index}
+                  name={gamerule}
+                  value={world.gamerule[gamerule]}
+                />
+              ))}
+            </ModalGamerulesInnerContainer>
+          </ModalGamerulesContainer>
+        </ModalBodyContainer>
+      ) : (
+        <WorldNameDisplay>월드 정보를 불러오지 못했습니다</WorldNameDisplay>
+      )}
     </ModalContainer>
   );
 };
@@ -227,11 +250,13 @@ const ModalHeadingSeparator = styled.div`
 `;
 
 const ModalHeading = ({ children }) => {
-  return <ModalHeadingContainer>
-    <ModalHeadingTitle>{children}</ModalHeadingTitle>
-    <ModalHeadingSeparator />
-  </ModalHeadingContainer>;
-}
+  return (
+    <ModalHeadingContainer>
+      <ModalHeadingTitle>{children}</ModalHeadingTitle>
+      <ModalHeadingSeparator />
+    </ModalHeadingContainer>
+  );
+};
 
 const ModalStatsDisplayContainer = styled.div`
   display: flex;
@@ -299,13 +324,17 @@ const GameruleValueDisplay = styled.div`
 `;
 
 const GameruleDisplay = ({ name, value }) => {
-  return <GameruleDisplayContainer>
-    <GameruleNameDisplay>{name}</GameruleNameDisplay>
-    <GameruleValueDisplay $color={
-      typeof value === 'boolean' ? (value ? '#338EE2' : '#D04038') : '#000'
-    }>{`${value}`}</GameruleValueDisplay>
-  </GameruleDisplayContainer>;
-}
+  return (
+    <GameruleDisplayContainer>
+      <GameruleNameDisplay>{name}</GameruleNameDisplay>
+      <GameruleValueDisplay
+        $color={
+          typeof value === 'boolean' ? (value ? '#338EE2' : '#D04038') : '#000'
+        }
+      >{`${value}`}</GameruleValueDisplay>
+    </GameruleDisplayContainer>
+  );
+};
 
 const tempWorldsData = {
   worlds: [
@@ -317,30 +346,30 @@ const tempWorldsData = {
 };
 
 const getWorldInfo = async (uuid) => ({
-  "name": tempWorldsData.worlds.find((world) => world.uuid === uuid).name,
-  "loadedChunks": 774,
-  "entities": 207,
-  "player": 1,
-  "gamerule": {
-    "doWardenSpawning": true,
-    "tntExplosionDropDecay": false,
-    "maxCommandChainLength": 65536,
-    "fireDamage": true,
-    "waterSourceConversion": true,
-    "lavaSourceConversion": false,
-    "drowningDamage": true,
-    "forgiveDeadPlayers": true,
-    "maxEntityCramming": true,
+  name: tempWorldsData.worlds.find((world) => world.uuid === uuid).name,
+  loadedChunks: 774,
+  entities: 207,
+  player: 1,
+  gamerule: {
+    doWardenSpawning: true,
+    tntExplosionDropDecay: false,
+    maxCommandChainLength: 65536,
+    fireDamage: true,
+    waterSourceConversion: true,
+    lavaSourceConversion: false,
+    drowningDamage: true,
+    forgiveDeadPlayers: true,
+    maxEntityCramming: true,
 
-    "globalSoundEvents": true,
-    "doFireTick": true,
-    "doVinesSpread": true,
-    "reducedDebugInfo": false,
-    "disableElytraMovementCheck": false,
-    "announceAdvancements": true,
-    "commandBlockOutput": true,
-    "doMobSpawning": true,
-    "disableRaids": false,
+    globalSoundEvents: true,
+    doFireTick: true,
+    doVinesSpread: true,
+    reducedDebugInfo: false,
+    disableElytraMovementCheck: false,
+    announceAdvancements: true,
+    commandBlockOutput: true,
+    doMobSpawning: true,
+    disableRaids: false
   },
   size: '20.3 MB',
   difficulty: 'peaceful'
@@ -349,7 +378,10 @@ const getWorldInfo = async (uuid) => ({
 const Worlds = () => {
   // eslint-disable-next-line no-unused-vars
   const [refreshFn, setRefreshFn] = useOutletContext();
-  const [selectedFilter, setSelectedFilter] = useState({ value: 'name', label: '이름' });
+  const [selectedFilter, setSelectedFilter] = useState({
+    value: 'name',
+    label: '이름'
+  });
   const [searchValue, setSearchValue] = useState('');
 
   useEffect(() => {
@@ -361,10 +393,12 @@ const Worlds = () => {
   return (
     <WorldsContainer>
       <OverviewContainer>
-        <OverviewDataDisplay label='세계 개수' value={tempWorldsData.worlds.length} />
+        <OverviewDataDisplay
+          label='세계 개수'
+          value={tempWorldsData.worlds.length}
+        />
       </OverviewContainer>
       <WorldsListContainer>
-        
         <Searchbar
           selectedValue={selectedFilter}
           setSelectedValue={setSelectedFilter}
@@ -372,16 +406,22 @@ const Worlds = () => {
           setSearchValue={setSearchValue}
           options={[
             { value: 'name', label: '이름' },
-            { value: 'uuid', label: 'UUID' },
+            { value: 'uuid', label: 'UUID' }
           ]}
         />
-        {tempWorldsData.worlds.filter(world => {
-          if (selectedFilter.value === 'name') return world.name.includes(searchValue);
-          if (selectedFilter.value === 'uuid') return world.uuid.replace(/-/g, '').includes(searchValue.replace(/-/g, ''));
-          return true;
-        }).map(({ uuid, name }, index) => (
-          <WorldInfoContainer key={index} uuid={uuid} name={name} />
-        ))}
+        {tempWorldsData.worlds
+          .filter((world) => {
+            if (selectedFilter.value === 'name')
+              return world.name.includes(searchValue);
+            if (selectedFilter.value === 'uuid')
+              return world.uuid
+                .replace(/-/g, '')
+                .includes(searchValue.replace(/-/g, ''));
+            return true;
+          })
+          .map(({ uuid, name }, index) => (
+            <WorldInfoContainer key={index} uuid={uuid} name={name} />
+          ))}
       </WorldsListContainer>
     </WorldsContainer>
   );

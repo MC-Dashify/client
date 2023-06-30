@@ -23,12 +23,12 @@ const OverviewDataValueDisplay = styled.div`
 `;
 
 const OverviewDataDisplay = ({ label, value }) => {
-    return (
-      <OverviewDataContainer>
-        <OverviewDataLabel>{label}</OverviewDataLabel>
-        <OverviewDataValueDisplay>{value}</OverviewDataValueDisplay>
-      </OverviewDataContainer>
-    );
+  return (
+    <OverviewDataContainer>
+      <OverviewDataLabel>{label}</OverviewDataLabel>
+      <OverviewDataValueDisplay>{value}</OverviewDataValueDisplay>
+    </OverviewDataContainer>
+  );
 };
 
 export default OverviewDataDisplay;
