@@ -5,7 +5,7 @@ import { ComputerChipIcon } from '../assets/24x-icons';
 import Chart from '../components/common/Chart';
 import { Line } from 'react-chartjs-2';
 import { stringToBytes } from '../utils/convert';
-import { addCommasToNumbers, floorDecimal } from '../utils/numbers';
+import { floorDecimal } from '../utils/numbers';
 
 const StatContainer = styled.div`
   display: grid;
