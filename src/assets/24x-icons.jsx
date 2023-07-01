@@ -241,31 +241,30 @@ const KickIcon = (props) => (
     xmlns='http://www.w3.org/2000/svg'
     width={24}
     height={24}
-    viewBox='0 0 24 24'
     fill='none'
     {...props}
   >
     <circle
-      opacity={0.6}
       cx={10}
       cy={7}
       r={3}
       stroke='currentColor'
-      stroke-width={2}
-    />
-    <path
+      strokeWidth={2}
       opacity={0.6}
-      fill-rule='evenodd'
-      clip-rule='evenodd'
-      d='M12 15H7C5.89543 15 5 15.8954 5 17V20H12V22H5H3V20V17C3 14.7909 4.79086 13 7 13H12V15Z'
-      fill='currentColor'
     />
     <path
-      d='M20 15L15 20M15 15L20 20'
+      fill='currentColor'
+      fillRule='evenodd'
+      d='M12 15H7a2 2 0 0 0-2 2v3h7v2H3v-5a4 4 0 0 1 4-4h5v2Z'
+      clipRule='evenodd'
+      opacity={0.6}
+    />
+    <path
       stroke='currentColor'
-      stroke-width={2}
-      stroke-linecap='round'
-      stroke-linejoin='round'
+      strokeLinecap='round'
+      strokeLinejoin='round'
+      strokeWidth={2}
+      d='m20 15-5 5m0-5 5 5'
     />
   </svg>
 );
@@ -275,17 +274,17 @@ const BanIcon = (props) => (
     xmlns='http://www.w3.org/2000/svg'
     width={24}
     height={24}
-    viewBox='0 0 24 24'
     fill='none'
+    {...props}
   >
-    <circle cx={12} cy={12} r={8} stroke='currentColor' stroke-width={2} />
+    <circle cx={12} cy={12} r={8} stroke='currentColor' strokeWidth={2} />
     <path
-      opacity={0.6}
-      d='M7 7L17 17'
       stroke='currentColor'
-      stroke-width={2}
-      stroke-linecap='round'
-      stroke-linejoin='round'
+      strokeLinecap='round'
+      strokeLinejoin='round'
+      strokeWidth={2}
+      d='m7 7 10 10'
+      opacity={0.6}
     />
   </svg>
 );
