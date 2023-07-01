@@ -1,6 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import {
+  createBrowserRouter,
+  RouterProvider,
+  createRoutesFromElements,
+  Route
+} from 'react-router-dom';
 import { Tooltip as ReactTooltip } from 'react-tooltip';
 import { toast, Toaster } from 'react-hot-toast';
 import {
@@ -57,26 +62,26 @@ const updateSW = registerSW({
   }
 });
 
-const router = createBrowserRouter([
-  {
-    path: '/',
-    element: <Root />,
-    errorElement: <ErrorPage />
-  },
-  {
-    path: '/dashboard',
-    element: <DashboardLayout />,
-    children: [
-      { index: true, element: <Overview /> },
-      { path: 'stats', element: <Stats /> },
-      { path: 'world', element: <Worlds /> },
-      { path: 'player', element: <Players /> },
-      { path: 'traffic', element: <Traffic /> },
-      { path: 'console', element: <Console /> }
-    ],
-    errorElement: <ErrorPage />
-  }
-]);
+const router = createBrowserRouter(
+  createRoutesFromElements(
+    <>
+      <Route path='/' element={<Root />} errorElement={<ErrorPage />} />
+
+      <Route path='/dashboard' element={<DashboardLayout />}>
+        <Route errorElement={<ErrorPage />}>
+          <Route index element={<Overview />} />
+          <Route path='stats' element={<Stats />} />
+          <Route path='world' element={<Worlds />} />
+          <Route path='player' element={<Players />} />
+          <Route path='traffic' element={<Traffic />} />
+          <Route path='console' element={<Console />} />
+        </Route>
+      </Route>
+
+      {/* <Route path='/settings' /> */}
+    </>
+  )
+);
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
