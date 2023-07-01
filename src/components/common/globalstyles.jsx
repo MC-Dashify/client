@@ -50,8 +50,6 @@ const GlobalStyle = styled.createGlobalStyle`
     color: #000;
 
     user-select: none;
-    -moz-user-select: none;
-    -webkit-user-select: none;
 
     position: absolute;
     transform: translateX(-46px) translateY(46px) !important;
