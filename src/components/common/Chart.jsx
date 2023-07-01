@@ -1,6 +1,10 @@
 import { useRef } from 'react';
 import styled from 'styled-components';
 
+// https://github.com/jtblin/angular-chart.js/issues/614#issuecomment-509649618
+// 차트가 Flex 또는 Grid 안에 있을 경우 사이즈 계산이 제대로 되지 않는 문제가 있습니다.
+// Chart를 감싸는 relative div가 있는 것과 canvas의 width가 100%인 것도 위 문제 때문입니다.
+
 const backgroundColors = [
   '#DC6B65',
   '#F9C876',
