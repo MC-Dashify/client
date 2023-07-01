@@ -197,7 +197,6 @@ const Stats = () => {
 
   return (
     <StatContainer>
-      {/* <StatCardsContainer> */}
       <StatChartCard
         id='cpu'
         label='CPU(%)'

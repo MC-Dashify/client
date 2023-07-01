@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { Route, BrowserRouter, Routes } from 'react-router-dom';
+import { BrowserRouter } from 'react-router-dom';
 import { Tooltip as ReactTooltip } from 'react-tooltip';
 import { toast, Toaster } from 'react-hot-toast';
 import {
@@ -16,16 +16,7 @@ import {
 } from 'chart.js';
 import { registerSW } from 'virtual:pwa-register';
 
-import Root from './routes/Root';
-import ErrorPage from './routes/ErrorPage';
-import DashboardLayout from './routes/DashboardLayout';
-import Overview from './routes/Overview';
-import Stats from './routes/Stats';
-import Worlds from './routes/Worlds';
-import Players from './routes/Players';
-import Traffic from './routes/Traffic';
-import Console from './routes/Console';
-import Settings from './routes/Settings';
+import App from './App';
 
 import AppData from './storage/data';
 import GlobalStyle, {
@@ -68,22 +59,7 @@ root.render(
     <GlobalStyle />
 
     <BrowserRouter>
-      <Routes>
-        <Route path='/' element={<Root />} errorElement={<ErrorPage />} />
-
-        <Route path='/dashboard' element={<DashboardLayout />}>
-          <Route errorElement={<ErrorPage />}>
-            <Route index element={<Overview />} />
-            <Route path='stats' element={<Stats />} />
-            <Route path='world' element={<Worlds />} />
-            <Route path='player' element={<Players />} />
-            <Route path='traffic' element={<Traffic />} />
-            <Route path='console' element={<Console />} />
-          </Route>
-        </Route>
-
-        <Route path='/settings' element={<Settings />} />
-      </Routes>
+      <App />
     </BrowserRouter>
 
     <ReactTooltip id='dashify__tooltip' place='bottom' />
