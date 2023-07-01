@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { Tooltip as ReactTooltip } from 'react-tooltip';
+import { toast, Toaster } from 'react-hot-toast';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -30,7 +31,6 @@ import GlobalStyle, {
   defaultFontFamily
 } from './components/common/globalstyles';
 import './styles/font-settings.css';
-import Swal from 'sweetalert2';
 
 ChartJS.register(
   ArcElement,
@@ -50,22 +50,10 @@ AppData.set('etc.version', VERSION);
 
 const updateSW = registerSW({
   onOfflineReady() {
-    const Toast = Swal.mixin({
-      toast: true,
-      position: 'bottom',
-      width: '250',
-      showConfirmButton: false,
-      iconColor: 'white',
-      timer: 2000,
-      html: '<span style="color:#ffffff">오프라인 준비 완료</span>',
-      grow: 'row',
-      timerProgressBar: true,
-      background: '#3B86F8'
+    toast('네트워크 연결이 끊겨 오프라인 모드 준비를 완료했습니다.', {
+      id: 'offline-ready',
+      duration: 4000
     });
-    Toast.fire({
-      icon: 'success'
-    });
-    console.log('Ready for offline mode.');
   }
 });
 
@@ -95,8 +83,11 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <GlobalStyle />
+
     <RouterProvider router={router} />
+
     <ReactTooltip id='dashify__tooltip' place='bottom' />
+    <Toaster position='bottom-center' />
   </React.StrictMode>
 );
 

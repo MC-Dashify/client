@@ -2,50 +2,29 @@ import { useRouteError } from 'react-router';
 
 import SyntaxHighlighter from 'react-syntax-highlighter';
 import { docco } from 'react-syntax-highlighter/dist/esm/styles/hljs';
-
-import Swal from 'sweetalert2';
-
 import Button from '../components/common/Button';
+import { toast } from 'react-hot-toast';
 
 const ErrorPage = () => {
   const error = useRouteError();
   const errorText = `${error.stack}`.replace(/\\n/g, '\n');
 
-  const Toast = Swal.mixin({
-    toast: true,
-    position: 'bottom',
-    width: '300',
-    showConfirmButton: false,
-    iconColor: 'white',
-    timer: 2000,
-    grow: 'row',
-    timerProgressBar: true
-  });
+  const copyToClipboard = async () => {
+    const { clipboard } = navigator;
 
-  const copyToClipboard = () => {
-    if (typeof navigator.clipboard == 'undefined') {
-      Toast.fire({
-        icon: 'error',
-        html: '<span style="color:#ffffff">HTTPS 연결이 아니므로 복사할 수 없습니다.</span>',
-        background: '#ff3333'
-      });
-    } else {
-      navigator.clipboard
-        .writeText(errorText)
-        .then(() => {
-          Toast.fire({
-            icon: 'success',
-            html: '<span style="color:#ffffff">복사되었습니다</span>',
-            background: '#3B86F8'
-          });
-        })
-        .catch((e) => {
-          Toast.fire({
-            icon: 'error',
-            html: '<span style="color:#ffffff">복사에 실패하였습니다.</span>',
-            background: '#ff3333'
-          });
-        });
+    if (typeof clipboard == 'undefined') {
+      toast.error(
+        '복사에 실패했습니다. 브라우저가 복사 기능을 지원하지 않거나, 애플리케이션이 HTTPS로 연결되지 않았습니다.',
+        { id: 'clipboard' }
+      );
+      return;
+    }
+
+    try {
+      await clipboard.writeText(errorText);
+      toast.success('복사되었습니다.', { id: 'clipboard' });
+    } catch (e) {
+      toast.error('복사에 실패했습니다.', { id: 'clipboard' });
     }
   };
   return (
