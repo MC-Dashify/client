@@ -55,10 +55,13 @@ AppData.set('etc.version', VERSION);
 
 const updateSW = registerSW({
   onOfflineReady() {
-    toast('네트워크 연결이 끊겨 오프라인 모드 준비를 완료했습니다.', {
-      id: 'offline-ready',
-      duration: 4000
-    });
+    toast(
+      '오프라인 준비를 완료했습니다. 이제 오프라인 상태에서도 애플리케이션을 사용할 수 있습니다.',
+      {
+        id: 'offline-ready',
+        duration: 4000
+      }
+    );
   }
 });
 
@@ -78,7 +81,7 @@ const router = createBrowserRouter(
         </Route>
       </Route>
 
-      {/* <Route path='/settings' /> */}
+      <Route path='/settings' />
     </>
   )
 );
