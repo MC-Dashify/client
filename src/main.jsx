@@ -1,11 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import {
-  createBrowserRouter,
-  RouterProvider,
-  createRoutesFromElements,
-  Route
-} from 'react-router-dom';
+import { Route, BrowserRouter, Routes } from 'react-router-dom';
 import { Tooltip as ReactTooltip } from 'react-tooltip';
 import { toast, Toaster } from 'react-hot-toast';
 import {
@@ -30,6 +25,7 @@ import Worlds from './routes/Worlds';
 import Players from './routes/Players';
 import Traffic from './routes/Traffic';
 import Console from './routes/Console';
+import Settings from './routes/Settings';
 
 import AppData from './storage/data';
 import GlobalStyle, {
@@ -65,34 +61,30 @@ const updateSW = registerSW({
   }
 });
 
-const router = createBrowserRouter(
-  createRoutesFromElements(
-    <>
-      <Route path='/' element={<Root />} errorElement={<ErrorPage />} />
-
-      <Route path='/dashboard' element={<DashboardLayout />}>
-        <Route errorElement={<ErrorPage />}>
-          <Route index element={<Overview />} />
-          <Route path='stats' element={<Stats />} />
-          <Route path='world' element={<Worlds />} />
-          <Route path='player' element={<Players />} />
-          <Route path='traffic' element={<Traffic />} />
-          <Route path='console' element={<Console />} />
-        </Route>
-      </Route>
-
-      <Route path='/settings' />
-    </>
-  )
-);
-
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
 root.render(
   <React.StrictMode>
     <GlobalStyle />
 
-    <RouterProvider router={router} />
+    <BrowserRouter>
+      <Routes>
+        <Route path='/' element={<Root />} errorElement={<ErrorPage />} />
+
+        <Route path='/dashboard' element={<DashboardLayout />}>
+          <Route errorElement={<ErrorPage />}>
+            <Route index element={<Overview />} />
+            <Route path='stats' element={<Stats />} />
+            <Route path='world' element={<Worlds />} />
+            <Route path='player' element={<Players />} />
+            <Route path='traffic' element={<Traffic />} />
+            <Route path='console' element={<Console />} />
+          </Route>
+        </Route>
+
+        <Route path='/settings' element={<Settings />} />
+      </Routes>
+    </BrowserRouter>
 
     <ReactTooltip id='dashify__tooltip' place='bottom' />
     <Toaster position='bottom-center' />
