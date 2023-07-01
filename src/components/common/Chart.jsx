@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useRef } from 'react';
 import styled from 'styled-components';
 
 const backgroundColors = [
@@ -20,6 +20,11 @@ const ChartWrapper = styled.div`
   ${({ $width }) => $width && `width: ${$width};`}
   ${({ $height }) => $height && `height: ${$height};`}
   ${({ $flex }) => $flex && `flex: ${$flex};`}
+  overflow: auto;
+
+  canvas {
+    width: 100% !important;
+  }
 `;
 
 const Chart = ({
@@ -35,22 +40,6 @@ const Chart = ({
   tooltipCallbacks
 }) => {
   const chartRef = useRef(null);
-
-  useEffect(() => {
-    const eventCallback = () => {
-      if (chartRef.current) {
-        chartRef.current.resize(1, 1);
-        // 0, 0으로 하면 resize받을 때마다 애니메이션 발동됩니다
-        // 인자를 비우면 작동하지 않습니다
-      }
-    };
-
-    window.addEventListener('resize', eventCallback);
-
-    return () => {
-      window.removeEventListener('resize', eventCallback);
-    };
-  }, [chartRef]);
 
   const legendOptions = useLegend && {
     position: 'bottom',
@@ -70,47 +59,55 @@ const Chart = ({
 
   return (
     <ChartWrapper $width={width} $height={height} $flex={flex}>
-      <ChartComponent
-        ref={chartRef}
-        options={{
-          maintainAspectRatio: false,
+      <div
+        style={{
+          position: 'relative',
+          width: '100%',
+          height: '100%'
+        }}
+      >
+        <ChartComponent
+          ref={chartRef}
+          options={{
+            maintainAspectRatio: false,
 
-          elements: {
-            arc: {
-              weight: 10000,
-              borderWidth: 0,
-              hoverBorderWidth: 0,
-              hoverOffset: 0
-            }
-          },
-          plugins: {
-            legend: legendOptions,
-            tooltip: {
-              caretSize: 8,
-              titleFont: { size: 18 },
-              padding: { x: 20, y: 16 },
-              boxPadding: 6,
-              callbacks: tooltipCallbacks
-            }
-          },
-          layout: {
-            padding: 20
-          },
-          scales
-        }}
-        data={{
-          labels: labels,
-          datasets: datasets?.map((dataset, index) => ({
-            ...dataset,
-            backgroundColor: backgroundColors[index % backgroundColors.length]
-          })) ?? [
-            {
-              data: data,
-              backgroundColor: backgroundColors
-            }
-          ]
-        }}
-      />
+            elements: {
+              arc: {
+                weight: 10000,
+                borderWidth: 0,
+                hoverBorderWidth: 0,
+                hoverOffset: 0
+              }
+            },
+            plugins: {
+              legend: legendOptions,
+              tooltip: {
+                caretSize: 8,
+                titleFont: { size: 18 },
+                padding: { x: 20, y: 16 },
+                boxPadding: 6,
+                callbacks: tooltipCallbacks
+              }
+            },
+            layout: {
+              padding: 20
+            },
+            scales
+          }}
+          data={{
+            labels: labels,
+            datasets: datasets?.map((dataset, index) => ({
+              ...dataset,
+              backgroundColor: backgroundColors[index % backgroundColors.length]
+            })) ?? [
+              {
+                data: data,
+                backgroundColor: backgroundColors
+              }
+            ]
+          }}
+        />
+      </div>
     </ChartWrapper>
   );
 };
