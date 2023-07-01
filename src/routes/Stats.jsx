@@ -1,7 +1,12 @@
 import styled from 'styled-components';
 import { useEffect, useState } from 'react';
 import { useOutletContext } from 'react-router-dom';
-import { ComputerChipIcon } from '../assets/24x-icons';
+import {
+  ComputerChipIcon,
+  HardDiskIcon,
+  MemoryChipIcon,
+  TimerIcon
+} from '../assets/24x-icons';
 import Chart from '../components/common/Chart';
 import { Line } from 'react-chartjs-2';
 import { stringToBytes } from '../utils/convert';
@@ -34,6 +39,10 @@ const StatChartBox = styled.div`
 const StatChartHeader = styled.div`
   display: flex;
   align-items: center;
+
+  svg {
+    flex-shrink: 0;
+  }
 `;
 
 const StatChartHeaderTitle = styled.div`
@@ -215,7 +224,7 @@ const Stats = () => {
       <StatChartCard
         id='mem'
         label='메모리(MB)'
-        icon={<ComputerChipIcon />}
+        icon={<MemoryChipIcon />}
         chartLabels={[1]}
         chartData={[stringToMegabytes(mem.usedMem)]}
         currentValue={
@@ -230,7 +239,7 @@ const Stats = () => {
       <StatChartCard
         id='jvm'
         label='JVM 메모리(MB)'
-        icon={<ComputerChipIcon />}
+        icon={<MemoryChipIcon />}
         chartLabels={[1]}
         chartData={[stringToMegabytes(jvm.usedMemory)]}
         currentValue={
@@ -245,7 +254,7 @@ const Stats = () => {
       <StatChartCard
         id='disk'
         label='디스크(MB)'
-        icon={<ComputerChipIcon />}
+        icon={<HardDiskIcon />}
         chartLabels={[1]}
         chartData={[stringToMegabytes(disk.freeSpace)]}
         currentValue={
@@ -260,7 +269,7 @@ const Stats = () => {
       <StatChartCard
         id='tps'
         label='TPS'
-        icon={<ComputerChipIcon />}
+        icon={<TimerIcon />}
         chartLabels={[1]}
         chartDatasets={[
           { data: [tps[0], tps[0], tps[0]], label: '1분' },

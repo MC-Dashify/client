@@ -236,6 +236,111 @@ const ComputerChipIcon = (props) => (
   </svg>
 );
 
+const MemoryChipIcon = (props) => (
+  <svg
+    xmlns='http://www.w3.org/2000/svg'
+    width={24}
+    height={24}
+    fill='none'
+    {...props}
+  >
+    <path
+      fill='currentColor'
+      d='M3 14h11a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-3Z'
+      opacity={0.4}
+    />
+    <rect width={6} height={4} x={5} y={9} fill='currentColor' rx={1} />
+    <rect width={6} height={4} x={13} y={9} fill='currentColor' rx={1} />
+    <path
+      fill='currentColor'
+      d='M17 15a1 1 0 0 1 1-1h3v3a1 1 0 0 1-1 1h-2a1 1 0 0 1-1-1v-2Z'
+      opacity={0.4}
+    />
+    <path
+      fill='currentColor'
+      fillRule='evenodd'
+      d='M4 8h16v1h2V8a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v1h2V8Zm0 3H2v3a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-3h-2v3H4v-3Z'
+      clipRule='evenodd'
+    />
+    <path
+      fill='currentColor'
+      d='M2 11a1 1 0 1 1 2 0H2ZM22 9a1 1 0 1 1-2 0h2Z'
+    />
+  </svg>
+);
+
+const HardDiskIcon = (props) => (
+  <svg
+    xmlns='http://www.w3.org/2000/svg'
+    width={24}
+    height={24}
+    fill='none'
+    {...props}
+  >
+    <rect
+      width={14}
+      height={18}
+      x={5}
+      y={3}
+      stroke='currentColor'
+      strokeWidth={2}
+      rx={1}
+    />
+    <path
+      fill='currentColor'
+      fillRule='evenodd'
+      d='M12 12a2 2 0 1 1 2-2h2a4 4 0 1 0-4 4v-2Z'
+      clipRule='evenodd'
+      opacity={0.4}
+    />
+    <path
+      fill='currentColor'
+      d='M13 13.9v-3.6a.1.1 0 0 1 .18-.06l2.7 3.6a.1.1 0 0 1-.08.16h-2.7a.1.1 0 0 1-.1-.1Z'
+    />
+    <rect width={8} height={2} x={8} y={16} fill='currentColor' rx={1} />
+  </svg>
+);
+
+const TimerIcon = (props) => (
+  <svg
+    xmlns='http://www.w3.org/2000/svg'
+    width={24}
+    height={24}
+    fill='none'
+    {...props}
+  >
+    <path
+      fill='currentColor'
+      fillRule='evenodd'
+      d='M12 20a7 7 0 1 0 0-14 7 7 0 0 0 0 14Zm0 2a9 9 0 1 0 0-18 9 9 0 0 0 0 18Z'
+      clipRule='evenodd'
+    />
+    <g fill='currentColor' opacity={0.4}>
+      <path d='M11 9a1 1 0 1 1 2 0v4a1 1 0 1 1-2 0V9Z' />
+      <path d='M14 12a1 1 0 1 1 0 2h-2a1 1 0 1 1 0-2h2Z' />
+    </g>
+    <rect width={6} height={4} x={9} y={2} fill='currentColor' rx={1} />
+    <rect
+      width={4.685}
+      height={2}
+      x={18.608}
+      y={2.756}
+      fill='currentColor'
+      rx={1}
+      transform='rotate(45.408 18.608 2.756)'
+    />
+    <rect
+      width={2}
+      height={4}
+      x={19.55}
+      y={3.712}
+      fill='currentColor'
+      rx={1}
+      transform='rotate(45.408 19.55 3.712)'
+    />
+  </svg>
+);
+
 const KickIcon = (props) => (
   <svg
     xmlns='http://www.w3.org/2000/svg'
@@ -298,6 +403,9 @@ export {
   TopBottomArrowIcon,
   CogIcon,
   ComputerChipIcon,
+  MemoryChipIcon,
+  HardDiskIcon,
+  TimerIcon,
   KickIcon,
   BanIcon
 };
