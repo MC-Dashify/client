@@ -16,4 +16,23 @@ const ArrowRightAndLeftIcon = (props) => (
   </svg>
 );
 
-export { ArrowRightAndLeftIcon };
+const XIcon = (props) => (
+  <svg
+    xmlns='http://www.w3.org/2000/svg'
+    width={16}
+    height={16}
+    fill='none'
+    {...props}
+  >
+    <g
+      stroke='currentColor'
+      strokeLinecap='round'
+      strokeLinejoin='round'
+      strokeWidth={2}
+    >
+      <path d='m3 3 10 10M13 3 3 13' />
+    </g>
+  </svg>
+);
+
+export { ArrowRightAndLeftIcon, XIcon };

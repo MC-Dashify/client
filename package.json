@@ -5,6 +5,7 @@
   "dependencies": {
     "@vitejs/plugin-react": "^4.0.1",
     "chart.js": "^4.3.0",
+    "focus-trap-react": "^10.1.4",
     "framer-motion": "^10.12.17",
     "postcss-styled-components": "^0.2.1",
     "react": "^18.2.0",
