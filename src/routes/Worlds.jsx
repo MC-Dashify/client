@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useOutletContext } from 'react-router-dom';
 import styled from 'styled-components';
 import { showModal } from '../utils/modal';
-import OverviewDataDisplay from '../components/common/OverviewDataDisplay';
+import DashboardSummary from '../components/dashboard/DashboardSummary';
 import Searchbar from '../components/common/Searchbar';
 
 const WorldsContainer = styled.div`
@@ -393,7 +393,7 @@ const Worlds = () => {
   return (
     <WorldsContainer>
       <OverviewContainer>
-        <OverviewDataDisplay
+        <DashboardSummary
           label='세계 개수'
           value={tempWorldsData.worlds.length}
         />

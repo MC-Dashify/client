@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useOutletContext } from 'react-router-dom';
-import OverviewDataDisplay from '../components/common/OverviewDataDisplay';
+import DashboardSummary from '../components/dashboard/DashboardSummary';
 import styled from 'styled-components';
 import Searchbar from '../components/common/Searchbar';
 import { BanIcon, KickIcon } from '../assets/24x-icons';
@@ -193,7 +193,7 @@ const Players = () => {
 
   return (
     <PlayersContainer>
-      <OverviewDataDisplay
+      <DashboardSummary
         label='플레이어 수'
         value={tempPlayerData.players.length}
       />

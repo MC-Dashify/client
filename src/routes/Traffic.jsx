@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useOutletContext } from 'react-router-dom';
 import styled from 'styled-components';
-import OverviewDataDisplay from '../components/common/OverviewDataDisplay';
+import DashboardSummary from '../components/dashboard/DashboardSummary';
 import { BanIcon } from '../assets/24x-icons';
 
 const TrafficContainer = styled.div`
@@ -82,7 +82,7 @@ const Traffic = () => {
   return (
     <TrafficContainer>
       <OverviewContainer>
-        <OverviewDataDisplay label='커넥션 수' value={0} />
+        <DashboardSummary label='커넥션 수' value={0} />
         <ErrorContainer>
           <ErrorContainerTop>
             <BanIcon color='#B72C25' transform='scale(0.666666666666667)' />
