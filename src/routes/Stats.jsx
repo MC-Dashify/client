@@ -34,6 +34,8 @@ const StatChartBox = styled.div`
   gap: 18px;
   border-radius: 12px;
   background: #fbfbfb;
+
+  grid-area: ${(props) => props.$gridArea};
 `;
 
 const StatChartHeader = styled.div`
@@ -73,16 +75,10 @@ const StatChartCard = ({
   minY = 0,
   maxY,
   useLegend = false,
-  callback = (item) => item.raw.toLocaleString(),
-  style
+  callback = (item) => item.raw.toLocaleString()
 }) => {
   return (
-    <StatChartBox
-      style={{
-        gridArea: id,
-        ...style
-      }}
-    >
+    <StatChartBox $gridArea={id}>
       <StatChartHeader>
         <StatChartHeaderTitle>
           {icon}
