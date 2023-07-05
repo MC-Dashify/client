@@ -3,6 +3,7 @@ import { AnimatePresence } from 'framer-motion';
 import { useNavigate, useLocation } from 'react-router-dom';
 import Button from '../components/common/Button';
 import LayerPopup, { PopupSection } from '../components/common/LayerPopup';
+import { Logo80 } from '../assets/logo';
 
 const Modal = () => {
   const [isModalOpen, setIsModalOpen] = useState(true);
@@ -24,6 +25,7 @@ const Modal = () => {
       <AnimatePresence mode='' onExitComplete={goBackward}>
         {isModalOpen && (
           <LayerPopup title='설정' onClose={() => setIsModalOpen(false)}>
+            <Logo80 background='black' foreground='white' />
             <PopupSection title='계정'>
               <Button>로그아웃</Button>
             </PopupSection>

@@ -42,6 +42,45 @@ const Logo = ({
   );
 };
 
+const Logo80 = ({
+  background = 'transparent',
+  foreground = 'currentColor',
+  ...props
+}) => {
+  return (
+    <svg
+      width='80'
+      height='80'
+      viewBox='0 0 80 80'
+      fill='none'
+      xmlns='http://www.w3.org/2000/svg'
+    >
+      <rect width='80' height='80' rx='16' fill={background} />
+      <path
+        d='M20 60L60 20'
+        stroke={foreground}
+        strokeWidth='8'
+        strokeLinecap='round'
+      />
+      <path
+        opacity='0.4'
+        d='M16 40L64 40'
+        stroke={foreground}
+        strokeWidth='8'
+        strokeLinecap='round'
+      />
+      <circle cx='26' cy='22' r='6' fill={foreground} />
+      <circle
+        cx='54'
+        cy='58'
+        r='6'
+        transform='rotate(180 54 58)'
+        fill={foreground}
+      />
+    </svg>
+  );
+};
+
 const LogoText = (props) => (
   <svg
     xmlns='http://www.w3.org/2000/svg'
@@ -62,4 +101,4 @@ const LogoText = (props) => (
   </svg>
 );
 
-export { Logo, LogoText };
+export { Logo, Logo80, LogoText };
