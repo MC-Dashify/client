@@ -39,7 +39,7 @@ const GlobalStyle = styled.createGlobalStyle`
     padding: 42px;
 
     max-height: 90vh;
-    overflow-y: scroll;
+    overflow-y: auto;
   }
 
   .swal2-close {
