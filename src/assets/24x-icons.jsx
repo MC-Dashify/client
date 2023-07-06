@@ -394,6 +394,22 @@ const BanIcon = (props) => (
   </svg>
 );
 
+const SendAndReceiveIcon = (props) => (
+  <svg
+    xmlns='http://www.w3.org/2000/svg'
+    width={24}
+    height={24}
+    fill='none'
+  >
+    <path d='M4 7L8 3L12 7' stroke='currentColor' strokeWidth={2} strokeLinecap='round' strokeLinejoin='round'/>
+    <path d='M8 16L8 3' stroke='currentColor' strokeWidth={2} strokeLinecap='round' strokeLinejoin='round'/>
+    <g opacity={0.4}>
+      <path d='M12 17L16 21L20 17' stroke='currentColor' strokeWidth={2} strokeLinecap='round' strokeLinejoin='round'/>
+      <path d='M16 8L16 21' stroke='currentColor' strokeWidth={2} strokeLinecap='round' strokeLinejoin='round'/>
+    </g>
+  </svg>
+);
+
 export {
   ChartIcon,
   ServerIcon,
@@ -407,5 +423,6 @@ export {
   HardDiskIcon,
   TimerIcon,
   KickIcon,
-  BanIcon
+  BanIcon,
+  SendAndReceiveIcon
 };
