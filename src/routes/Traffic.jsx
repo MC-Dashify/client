@@ -19,7 +19,7 @@ const TrafficContainer = styled.div`
 
 const PageSummaryContainer = styled.div`
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 4rem;
   align-self: stretch;
 `;
@@ -215,13 +215,24 @@ const ModalSummaryContainer = styled.div`
   gap: 1.5rem;
 `;
 
+const ModalChartContainer = styled.div`
+  flex: 1 0 0;
+  align-self: stretch;
+  border-radius: 26px;
+`;
+
 const TrafficInfoModal = ({ address }) => {
   const [traffic, setTraffic] = useState(undefined);
+  const [sendDataset, setSendDataset] = useState([]);
+  const [receiveDataset, setReceiveDataset] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
       const data = await getTrafficInfo(address);
       setTraffic(data);
+
+      setSendDataset([data.SentBytes]);
+      setReceiveDataset([data.ReceivedBytes]);
     };
     fetchData();
   }, [address]);
@@ -235,6 +246,33 @@ const TrafficInfoModal = ({ address }) => {
             <ByteInfo icon={<SendIcon />} value={traffic.SentBytes} />
             <ByteInfo icon={<ReceiveIcon />} value={traffic.ReceivedBytes} />
           </ModalSummaryContainer>
+          <ModalChartContainer>
+            <Chart
+              ChartComponent={Line}
+              labels={sendDataset.map((_, index) => index)}
+              datasets={[
+                { data: sendDataset, label: '송신' },
+                { data: receiveDataset, label: '수신' },
+              ]}
+              width='100%'
+              height='100%'
+              flex='1 0 0'
+              useLegend={false}
+              scales={{
+                y: {
+                  ticks: {
+                    font: { size: 12 }
+                  }
+                },
+                x: {
+                  ticks: {
+                    font: { size: 12 }
+                  }
+                }
+              }}
+              tension={0.1}
+            />
+          </ModalChartContainer>
         </ModalBodyContainer>
       ) : (
         <AddressDisplay>월드 정보를 불러오지 못했습니다</AddressDisplay>
@@ -300,7 +338,7 @@ const Traffic = () => {
                 '3'
               ]}
               datasets={[
-                { data: [3600, 4800, 4200], label: '전송' },
+                { data: [3600, 4800, 4200], label: '송신' },
                 { data: [4700, 5000, 6000], label: '수신' },
               ]}
               width='100%'
