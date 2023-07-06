@@ -41,6 +41,7 @@ const Chart = ({
   flex,
   useLegend = true,
   scales = {},
+  tension = 0,
   tooltipCallbacks
 }) => {
   const chartRef = useRef(null);
@@ -96,7 +97,8 @@ const Chart = ({
             layout: {
               padding: 20
             },
-            scales
+            scales,
+            tension
           }}
           data={{
             labels: labels,
