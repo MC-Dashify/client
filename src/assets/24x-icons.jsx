@@ -400,6 +400,7 @@ const SendAndReceiveIcon = (props) => (
     width={24}
     height={24}
     fill='none'
+    {...props}
   >
     <path d='M4 7L8 3L12 7' stroke='currentColor' strokeWidth={2} strokeLinecap='round' strokeLinejoin='round'/>
     <path d='M8 16L8 3' stroke='currentColor' strokeWidth={2} strokeLinecap='round' strokeLinejoin='round'/>
@@ -407,6 +408,28 @@ const SendAndReceiveIcon = (props) => (
       <path d='M12 17L16 21L20 17' stroke='currentColor' strokeWidth={2} strokeLinecap='round' strokeLinejoin='round'/>
       <path d='M16 8L16 21' stroke='currentColor' strokeWidth={2} strokeLinecap='round' strokeLinejoin='round'/>
     </g>
+  </svg>
+);
+
+const SendIcon = (props) => (
+  <svg xmlns='http://www.w3.org/2000/svg' width={24} height={24} fill='none' {...props}>
+    <rect opacity={0.4} x={6} y={6} width={8} height={2} fill='currentColor'/>
+    <rect opacity={0.4} x={6} y={10} width={8} height={2} fill='currentColor'/>
+    <circle opacity={0.4} cx={10} cy={16} r={2} fill='currentColor'/>
+    <path fillRule='evenodd' clipRule='evenodd' d='M4 4H16V9H18V4C18 2.89543 17.1046 2 16 2H4C2.89543 2 2 2.89543 2 4V20C2 21.1046 2.89543 22 4 22H14V20H4V4Z' fill='currentColor'/>
+    <path d='M15 15L18 12L21 15' stroke='#3B86F8' strokeWidth={2} strokeLinecap='round' strokeLinejoin='round'/>
+    <path d='M18 13V21' stroke='#3B86F8' strokeWidth={2} strokeLinecap='round' strokeLinejoin='round'/>
+  </svg>
+);
+
+const ReceiveIcon = (props) => (
+  <svg xmlns='http://www.w3.org/2000/svg' width={24} height={24} fill='none' {...props}>
+    <rect opacity={0.4} x={7} y={6} width={8} height={2} fill='currentColor'/>
+    <rect opacity={0.4} x={7} y={10} width={8} height={2} fill='currentColor'/>
+    <circle opacity={0.4} cx={11} cy={16} r={2} fill='currentColor'/>
+    <path fillRule='evenodd' clipRule='evenodd' d='M5 4H17V9H19V4C19 2.89543 18.1046 2 17 2H5C3.89543 2 3 2.89543 3 4V20C3 21.1046 3.89543 22 5 22H13V20H5V4Z' fill='black'/>
+    <path d='M15 18L18 21L21 18' stroke='#389287' strokeWidth={2} strokeLinecap='round' strokeLinejoin='round'/>
+    <path d='M18 20V12' stroke='#389287' strokeWidth={2} strokeLinecap='round' strokeLinejoin='round'/>
   </svg>
 );
 
@@ -424,5 +447,7 @@ export {
   TimerIcon,
   KickIcon,
   BanIcon,
-  SendAndReceiveIcon
+  SendAndReceiveIcon,
+  SendIcon,
+  ReceiveIcon
 };
