@@ -3,7 +3,7 @@ import Select from 'react-select';
 
 const SearchbarContainer = styled.div`
   display: flex;
-  padding: 8px 20px 8px 0;
+  padding: ${({ $hasOptions }) => $hasOptions ? '8px 20px 8px 0' : '0 20px'};
   align-items: center;
   gap: 14px;
   align-self: stretch;
@@ -47,53 +47,56 @@ const Searchbar = ({
   setSelectedValue,
   searchValue,
   setSearchValue,
-  options
+  placeholder = '검색',
+  options = []
 }) => {
   return (
-    <SearchbarContainer>
-      <Select
-        styles={{
-          control: (baseStyles, state) => ({
-            ...baseStyles,
-            backgroundColor: 'transparent',
-            border: 'none',
-            borderRadius: '12px',
-            height: '44px',
-            width: '98px',
-            boxSizing: 'content-box',
-            paddingLeft: '10px',
+    <SearchbarContainer $hasOptions={options.length > 0}>
+      {options.length > 0 && <>
+        <Select
+          styles={{
+            control: (baseStyles, state) => ({
+              ...baseStyles,
+              backgroundColor: 'transparent',
+              border: 'none',
+              borderRadius: '12px',
+              height: '44px',
+              width: '98px',
+              boxSizing: 'content-box',
+              paddingLeft: '10px',
 
-            color: '#000',
-            textShadow: '0px 0px 16px 0px rgba(0, 0, 0, 0.15)',
-            fontSize: '16px',
-            fontWeight: 500,
-            lineHeight: '100%',
-            letterSpacing: '-0.176px'
-          }),
-          option: (styles, { data, isFocused }) => ({
-            ...styles,
-            color: 'black',
-            backgroundColor: isFocused ? '#e7e7e7' : '#f7f7f7',
-            '&:hover, &:active': {
-              backgroundColor: '#e7e7e7'
-            }
-          }),
-          menu: (styles) => ({
-            ...styles,
-            backgroundColor: '#f7f7f7'
-          })
-        }}
-        options={options}
-        components={{
-          IndicatorSeparator: () => null
-        }}
-        isSearchable={false}
-        value={selectedValue}
-        onChange={(value) => setSelectedValue(value)}
-      />
-      <Separator />
+              color: '#000',
+              textShadow: '0px 0px 16px 0px rgba(0, 0, 0, 0.15)',
+              fontSize: '16px',
+              fontWeight: 500,
+              lineHeight: '100%',
+              letterSpacing: '-0.176px'
+            }),
+            option: (styles, { data, isFocused }) => ({
+              ...styles,
+              color: 'black',
+              backgroundColor: isFocused ? '#e7e7e7' : '#f7f7f7',
+              '&:hover, &:active': {
+                backgroundColor: '#e7e7e7'
+              }
+            }),
+            menu: (styles) => ({
+              ...styles,
+              backgroundColor: '#f7f7f7'
+            })
+          }}
+          options={options}
+          components={{
+            IndicatorSeparator: () => null
+          }}
+          isSearchable={false}
+          value={selectedValue}
+          onChange={(value) => setSelectedValue(value)}
+        />
+        <Separator />
+      </>}
       <Searchbox
-        placeholder='검색'
+        placeholder={placeholder}
         onChange={(event) => {
           setSearchValue(event.target.value);
         }}
