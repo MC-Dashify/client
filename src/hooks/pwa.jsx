@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
-const InstallPWA = ({ title, content }) => {
+const InstallPWA = () => {
   const [supportsPWA, setSupportsPWA] = useState(false);
   const [promptInstall, setPromptInstall] = useState(null);
 
@@ -25,13 +25,7 @@ const InstallPWA = ({ title, content }) => {
     }
   };
 
-  return (
-    supportsPWA && (
-      <button aria-label={title} title={title} onClick={onClick}>
-        {content}
-      </button>
-    )
-  );
+  return supportsPWA ? onClick : (() => {});
 };
 
 export default InstallPWA;
