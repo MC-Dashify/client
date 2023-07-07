@@ -1,8 +1,8 @@
-import { useState } from 'react';
-import { Outlet, Link, useLocation } from 'react-router-dom';
-import { css, styled } from 'styled-components';
+import { useState } from "react";
+import { Outlet, Link, useLocation } from "react-router-dom";
+import { css, styled } from "styled-components";
 
-import { Logo, LogoText } from '../assets/logo';
+import { Logo, LogoText } from "../assets/logo";
 import {
   ChartIcon,
   ServerIcon,
@@ -10,10 +10,13 @@ import {
   PeopleIcon,
   ConsoleIcon,
   TopBottomArrowIcon,
-  CogIcon
-} from '../assets/24x-icons';
-import { ArrowRightAndLeftIcon } from '../assets/16x-icons';
-import DashboardPageTitle from '../components/dashboard/DashboardPageTitle';
+  CogIcon,
+} from "../assets/24x-icons";
+import { ArrowRightAndLeftIcon } from "../assets/16x-icons";
+import DashboardPageTitle from "../components/dashboard/DashboardPageTitle";
+import { RecoilRoot, useRecoilState } from "recoil";
+import { useInterval } from "../hooks/interval";
+import { testState } from "../contexts/states";
 
 const Aside = styled.aside`
   display: flex;
@@ -80,7 +83,7 @@ const AsideMenuLink = styled(Link)`
   }
 
   &::before {
-    content: '';
+    content: "";
     display: block;
     position: absolute;
     left: 0;
@@ -210,34 +213,29 @@ const Sidebar = () => {
   const location = useLocation();
 
   const menus = [
-    { path: '/dashboard', label: '대시보드', icon: <ChartIcon /> },
-    { path: '/dashboard/stats', label: '서버 상태', icon: <ServerIcon /> },
-    { path: '/dashboard/world', label: '월드', icon: <EarthIcon /> },
-    { path: '/dashboard/player', label: '플레이어', icon: <PeopleIcon /> },
+    { path: "/dashboard", label: "대시보드", icon: <ChartIcon /> },
+    { path: "/dashboard/stats", label: "서버 상태", icon: <ServerIcon /> },
+    { path: "/dashboard/world", label: "월드", icon: <EarthIcon /> },
+    { path: "/dashboard/player", label: "플레이어", icon: <PeopleIcon /> },
     {
-      path: '/dashboard/traffic',
-      label: '트래픽 (αlpha)',
-      icon: <TopBottomArrowIcon />
+      path: "/dashboard/traffic",
+      label: "트래픽 (αlpha)",
+      icon: <TopBottomArrowIcon />,
     },
-    { path: '/dashboard/console', label: '콘솔 / 로그', icon: <ConsoleIcon /> }
+    { path: "/dashboard/console", label: "콘솔 / 로그", icon: <ConsoleIcon /> },
   ];
 
   return (
     <Aside>
       <AsideTopContainer>
         <AsideLogoContainer>
-          <Logo background='black' foreground='white' />
+          <Logo background="black" foreground="white" />
           <LogoText />
         </AsideLogoContainer>
 
         <AsideMenuContainer>
           {menus.map((menu, index) => (
-            <AsidePageMenu
-              to={menu.path}
-              label={menu.label}
-              icon={menu.icon}
-              key={`aside-menu-${index}`}
-            />
+            <AsidePageMenu to={menu.path} label={menu.label} icon={menu.icon} key={`aside-menu-${index}`} />
           ))}
         </AsideMenuContainer>
       </AsideTopContainer>
@@ -245,12 +243,7 @@ const Sidebar = () => {
       <AsideBottomContainer>
         <ProfileChanger />
 
-        <AsidePageMenu
-          to='/settings'
-          label='설정'
-          icon={<CogIcon />}
-          state={{ background: location }}
-        />
+        <AsidePageMenu to="/settings" label="설정" icon={<CogIcon />} state={{ background: location }} />
       </AsideBottomContainer>
     </Aside>
   );
