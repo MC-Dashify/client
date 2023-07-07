@@ -53,7 +53,7 @@ const styles = {
   // TODO accent
 };
 
-const Button = ({ styleType, color, textColor, padding = '16px 36px', children, ...props }) => {
+const Button = ({ styleType, color, textColor, padding = "16px 36px", children, ...props }) => {
   return (
     <ButtonBox
       $padding={padding}
