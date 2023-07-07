@@ -77,6 +77,7 @@ const Content = styled.div`
   flex-direction: column;
   gap: 32px;
   overflow-y: auto;
+  padding: 4px;
 
   &::-webkit-scrollbar {
     width: 8px;
