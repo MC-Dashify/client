@@ -82,7 +82,7 @@ const CommandInputContainer = styled.div`
   display: grid;
   flex: 1 0 0;
 
-  max-height: CALC(22.4px * 6);
+  max-height: CALC(22.4px * 5);
   overflow-y: auto;
 
   &::after {
@@ -167,7 +167,19 @@ const Console = () => {
       <CommandContainer>
         <CommandCaretContainer>{'>'}</CommandCaretContainer>
         <CommandInputContainer value={command}>
-          <CommandInput spellCheck={false} onChange={(event) => { setCommand(event.target.value) }} value={command} />
+          <CommandInput
+            spellCheck={false}
+            onChange={(event) => { setCommand(event.target.value) }}
+            value={command}
+            onKeyDown={(event) => {
+              if (event.key === 'Enter') {
+                if (!event.shiftKey) {
+                  event.preventDefault();
+                  setCommand('');
+                }
+              }
+            }}
+          />
         </CommandInputContainer>
       </CommandContainer>
     </ConsoleContainer>
