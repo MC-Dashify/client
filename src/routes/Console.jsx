@@ -73,29 +73,48 @@ const CommandContainer = styled.div`
 const CommandCaretContainer = styled.div`
   font-size: 14px;
   font-weight: 700;
-  line-height: 140%;
+  line-height: 22.4px;
   letter-spacing: -0.154px;
   opacity: 0.4;
 `;
 
-const CommandInputContainer = styled.textarea`
+const CommandInputContainer = styled.div`
+  display: grid;
+  flex: 1 0 0;
+
+  max-height: CALC(22.4px * 6);
+  overflow-y: auto;
+
+  &::after {
+    content: attr(value) ' ';
+    white-space: pre-wrap;
+    visibility: hidden;
+    flex: 1 0 0;
+  }
+
+  textarea, &::after {
+    grid-area: 1 / 1 / 2 / 2;
+
+    font-family: 'JetBrains Mono';
+    font-size: 16px;
+    font-weight: 400;
+    word-break: break-all;
+    line-height: 140%;
+    letter-spacing: -0.176px;
+  }
+`;
+
+const CommandInput = styled.textarea`
   color: #CACACA;
-  font-family: 'JetBrains Mono';
-  font-size: 16px;
-  font-weight: 400;
-  line-height: 140%;
-  letter-spacing: -0.176px;
-
-  overflow: auto;
-
+  overflow: hidden;
   padding: 0;
-
   background-color: transparent;
+
+  flex: 1 0 0;
+  height: auto;  
   border: none;
   resize: none;
 
-  flex: 1 0 0;
-  
   &:focus {
     outline: none;
   }
@@ -119,6 +138,7 @@ const Console = () => {
   // eslint-disable-next-line no-unused-vars
   const [refreshFn, setRefreshFn] = useOutletContext();
   const [logs, setLogs] = useState([]);
+  const [command, setCommand] = useState('');
 
   useEffect(() => {
     // 이 컴포넌트에서 DashboardLayout으로 정보 새로 고침 함수를 넘겨야 합니다
@@ -140,13 +160,15 @@ const Console = () => {
     <ConsoleContainer>
       <LogsOuterContainer>
         <LogsContainer>
-          {logs.map((log) => <LogLine>{log}</LogLine>)}
+          {logs.map((log, index) => <LogLine key={index}>{log}</LogLine>)}
         </LogsContainer>
       </LogsOuterContainer>
       <LogsSeparator />
       <CommandContainer>
         <CommandCaretContainer>{'>'}</CommandCaretContainer>
-        <CommandInputContainer rows={5} spellcheck='false' />
+        <CommandInputContainer value={command}>
+          <CommandInput spellCheck={false} onChange={(event) => { setCommand(event.target.value) }} value={command} />
+        </CommandInputContainer>
       </CommandContainer>
     </ConsoleContainer>
   </ConsolePageContainer>;
