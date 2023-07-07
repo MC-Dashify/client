@@ -86,6 +86,22 @@ const GlobalStyle = styled.createGlobalStyle`
   body.swal2-height-auto {
     height: 100% !important;
   }
+
+  .custom-scroll {
+    &::-webkit-scrollbar {
+      width: 8px;
+
+      &-track {
+        background-color: transparent;
+        border-radius: 4px;
+      }
+
+      &-thumb {
+        background-color: rgba(0, 0, 0, 0.6);
+        border-radius: 4px;
+      }
+    }
+  }
 `;
 
 export default GlobalStyle;

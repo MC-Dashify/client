@@ -158,7 +158,7 @@ const Console = () => {
       <Button styleType='outline'>최근 로그 1,000줄 다운로드</Button>
     </ButtonsContainer>
     <ConsoleContainer>
-      <LogsOuterContainer>
+      <LogsOuterContainer className='custom-scroll'>
         <LogsContainer>
           {logs.map((log, index) => <LogLine key={index}>{log}</LogLine>)}
         </LogsContainer>
@@ -166,7 +166,7 @@ const Console = () => {
       <LogsSeparator />
       <CommandContainer>
         <CommandCaretContainer>{'>'}</CommandCaretContainer>
-        <CommandInputContainer value={command}>
+        <CommandInputContainer className='custom-scroll' value={command}>
           <CommandInput
             spellCheck={false}
             onChange={(event) => { setCommand(event.target.value) }}
