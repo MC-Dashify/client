@@ -6,7 +6,8 @@ const ButtonBox = styled.button`
   border: none;
   justify-content: center;
   align-items: center;
-  background: transparent;
+  background: ${({ $color }) => $color ?? 'transparent'};
+  color: ${({ $textColor }) => $textColor ?? '#000'};
   padding: ${({ $padding }) => $padding};
   min-height: 32px;
   font-weight: 700;
@@ -52,11 +53,13 @@ const styles = {
   // TODO accent
 };
 
-const Button = ({ styleType, padding = '16px 36px', children, ...props }) => {
+const Button = ({ styleType, color, textColor, padding = '16px 36px', children, ...props }) => {
   return (
     <ButtonBox
       $padding={padding}
       $additionalStyle={styles[styleType]}
+      $color={color}
+      $textColor={textColor}
       {...props}
     >
       {children}
