@@ -34,6 +34,13 @@ const AppData = {
    */
   delete: (key) => {
     localStorage.removeItem(key);
+  },
+
+  /**
+   * Delete all data from localStorage
+   */
+  clear: (key) => {
+    localStorage.clear();
   }
 };
 
