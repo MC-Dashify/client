@@ -277,12 +277,13 @@ const DashboardLayout = () => {
 
   return (
     <PageContentContainer>
-      <Sidebar />
-
-      <OutletContainer>
-        <DashboardPageTitle refreshFn={refreshFn} />
-        <Outlet context={[refreshFn, setRefreshFn]} />
-      </OutletContainer>
+      <RecoilRoot>
+        <Sidebar />
+        <OutletContainer>
+          <DashboardPageTitle refreshFn={refreshFn} />
+          <Outlet context={[refreshFn, setRefreshFn]} />
+        </OutletContainer>{" "}
+      </RecoilRoot>
     </PageContentContainer>
   );
 };
