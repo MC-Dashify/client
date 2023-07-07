@@ -30,25 +30,25 @@ const App = () => {
   return (
     <>
       <Routes location={background || location}>
-        <Route path='/' element={<Root />} errorElement={<ErrorPage />} />
+        <Route path="/" element={<Root />} errorElement={<ErrorPage />} />
 
-        <Route path='/dashboard' element={<DashboardLayout />}>
+        <Route path="/dashboard" element={<DashboardLayout />}>
           <Route errorElement={<ErrorPage />}>
             <Route index element={<Overview />} />
-            <Route path='stats' element={<Stats />} />
-            <Route path='world' element={<Worlds />} />
-            <Route path='player' element={<Players />} />
-            <Route path='traffic' element={<Traffic />} />
-            <Route path='console' element={<Console />} />
+            <Route path="stats" element={<Stats />} />
+            <Route path="world" element={<Worlds />} />
+            <Route path="player" element={<Players />} />
+            <Route path="traffic" element={<Traffic />} />
+            <Route path="console" element={<Console />} />
           </Route>
         </Route>
 
-        <Route path='/settings' element={<Settings />} />
+        <Route path="/settings" element={<Settings />} />
       </Routes>
 
       {background && (
         <Routes>
-          <Route path='/settings' element={<Settings />} />
+          <Route path="/settings" element={<Settings />} />
         </Routes>
       )}
     </>
