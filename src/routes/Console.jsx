@@ -1,7 +1,7 @@
-import { useEffect, useState } from 'react';
-import { useOutletContext } from 'react-router-dom';
-import { styled } from 'styled-components';
-import Button from '../components/common/Button';
+import { useEffect, useState } from "react";
+import { useOutletContext } from "react-router-dom";
+import { styled } from "styled-components";
+import Button from "../components/common/Button";
 
 const ConsolePageContainer = styled.div`
   display: flex;
@@ -26,9 +26,9 @@ const ConsoleContainer = styled.div`
   align-self: stretch;
 
   border-radius: 22px;
-  border: 2px solid rgba(0, 0, 0, 0.10);
-  background: #2B2B2B;
-  box-shadow: 0px 0px 14px 0px rgba(0, 0, 0, 0.10);
+  border: 2px solid rgba(0, 0, 0, 0.1);
+  background: #2b2b2b;
+  box-shadow: 0px 0px 14px 0px rgba(0, 0, 0, 0.1);
 
   flex: 1 0 0;
 `;
@@ -53,20 +53,20 @@ const LogsContainer = styled.div`
 const LogsSeparator = styled.div`
   width: 100%;
   height: 1px;
-  background: rgba(255, 255, 255, 0.20);
+  background: rgba(255, 255, 255, 0.2);
   box-shadow: 0px 0px 6px 0px rgba(0, 0, 0, 0.15);
 `;
 
 const CommandContainer = styled.div`
   display: flex;
-  padding: 4px 6px;
+  padding: 4px 0px 4px 6px;
   align-items: flex-start;
   gap: 10px;
   align-self: stretch;
 
   div {
-    font-family: 'JetBrains Mono';
-    color: #CACACA;
+    font-family: "JetBrains Mono";
+    color: #cacaca;
   }
 `;
 
@@ -86,16 +86,17 @@ const CommandInputContainer = styled.div`
   overflow-y: auto;
 
   &::after {
-    content: attr(value) ' ';
+    content: attr(value) " ";
     white-space: pre-wrap;
     visibility: hidden;
     flex: 1 0 0;
   }
 
-  textarea, &::after {
+  textarea,
+  &::after {
     grid-area: 1 / 1 / 2 / 2;
 
-    font-family: 'JetBrains Mono';
+    font-family: "JetBrains Mono";
     font-size: 16px;
     font-weight: 400;
     word-break: break-all;
@@ -105,13 +106,13 @@ const CommandInputContainer = styled.div`
 `;
 
 const CommandInput = styled.textarea`
-  color: #CACACA;
+  color: #cacaca;
   overflow: hidden;
   padding: 0;
   background-color: transparent;
 
   flex: 1 0 0;
-  height: auto;  
+  height: auto;
   border: none;
   resize: none;
 
@@ -125,9 +126,9 @@ const LogLine = styled.div`
   padding: 4px 6px;
   gap: 10px;
   align-self: stretch;
-  
-  color: #CACACA;
-  font-family: 'JetBrains Mono';
+
+  color: #cacaca;
+  font-family: "JetBrains Mono";
   font-size: 14px;
   font-weight: 300;
   line-height: 140%;
@@ -138,52 +139,60 @@ const Console = () => {
   // eslint-disable-next-line no-unused-vars
   const [refreshFn, setRefreshFn] = useOutletContext();
   const [logs, setLogs] = useState([]);
-  const [command, setCommand] = useState('');
+  const [command, setCommand] = useState("");
 
   useEffect(() => {
     // 이 컴포넌트에서 DashboardLayout으로 정보 새로 고침 함수를 넘겨야 합니다
     // TODO 정보 새로 고침
-    setRefreshFn(() => console.log('refreshed'));
+    setRefreshFn(() => console.log("refreshed"));
   }, [setRefreshFn]);
 
   useEffect(() => {
-    setLogs((new Array(20)).fill(
-      '[23:39:52] [Server thread/INFO]: Entity Tracking Range: Pl 48 / An 48 / Mo 48 / Mi 32 / Other 64'
-    ));
+    setLogs(
+      new Array(20).fill(
+        "[23:39:52] [Server thread/INFO]: Entity Tracking Range: Pl 48 / An 48 / Mo 48 / Mi 32 / Other 64"
+      )
+    );
   }, []);
 
-  return <ConsolePageContainer>
-    <ButtonsContainer>
-      <Button styleType='outline'>최근 로그 500줄 다운로드</Button>
-      <Button styleType='outline'>최근 로그 1,000줄 다운로드</Button>
-    </ButtonsContainer>
-    <ConsoleContainer>
-      <LogsOuterContainer className='custom-scroll'>
-        <LogsContainer>
-          {logs.map((log, index) => <LogLine key={index}>{log}</LogLine>)}
-        </LogsContainer>
-      </LogsOuterContainer>
-      <LogsSeparator />
-      <CommandContainer>
-        <CommandCaretContainer>{'>'}</CommandCaretContainer>
-        <CommandInputContainer className='custom-scroll' value={command}>
-          <CommandInput
-            spellCheck={false}
-            onChange={(event) => { setCommand(event.target.value) }}
-            value={command}
-            onKeyDown={(event) => {
-              if (event.key === 'Enter') {
-                if (!event.shiftKey) {
-                  event.preventDefault();
-                  setCommand('');
+  return (
+    <ConsolePageContainer>
+      <ButtonsContainer>
+        <Button styleType="outline">최근 로그 500줄 다운로드</Button>
+        <Button styleType="outline">최근 로그 1,000줄 다운로드</Button>
+      </ButtonsContainer>
+      <ConsoleContainer>
+        <LogsOuterContainer className="custom-scroll">
+          <LogsContainer>
+            {logs.map((log, index) => (
+              <LogLine key={index}>{log}</LogLine>
+            ))}
+          </LogsContainer>
+        </LogsOuterContainer>
+        <LogsSeparator />
+        <CommandContainer>
+          <CommandCaretContainer>{">"}</CommandCaretContainer>
+          <CommandInputContainer className="custom-scroll" value={command}>
+            <CommandInput
+              spellCheck={false}
+              onChange={(event) => {
+                setCommand(event.target.value);
+              }}
+              value={command}
+              onKeyDown={(event) => {
+                if (event.key === "Enter") {
+                  if (!event.shiftKey) {
+                    event.preventDefault();
+                    setCommand("");
+                  }
                 }
-              }
-            }}
-          />
-        </CommandInputContainer>
-      </CommandContainer>
-    </ConsoleContainer>
-  </ConsolePageContainer>;
+              }}
+            />
+          </CommandInputContainer>
+        </CommandContainer>
+      </ConsoleContainer>
+    </ConsolePageContainer>
+  );
 };
 
 export default Console;
