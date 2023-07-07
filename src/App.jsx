@@ -10,22 +10,9 @@ import Traffic from "./routes/Traffic";
 import Console from "./routes/Console";
 import Settings from "./routes/Settings";
 
-import { useRecoilState } from "recoil";
-
-import { testState } from "./contexts/states";
-import { useInterval } from "./hooks/interval";
-
 const App = () => {
   const location = useLocation();
   const background = location.state?.background;
-
-  const [test, setTest] = useRecoilState(testState);
-
-  // 백그라운드에서 일정 시간마다 작업 실행
-  useInterval(() => {
-    console.log(test)
-    setTest(test + 1)
-  }, 1000)
 
   return (
     <>
