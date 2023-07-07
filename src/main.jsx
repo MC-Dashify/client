@@ -22,8 +22,6 @@ import AppData from "./storage/data";
 import GlobalStyle, { defaultFontFamily } from "./components/common/globalstyles";
 import "./styles/font-settings.css";
 
-import { RecoilRoot } from "recoil";
-
 ChartJS.register(ArcElement, Tooltip, Legend, CategoryScale, LinearScale, PointElement, LineElement);
 chartDefaults.font.family = defaultFontFamily;
 chartDefaults.font.size = 16;
@@ -45,7 +43,6 @@ const root = ReactDOM.createRoot(document.getElementById("root"));
 
 root.render(
   <React.StrictMode>
-    <RecoilRoot>
       <GlobalStyle />
 
       <BrowserRouter>
@@ -54,7 +51,6 @@ root.render(
 
       <ReactTooltip id="dashify__tooltip" place="bottom" />
       <Toaster position="bottom-center" />
-    </RecoilRoot>
   </React.StrictMode>
 );
 
