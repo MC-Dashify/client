@@ -159,7 +159,7 @@ const LayerPopup = ({ title, children, footer, width, height, onClose }) => {
 const PopupSectionBox = styled.section`
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  gap: ${({ $gap }) => $gap};
 `;
 
 const SectionTitleWrapper = styled.div`
@@ -167,6 +167,7 @@ const SectionTitleWrapper = styled.div`
   align-items: center;
   gap: 10px;
   font-weight: 700;
+  margin-bottom: ${({ $titleMargin }) => $titleMargin};
 `;
 
 const SectionTitleDecoration = styled.div`
@@ -175,10 +176,10 @@ const SectionTitleDecoration = styled.div`
   background-color: rgba(0, 0, 0, 0.2);
 `;
 
-const PopupSection = ({ title, children }) => {
+const PopupSection = ({ title, gap = '18px', titleMargin = '0', children }) => {
   return (
-    <PopupSectionBox>
-      <SectionTitleWrapper>
+    <PopupSectionBox $gap={gap}>
+      <SectionTitleWrapper $titleMargin={titleMargin}>
         {title}
         <SectionTitleDecoration />
       </SectionTitleWrapper>
