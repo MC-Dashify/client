@@ -10,8 +10,6 @@ import Button from "../components/common/Button";
 import LayerPopup, { PopupSection } from "../components/common/LayerPopup";
 import AppData from "../storage/data";
 
-import InstallPWA from "../hooks/pwa";
-
 const WebsiteInfoContainer = styled.div`
   display: flex;
   align-items: center;
@@ -119,11 +117,10 @@ const ClearData = () => {
   toast.success("모든 데이터가 삭제되었습니다.");
 };
 
-const Modal = () => {
+const Modal = ({ install }) => {
   const [isModalOpen, setIsModalOpen] = useState(true);
   const navigate = useNavigate();
   const location = useLocation();
-  const install = InstallPWA();
 
   const goBackward = () => {
     if (location.key !== "default") {

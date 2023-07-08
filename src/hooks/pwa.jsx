@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 const InstallPWA = () => {
   const [supportsPWA, setSupportsPWA] = useState(false);
@@ -22,10 +22,13 @@ const InstallPWA = () => {
 
     if (promptInstall) {
       promptInstall.prompt();
+      setPromptInstall(null);
     }
   };
 
-  return supportsPWA ? onClick : (() => {});
+  return (
+    supportsPWA ? onClick : () => {}
+  );
 };
 
 export default InstallPWA;

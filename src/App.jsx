@@ -9,10 +9,12 @@ import Players from "./routes/Players";
 import Traffic from "./routes/Traffic";
 import Console from "./routes/Console";
 import Settings from "./routes/Settings";
+import InstallPWA from "./hooks/pwa";
 
 const App = () => {
   const location = useLocation();
   const background = location.state?.background;
+  const install = InstallPWA();
 
   return (
     <>
@@ -30,12 +32,12 @@ const App = () => {
           </Route>
         </Route>
 
-        <Route path="/settings" element={<Settings />} />
+        <Route path="/settings" element={<Settings install={install} />} />
       </Routes>
 
       {background && (
         <Routes>
-          <Route path="/settings" element={<Settings />} />
+          <Route path="/settings" element={<Settings install={install} />} />
         </Routes>
       )}
     </>
