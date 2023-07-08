@@ -27,6 +27,10 @@ const GlobalStyle = styled.createGlobalStyle`
     padding: 0;
   }
 
+  a {
+    text-decoration: none;
+  }
+
   .swal2-html-container {
     margin: 0 !important;
     user-select: none;
