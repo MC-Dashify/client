@@ -157,9 +157,12 @@ const Modal = ({ install }) => {
               >
                 GitHub 리포지토리 방문
               </Button>
-              <Button padding={"8px 16px"} styleType="accent">
+              {/* <Button padding={"8px 16px"} styleType="accent">
                 업데이트 확인
-              </Button>
+              </Button> 
+              ^^^^^
+              업데이트 확인 기능을 구현할 이유가 없음. vite.config.js의 registerType 참고
+              */}
             </WebsiteInfoContainer>
             {/* <PopupSection title="외관" gap="0" titleMargin="18px">
               <SettingOption
