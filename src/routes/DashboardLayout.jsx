@@ -215,10 +215,9 @@ const Sidebar = () => {
 
   // 백그라운드에서 일정 시간마다 작업 실행
   useInterval(() => {
-    console.log(test)
-    setTest(test + 1)
-  }, 1000)
-
+    console.log(test);
+    setTest(test + 1);
+  }, 1000);
 
   const menus = [
     { path: "/dashboard", label: "대시보드", icon: <ChartIcon /> },
@@ -236,11 +235,12 @@ const Sidebar = () => {
   return (
     <Aside>
       <AsideTopContainer>
-        <AsideLogoContainer>
-          <Logo background="black" foreground="white" />
-          <LogoText />
-        </AsideLogoContainer>
-
+        <Link to="/">
+          <AsideLogoContainer>
+            <Logo background="black" foreground="white" />
+            <LogoText color="black"/>
+          </AsideLogoContainer>
+        </Link>
         <AsideMenuContainer>
           {menus.map((menu, index) => (
             <AsidePageMenu to={menu.path} label={menu.label} icon={menu.icon} key={`aside-menu-${index}`} />
