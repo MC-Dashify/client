@@ -6,8 +6,7 @@ const ButtonBox = styled.button`
   border: none;
   justify-content: center;
   align-items: center;
-  background: ${({ $color }) => $color ?? "transparent"};
-  color: ${({ $textColor }) => $textColor ?? "#000"};
+  background: transparent;
   padding: ${({ $padding }) => $padding};
   min-height: 32px;
   font-weight: 700;
