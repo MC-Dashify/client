@@ -8,9 +8,7 @@ const AppData = {
   get: (key) => {
     const _temp = localStorage.getItem(key);
 
-    return _temp === null || _temp === ''
-      ? null
-      : JSON.parse(decodeURIComponent(atob(_temp)));
+    return _temp === null || _temp === "" ? null : JSON.parse(decodeURIComponent(atob(_temp)));
   },
 
   /**
@@ -21,10 +19,7 @@ const AppData = {
    * @param {any} value
    */
   set: (key, value) => {
-    localStorage.setItem(
-      key,
-      value === null ? '' : btoa(encodeURIComponent(JSON.stringify(value)))
-    );
+    localStorage.setItem(key, value === null ? "" : btoa(encodeURIComponent(JSON.stringify(value))));
   },
 
   /**
@@ -40,8 +35,12 @@ const AppData = {
    * Delete all data from localStorage
    */
   clear: (key) => {
-    localStorage.clear();
-  }
+    for (var a in localStorage) {
+      if (`${a}` !== "etc.version") {
+        localStorage.removeItem(a);
+      }
+    }
+  },
 };
 
 export default AppData;
