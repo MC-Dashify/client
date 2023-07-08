@@ -4,6 +4,7 @@ const ButtonBox = styled.button`
   display: flex;
   border-radius: 8px;
   border: none;
+  gap: 8px;
   justify-content: center;
   align-items: center;
   background: transparent;
@@ -91,9 +92,10 @@ const styles = {
   `,
 };
 
-const Button = ({ styleType, color, textColor, padding = "16px 36px", children, ...props }) => {
+const Button = ({ styleType, padding = "16px 36px", children, icon, ...props }) => {
   return (
-    <ButtonBox $padding={padding} $additionalStyle={styles[styleType]} $color={color} $textColor={textColor} {...props}>
+    <ButtonBox $additionalStyle={styles[styleType]} $padding={padding} {...props}>
+      {icon}
       {children}
     </ButtonBox>
   );
