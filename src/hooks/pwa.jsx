@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 const InstallPWA = () => {
   const [supportsPWA, setSupportsPWA] = useState(false);
@@ -27,7 +27,7 @@ const InstallPWA = () => {
   };
 
   return (
-    supportsPWA ? onClick : () => {}
+    supportsPWA ? onClick : undefined
   );
 };
 

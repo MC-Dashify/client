@@ -177,14 +177,18 @@ const Modal = ({ install }) => {
               />
             </PopupSection> */}
             <PopupSection title="애플리케이션" gap="0" titleMargin="18px">
-              <SettingButton
-                optionName="애플리케이션 설치"
-                optionDescription="Dashify을 디바이스에 설치합니다."
-                styleType="filled"
-                onClick={install}
-              >
-                설치
-              </SettingButton>
+              {install === undefined ? (
+                ""
+              ) : (
+                <SettingButton
+                  optionName="애플리케이션 설치"
+                  optionDescription="Dashify을 디바이스에 설치합니다."
+                  styleType="filled"
+                  onClick={install}
+                >
+                  설치
+                </SettingButton>
+              )}
               <SettingButton
                 optionName="모든 데이터 삭제"
                 optionDescription="Dashify에 저장된 모든 로컬 데이터(프로파일 등)을 삭제합니다."
