@@ -5,6 +5,8 @@ import { Logo80, LogoText } from "../assets/logo";
 import { styled } from "styled-components";
 import Select from "react-select";
 import { toast } from "react-hot-toast";
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
 
 import Button from "../components/common/Button";
 import LayerPopup, { PopupSection } from "../components/common/LayerPopup";
@@ -112,9 +114,29 @@ const SettingButton = ({ children, optionName, optionDescription, styleType, onC
 };
 
 const ClearData = () => {
-  console.log("asdf");
+  const modal = withReactContent(Swal);
+
   AppData.clear();
-  toast.success("모든 데이터가 삭제되었습니다.");
+  modal.fire({
+    icon: "success",
+    html: (
+      <>
+        <h3>모든 데이터가 삭제되었습니다.</h3>
+        <p>잠시 후 메인 페이지로 이동됩니다.</p>
+      </>
+    ),
+    timer: 3000,
+    showConfirmButton: false,
+    showCancelButton: false,
+    timerProgressBar: true,
+    allowEscapeKey: false,
+    allowOutsideClick: false,
+    willClose: () => {
+      window.location.href = "/";
+    },
+  });
+
+  // toast.success("모든 데이터가 삭제되었습니다.");
 };
 
 const Modal = ({ install }) => {
