@@ -217,13 +217,6 @@ const Sidebar = () => {
 
   // 백그라운드에서 일정 시간마다 작업 실행
   useInterval(async () => {
-    fetch(`${AppData.get('test.address')}/ping`, {
-      method: 'GET',
-      mode: 'no-cors'
-    }).then((res) => {
-      console.log(res);
-    });
-
     console.log(test);
     setTest(test + 1);
   }, 1000);

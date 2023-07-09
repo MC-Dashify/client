@@ -17,8 +17,8 @@ const Network = {
    **/
   ping: (host, port, key, isSecureConnection = false) => {
     return axios.get(
-      // `${isSecureConnection ? 'https' : 'http'}://${host}:${port}/ping`,
-      '/ping',
+      `${isSecureConnection ? 'https' : 'http'}://${host}:${port}/ping`,
+      // '/ping',
       {
         headers: {
           Authorization: `Bearer ${key}`
