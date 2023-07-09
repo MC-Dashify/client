@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 import { styled, css } from 'styled-components';
 import { Link } from 'react-router-dom';
@@ -6,6 +6,16 @@ import { FullLogo } from '../assets/logo';
 import Button from '../components/common/Button';
 import { CogIcon } from '../assets/24x-icons';
 import { PlusIcon } from '../assets/16x-icons';
+import Profile from '../storage/profile';
+import uuid4 from 'uuid4';
+import Network from '../utils/net';
+import withReactContent from 'sweetalert2-react-content';
+import Swal from 'sweetalert2';
+import SyntaxHighlighter from 'react-syntax-highlighter';
+import { docco } from 'react-syntax-highlighter/dist/esm/styles/hljs';
+import { checkTargetForNewValues } from 'framer-motion';
+import { toast } from 'react-hot-toast';
+import { XIcon } from '../assets/16x-icons';
 
 const RootContainer = styled.div`
   display: flex;
@@ -228,7 +238,9 @@ const Root = () => {
   const [serverAddress, setServerAddress] = useState('');
   const [serverPort, setServerPort] = useState('');
   const [securityKey, setSecurityKey] = useState('');
-  const [checked, setChecked] = useState(true);
+  const [secureConnection, setSecureConnection] = useState(false);
+  const [profiles, setProfiles] = useState([]);
+  const [isEditing, setIsEditing] = useState(false);
 
   const handlePortChange = (e) => {
     const { value } = e.target;
@@ -245,6 +257,91 @@ const Root = () => {
 
     setServerPort(number);
   };
+
+  console.log(profiles);
+
+  const handleAddProfile = () => {
+    const modal = withReactContent(Swal);
+
+    if (!/[\S]/g.test(profileName)) {
+      toast.error('프로필 이름을 작성해야 합니다.');
+      return;
+    }
+
+    Network.ping(serverAddress, serverPort, securityKey, secureConnection)
+      .then((res) => {
+        if (res.status === 200) {
+          const profile = {
+            uuid: uuid4(),
+            name: profileName,
+            address: serverAddress || 'localhost',
+            port: Number.parseInt(serverPort) || 8080,
+            key: securityKey,
+            isSecureConnection: secureConnection
+          };
+
+          Profile.add(profile);
+          toast.success('프로필이 추가되었습니다.', { id: 'profile-added' });
+
+          setProfiles(Profile.getAll());
+        }
+      })
+      .catch((err) => {
+        const errorText = `${err.stack}`.replace(/\\n/g, '\n');
+        const copyToClipboard = async () => {
+          const { clipboard } = navigator;
+
+          if (typeof clipboard == 'undefined') {
+            toast.error(
+              '복사에 실패했습니다. 브라우저가 복사 기능을 지원하지 않거나, 애플리케이션이 HTTPS로 연결되지 않았습니다.',
+              { id: 'clipboard' }
+            );
+            return;
+          }
+
+          try {
+            await clipboard.writeText(errorText);
+            toast.success('복사되었습니다.', { id: 'clipboard' });
+          } catch (e) {
+            toast.error('복사에 실패했습니다.', { id: 'clipboard' });
+          }
+        };
+
+        modal.fire({
+          icon: 'error',
+          html: (
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center',
+                alignItems: 'center'
+              }}
+            >
+              <h3>연결 실패</h3>
+              <p>다음과 같은 오류가 발생하였습니다</p>
+              <hr />
+              <SyntaxHighlighter language='js' style={docco}>
+                {errorText}
+              </SyntaxHighlighter>
+              <Button onClick={copyToClipboard}>
+                <div>클립보드에 복사하기</div>
+              </Button>
+            </div>
+          ),
+          width: '80%',
+          showConfirmButton: true,
+          showCancelButton: false,
+          timerProgressBar: true,
+          allowEscapeKey: false,
+          allowOutsideClick: false
+        });
+      });
+  };
+
+  useEffect(() => {
+    setProfiles(Profile.getAll());
+  }, []);
 
   return (
     <RootContainer>
@@ -279,8 +376,8 @@ const Root = () => {
               </InputFieldBox>
               <Checkbox
                 label='보안 연결(HTTPS) 사용'
-                checked={checked}
-                setChecked={setChecked}
+                checked={secureConnection}
+                setChecked={setSecureConnection}
               />
             </CheckboxInputField>
 
@@ -301,7 +398,14 @@ const Root = () => {
               </Button>
             </Link>
 
-            <Button styleType='accent'>프로파일 생성 후 연결</Button>
+            <Button
+              styleType='accent'
+              onClick={() => {
+                handleAddProfile();
+              }}
+            >
+              프로파일 생성 후 연결
+            </Button>
           </ButtonContainer>
         </ConnectSection>
 
@@ -310,41 +414,58 @@ const Root = () => {
         <ConnectSection $gap='0px'>
           <ProfileDataContainer>
             <ProfileDataLabel>프로파일로 연결</ProfileDataLabel>
-            <EditProfilesButton tabIndex={0}>
+            <EditProfilesButton
+              tabIndex={0}
+              onClick={() => {
+                setIsEditing(!isEditing);
+              }}
+            >
               <CogIcon transform='scale(0.666666667)' />
               관리
             </EditProfilesButton>
           </ProfileDataContainer>
           <ProfilesContainer>
-            {tempProfiles.map(({ name, address }, index) => (
+            {profiles.map(({ uuid, name, address }, index) => (
               <ProfileItem
                 key={index}
+                uuid={uuid}
                 name={name}
                 address={address}
                 showBorder={index > 0}
+                isEditing={isEditing}
+                updateProfile={() => {
+                  setProfiles(Profile.getAll());
+                }}
               />
             ))}
           </ProfilesContainer>
-          <AddProfileButton icon={<PlusIcon />}>프로필 추가</AddProfileButton>
+          <AddProfileButton onClick={handleAddProfile} icon={<PlusIcon />}>
+            프로필 추가
+          </AddProfileButton>
         </ConnectSection>
       </Content>
     </RootContainer>
   );
 };
 
-export default Root;
-
 const ProfileItemBox = styled.div`
   display: flex;
   padding: 18px 16px;
+  align-items: center;
+  align-self: stretch;
+  background: #fff;
+  ${({ $showBorder }) =>
+    $showBorder && 'border-top: 1px solid rgba(0, 0, 0, 0.10);'}
+`;
+
+const ProfileItemInfo = styled.div`
+  display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: flex-start;
   gap: 6px;
   align-self: stretch;
-  background: #fff;
-  ${({ $showBorder }) =>
-    $showBorder && 'border-top: 1px solid rgba(0, 0, 0, 0.10);'}
+  flex: 1 0 0;
 `;
 
 const ProfileItemName = styled.div`
@@ -374,14 +495,67 @@ const ProfileItemAddress = styled.div`
   font-weight: 500;
   line-height: 100%;
   letter-spacing: -0.132px;
+
+  opacity: 0.4;
 `;
 
-const ProfileItem = ({ name, address, showBorder }) => {
+const EditModeButton = styled.button`
+  display: flex;
+  padding: 5px 5px;
+  align-items: flex-start;
+  border-radius: 6px;
+  border: 1px solid rgba(216, 65, 58, 0.2);
+  background-color: rgba(216, 65, 58, 0);
+  cursor: pointer;
+
+  svg {
+    color: #d8413a;
+  }
+
+  &:hover,
+  &:focus-visible {
+    border: 1px solid transparent;
+    background-color: rgba(216, 65, 58, 0.2);
+    outline: none;
+  }
+
+  &:active {
+    border: 1px solid rgba(216, 65, 58, 0.2);
+    background: #d8413a;
+  }
+
+  &:active svg {
+    color: #fff;
+  }
+`;
+
+const ProfileItem = ({
+  uuid,
+  name,
+  address,
+  showBorder,
+  isEditing,
+  updateProfile
+}) => {
   return (
     <ProfileItemBox $showBorder={showBorder}>
-      <ProfileItemName>{name}</ProfileItemName>
-
-      <ProfileItemAddress>{address}</ProfileItemAddress>
+      <ProfileItemInfo>
+        <ProfileItemName>{name}</ProfileItemName>
+        <ProfileItemAddress>{address}</ProfileItemAddress>
+      </ProfileItemInfo>
+      {isEditing && (
+        <>
+          <EditModeButton
+            onClick={(uuid) => {
+              Profile.delete(uuid);
+              toast.success('성공적으로 프로파일을 삭제했습니다!');
+              updateProfile();
+            }}
+          >
+            <XIcon />
+          </EditModeButton>
+        </>
+      )}
     </ProfileItemBox>
   );
 };
@@ -398,6 +572,7 @@ const CheckboxContainer = styled.div`
 const CheckboxInput = styled.input`
   border: 1px solid black;
   height: 14px;
+  cursor: pointer;
 `;
 
 const CheckboxLabel = styled.div`
@@ -416,8 +591,10 @@ const Checkbox = ({ label, checked, setChecked }) => {
         if (key === 'Enter') setChecked(!checked);
       }}
     >
-      <CheckboxInput type='checkbox' tabIndex={-1} checked={checked} />
+      <CheckboxInput type='checkbox' tabIndex={-1} checked={checked} readOnly />
       <CheckboxLabel>{label}</CheckboxLabel>
     </CheckboxContainer>
   );
 };
+
+export default Root;
