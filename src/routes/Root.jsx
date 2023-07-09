@@ -1,11 +1,11 @@
-import { useState } from "react";
+import { useState } from 'react';
 
-import { styled, css } from "styled-components";
-import { Link } from "react-router-dom";
-import { FullLogo } from "../assets/logo";
-import Button from "../components/common/Button";
-import { CogIcon } from "../assets/24x-icons";
-import { PlusIcon } from "../assets/16x-icons";
+import { styled, css } from 'styled-components';
+import { Link } from 'react-router-dom';
+import { FullLogo } from '../assets/logo';
+import Button from '../components/common/Button';
+import { CogIcon } from '../assets/24x-icons';
+import { PlusIcon } from '../assets/16x-icons';
 
 const RootContainer = styled.div`
   display: flex;
@@ -91,7 +91,8 @@ const InputFieldWrapper = styled.div`
   &:has(:focus) {
     outline: 1px solid #6299ed;
     background-color: #fff;
-    box-shadow: 0px 0px 16px 0px rgba(98, 153, 237, 0.2), 0px 0px 8px 0px rgba(98, 153, 237, 0.2) inset;
+    box-shadow: 0px 0px 16px 0px rgba(98, 153, 237, 0.2),
+      0px 0px 8px 0px rgba(98, 153, 237, 0.2) inset;
   }
 `;
 
@@ -117,8 +118,8 @@ const InputField = styled.input`
     color: #000;
   }
 
-  &[type="number"]::-webkit-inner-spin-button,
-  &[type="number"]::-webkit-outer-spin-button {
+  &[type='number']::-webkit-inner-spin-button,
+  &[type='number']::-webkit-outer-spin-button {
     -webkit-appearance: none;
     margin: 0;
   }
@@ -133,6 +134,13 @@ const InputFieldBox = ({ label, children }) => {
     </InputLabelPair>
   );
 };
+
+const CheckboxInputField = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-self: stretch;
+`;
 
 const ButtonContainer = styled.div`
   display: flex;
@@ -192,7 +200,7 @@ const ProfilesContainer = styled.div`
 
 const AddProfileButton = styled(Button)`
   gap: 2px;
-  background-color: #F4F4F4;
+  background-color: #f4f4f4;
   align-self: stretch;
 
   &:hover {
@@ -202,30 +210,31 @@ const AddProfileButton = styled(Button)`
 
 const tempProfiles = [
   {
-    "uuid": "30cd1d0a-fe68-4e4f-b2a4-219c97300d4e",
-    "name": "Hypixel",
-    "address": "mc.hypixel.net",
-    "port": 14367
+    uuid: '30cd1d0a-fe68-4e4f-b2a4-219c97300d4e',
+    name: 'Hypixel',
+    address: 'mc.hypixel.net',
+    port: 14367
   },
   {
-    "uuid": "30cd1d0a-fe68-4e4f-b2a4-219c97300d4e",
-    "name": "로컬호스트",
-    "address": "localhost",
-    "port": 14367
+    uuid: '30cd1d0a-fe68-4e4f-b2a4-219c97300d4e',
+    name: '로컬호스트',
+    address: 'localhost',
+    port: 14367
   }
 ];
 
 const Root = () => {
-  const [profileName, setProfileName] = useState("");
-  const [serverAddress, setServerAddress] = useState("");
-  const [serverPort, setServerPort] = useState("");
-  const [securityKey, setSecurityKey] = useState("");
+  const [profileName, setProfileName] = useState('');
+  const [serverAddress, setServerAddress] = useState('');
+  const [serverPort, setServerPort] = useState('');
+  const [securityKey, setSecurityKey] = useState('');
+  const [checked, setChecked] = useState(true);
 
   const handlePortChange = (e) => {
     const { value } = e.target;
     const number = Number(value);
 
-    if (value === "") {
+    if (value === '') {
       setServerPort(value);
       return;
     }
@@ -240,35 +249,45 @@ const Root = () => {
   return (
     <RootContainer>
       <Content>
-        <ConnectSection $gap="32px">
-          <FullLogo color="black" />
+        <ConnectSection $gap='32px'>
+          <FullLogo color='black' />
 
           <InputFieldContainer>
-            <InputFieldBox label="프로파일 이름">
-              <InputField value={profileName} onChange={(e) => setProfileName(e.target.value)} />
-            </InputFieldBox>
-
-            <InputFieldBox label="서버 주소와 포트">
+            <InputFieldBox label='프로파일 이름'>
               <InputField
-                placeholder="localhost"
-                value={serverAddress}
-                onChange={(e) => setServerAddress(e.target.value)}
-              />
-              <Separator $width="1px" style={{ margin: "8px 0" }} />
-              <InputField
-                placeholder="8080"
-                step="1"
-                type="text"
-                $width="50px"
-                value={serverPort}
-                onChange={handlePortChange}
+                value={profileName}
+                onChange={(e) => setProfileName(e.target.value)}
               />
             </InputFieldBox>
 
-            <InputFieldBox label="보안 키">
+            <CheckboxInputField>
+              <InputFieldBox label='서버 주소와 포트'>
+                <InputField
+                  placeholder='localhost'
+                  value={serverAddress}
+                  onChange={(e) => setServerAddress(e.target.value)}
+                />
+                <Separator $width='1px' style={{ margin: '8px 0' }} />
+                <InputField
+                  placeholder='8080'
+                  step='1'
+                  type='text'
+                  $width='50px'
+                  value={serverPort}
+                  onChange={handlePortChange}
+                />
+              </InputFieldBox>
+              <Checkbox
+                label='보안 연결(HTTPS) 사용'
+                checked={checked}
+                setChecked={setChecked}
+              />
+            </CheckboxInputField>
+
+            <InputFieldBox label='보안 키'>
               <InputField
-                placeholder="서버에서 발급된 보안 키 입력"
-                type="password"
+                placeholder='서버에서 발급된 보안 키 입력'
+                type='password'
                 value={securityKey}
                 onChange={(e) => setSecurityKey(e.target.value)}
               />
@@ -276,19 +295,19 @@ const Root = () => {
           </InputFieldContainer>
 
           <ButtonContainer>
-            <Link to="/settings">
-              <Button icon={<CogIcon />} padding="12px 20px">
+            <Link to='/settings' tabIndex={-1}>
+              <Button icon={<CogIcon />} padding='12px 20px'>
                 설정
               </Button>
             </Link>
 
-            <Button styleType="accent">프로파일 생성 후 연결</Button>
+            <Button styleType='accent'>프로파일 생성 후 연결</Button>
           </ButtonContainer>
         </ConnectSection>
 
-        <Separator $width="2px" />
+        <Separator $width='2px' />
 
-        <ConnectSection $gap="0px">
+        <ConnectSection $gap='0px'>
           <ProfileDataContainer>
             <ProfileDataLabel>프로파일로 연결</ProfileDataLabel>
             <EditProfilesButton tabIndex={0}>
@@ -323,9 +342,10 @@ const ProfileItemBox = styled.div`
   align-items: flex-start;
   gap: 6px;
   align-self: stretch;
-  background: #FFF;
-  ${({ $showBorder }) => $showBorder && 'border-top: 1px solid rgba(0, 0, 0, 0.10);'}
-`
+  background: #fff;
+  ${({ $showBorder }) =>
+    $showBorder && 'border-top: 1px solid rgba(0, 0, 0, 0.10);'}
+`;
 
 const ProfileItemName = styled.div`
   display: -webkit-box;
@@ -339,7 +359,7 @@ const ProfileItemName = styled.div`
   font-weight: 500;
   line-height: 100%;
   letter-spacing: -0.176px;
-`
+`;
 
 const ProfileItemAddress = styled.div`
   display: flex;
@@ -354,13 +374,50 @@ const ProfileItemAddress = styled.div`
   font-weight: 500;
   line-height: 100%;
   letter-spacing: -0.132px;
-`
+`;
 
 const ProfileItem = ({ name, address, showBorder }) => {
-  return <ProfileItemBox $showBorder={showBorder}>
-    <ProfileItemName>{name}</ProfileItemName>
+  return (
+    <ProfileItemBox $showBorder={showBorder}>
+      <ProfileItemName>{name}</ProfileItemName>
 
-    <ProfileItemAddress>{address}</ProfileItemAddress>
+      <ProfileItemAddress>{address}</ProfileItemAddress>
+    </ProfileItemBox>
+  );
+};
 
-  </ProfileItemBox>;
-}
+const CheckboxContainer = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  align-self: stretch;
+  padding: 3px;
+  cursor: pointer;
+`;
+
+const CheckboxInput = styled.input`
+  border: 1px solid black;
+  height: 14px;
+`;
+
+const CheckboxLabel = styled.div`
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 100%;
+  user-select: none;
+`;
+
+const Checkbox = ({ label, checked, setChecked }) => {
+  return (
+    <CheckboxContainer
+      tabIndex={0}
+      onClick={() => setChecked(!checked)}
+      onKeyDown={({ key }) => {
+        if (key === 'Enter') setChecked(!checked);
+      }}
+    >
+      <CheckboxInput type='checkbox' tabIndex={-1} checked={checked} />
+      <CheckboxLabel>{label}</CheckboxLabel>
+    </CheckboxContainer>
+  );
+};
