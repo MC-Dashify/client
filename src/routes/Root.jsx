@@ -1,20 +1,19 @@
 import { useState, useEffect } from 'react';
-
-import { styled, css } from 'styled-components';
 import { Link } from 'react-router-dom';
-import { FullLogo } from '../assets/logo';
-import Button from '../components/common/Button';
-import { CogIcon } from '../assets/24x-icons';
-import { PlusIcon } from '../assets/16x-icons';
-import Profile from '../storage/profile';
+import { styled, css } from 'styled-components';
 import uuid4 from 'uuid4';
-import Network from '../utils/net';
 import withReactContent from 'sweetalert2-react-content';
 import Swal from 'sweetalert2';
 import SyntaxHighlighter from 'react-syntax-highlighter';
 import { docco } from 'react-syntax-highlighter/dist/esm/styles/hljs';
-import { checkTargetForNewValues } from 'framer-motion';
 import { toast } from 'react-hot-toast';
+
+import Button from '../components/common/Button';
+import Profile from '../storage/profile';
+import Network from '../utils/net';
+import { FullLogo } from '../assets/logo';
+import { CogIcon } from '../assets/24x-icons';
+import { PlusIcon } from '../assets/16x-icons';
 import { XIcon } from '../assets/16x-icons';
 
 const RootContainer = styled.div`
@@ -538,25 +537,28 @@ const ProfileItem = ({
   updateProfile
 }) => {
   return (
-    <ProfileItemBox $showBorder={showBorder}>
-      <ProfileItemInfo>
-        <ProfileItemName>{name}</ProfileItemName>
-        <ProfileItemAddress>{address}</ProfileItemAddress>
-      </ProfileItemInfo>
-      {isEditing && (
-        <>
-          <EditModeButton
-            onClick={(uuid) => {
-              Profile.delete(uuid);
-              toast.success('성공적으로 프로필을 삭제했습니다!');
-              updateProfile();
-            }}
-          >
-            <XIcon />
-          </EditModeButton>
-        </>
-      )}
-    </ProfileItemBox>
+    <Link to='/dashboard'>
+      <ProfileItemBox $showBorder={showBorder}>
+        <ProfileItemInfo>
+          <ProfileItemName>{name}</ProfileItemName>
+          <ProfileItemAddress>{address}</ProfileItemAddress>
+        </ProfileItemInfo>
+
+        {isEditing && (
+          <>
+            <EditModeButton
+              onClick={(uuid) => {
+                Profile.delete(uuid);
+                toast.success('성공적으로 프로필을 삭제했습니다!');
+                updateProfile();
+              }}
+            >
+              <XIcon />
+            </EditModeButton>
+          </>
+        )}
+      </ProfileItemBox>
+    </Link>
   );
 };
 

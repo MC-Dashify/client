@@ -29,6 +29,10 @@ const GlobalStyle = styled.createGlobalStyle`
 
   a {
     text-decoration: none;
+
+    &:visited {
+      color: inherit;
+    }
   }
 
   .swal2-html-container {
