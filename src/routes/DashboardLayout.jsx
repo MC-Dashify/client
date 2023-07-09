@@ -17,8 +17,6 @@ import DashboardPageTitle from '../components/dashboard/DashboardPageTitle';
 import { RecoilRoot, useRecoilState } from 'recoil';
 import { useInterval } from '../hooks/interval';
 import { testState } from '../contexts/states';
-import Network from '../utils/net';
-import AppData from '../storage/data';
 
 const Aside = styled.aside`
   display: flex;

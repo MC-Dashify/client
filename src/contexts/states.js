@@ -1,13 +1,18 @@
-import { atom } from "recoil";
+import { atom } from 'recoil';
 
 const testState = atom({
-  key: "test", // unique ID (with respect to other atoms/selectors)
-  default: 0, // default value (aka initial value)
+  key: 'test', // unique ID (with respect to other atoms/selectors)
+  default: 0 // default value (aka initial value)
 });
 
 const statsState = atom({
-  key: "stats",
+  key: 'stats',
   default: []
-})
+});
 
-export { testState, statsState };
+const profilesState = atom({
+  key: 'profiles',
+  default: []
+});
+
+export { testState, statsState, profilesState };

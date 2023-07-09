@@ -3,11 +3,12 @@ import withReactContent from 'sweetalert2-react-content';
 
 const modalContent = withReactContent(Swal);
 
-export const showModal = (body, width) => {
+export const showModal = (body, width, options) => {
   modalContent.fire({
     width: width,
     html: body,
     showCloseButton: true,
-    showConfirmButton: false
+    showConfirmButton: false,
+    ...options
   });
 };
