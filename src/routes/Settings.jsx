@@ -1,16 +1,16 @@
-import { useState } from "react";
-import { AnimatePresence } from "framer-motion";
-import { useNavigate, useLocation } from "react-router-dom";
-import { Logo80, LogoText } from "../assets/logo";
-import { styled } from "styled-components";
-import Select from "react-select";
-import { toast } from "react-hot-toast";
-import Swal from "sweetalert2";
-import withReactContent from "sweetalert2-react-content";
+import { useState } from 'react';
+import { AnimatePresence } from 'framer-motion';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { Logo80, LogoText } from '../assets/logo';
+import { styled } from 'styled-components';
+import Select from 'react-select';
+import { toast } from 'react-hot-toast';
+import Swal from 'sweetalert2';
+import withReactContent from 'sweetalert2-react-content';
 
-import Button from "../components/common/Button";
-import LayerPopup, { PopupSection } from "../components/common/LayerPopup";
-import AppData from "../storage/data";
+import Button from '../components/common/Button';
+import LayerPopup, { PopupSection } from '../components/common/LayerPopup';
+import AppData from '../storage/data';
 
 const WebsiteInfoContainer = styled.div`
   display: flex;
@@ -77,18 +77,22 @@ const SettingOption = ({ options, optionName, optionDescription }) => {
     <SettingOptionContainer>
       <SettingInfo>
         <SettingName>{optionName}</SettingName>
-        {optionDescription ? <SettingDescription>{optionDescription}</SettingDescription> : <></>}
+        {optionDescription ? (
+          <SettingDescription>{optionDescription}</SettingDescription>
+        ) : (
+          <></>
+        )}
       </SettingInfo>
       <Select
         styles={{
           control: () => ({
-            display: "flex",
-            border: "none",
-            width: "175px",
-          }),
+            display: 'flex',
+            border: 'none',
+            width: '175px'
+          })
         }}
         components={{
-          IndicatorSeparator: () => null,
+          IndicatorSeparator: () => null
         }}
         value={value}
         onChange={(newValue) => setValue(newValue)}
@@ -99,14 +103,24 @@ const SettingOption = ({ options, optionName, optionDescription }) => {
   );
 };
 
-const SettingButton = ({ children, optionName, optionDescription, styleType, onClick }) => {
+const SettingButton = ({
+  children,
+  optionName,
+  optionDescription,
+  styleType,
+  onClick
+}) => {
   return (
     <SettingOptionContainer>
       <SettingInfo>
         <SettingName>{optionName}</SettingName>
-        {optionDescription ? <SettingDescription>{optionDescription}</SettingDescription> : <></>}
+        {optionDescription ? (
+          <SettingDescription>{optionDescription}</SettingDescription>
+        ) : (
+          <></>
+        )}
       </SettingInfo>
-      <Button styleType={styleType} padding="8px 16px" onClick={onClick}>
+      <Button styleType={styleType} padding='8px 16px' onClick={onClick}>
         {children}
       </Button>
     </SettingOptionContainer>
@@ -118,7 +132,7 @@ const ClearData = () => {
 
   AppData.clear();
   modal.fire({
-    icon: "success",
+    icon: 'success',
     html: (
       <>
         <h3>모든 데이터가 삭제되었습니다.</h3>
@@ -132,8 +146,8 @@ const ClearData = () => {
     allowEscapeKey: false,
     allowOutsideClick: false,
     willClose: () => {
-      window.location.href = "/";
-    },
+      window.location.href = '/';
+    }
   });
 
   // toast.success("모든 데이터가 삭제되었습니다.");
@@ -145,36 +159,36 @@ const Modal = ({ install }) => {
   const location = useLocation();
 
   const goBackward = () => {
-    if (location.key !== "default") {
+    if (location.key !== 'default') {
       // 이 페이지로 직접 접속하면 key가 default로 설정됩니다.
       // https://github.com/remix-run/react-router/discussions/9788#discussioncomment-4604278
       navigate(-1);
     } else {
-      navigate("/");
+      navigate('/');
     }
   };
 
   return (
     <div>
-      <AnimatePresence mode="" onExitComplete={goBackward}>
+      <AnimatePresence mode='' onExitComplete={goBackward}>
         {isModalOpen && (
           <LayerPopup
-            width={"50rem"}
-            title="설정"
+            width={'50rem'}
+            title='설정'
             onClose={() => setIsModalOpen(false)}
             footer={<div> © 2023 "Dashify" Development Team</div>}
           >
             <WebsiteInfoContainer>
-              <Logo80 background="black" foreground="white" />
+              <Logo80 background='black' foreground='white' />
               <WebsiteInfo>
                 <LogoText />
-                <WebsiteVersion>v{AppData.get("etc.version")}</WebsiteVersion>
+                <WebsiteVersion>v{AppData.get('etc.version')}</WebsiteVersion>
               </WebsiteInfo>
               <Button
-                padding={"8px 16px"}
-                styleType="filled"
+                padding={'8px 16px'}
+                styleType='filled'
                 onClick={() => {
-                  window.open("https://github.com/MC-Dashify", "_blank");
+                  window.open('https://github.com/MC-Dashify', '_blank');
                 }}
               >
                 GitHub 리포지토리 방문
@@ -201,23 +215,23 @@ const Modal = ({ install }) => {
                 ]}
               />
             </PopupSection> */}
-            <PopupSection title="애플리케이션" gap="0" titleMargin="18px">
+            <PopupSection title='애플리케이션' gap='0' titleMargin='18px'>
               {install === undefined ? (
-                ""
+                ''
               ) : (
                 <SettingButton
-                  optionName="애플리케이션 설치"
-                  optionDescription="Dashify을 디바이스에 설치합니다."
-                  styleType="filled"
+                  optionName='애플리케이션 설치'
+                  optionDescription='Dashify을 디바이스에 설치합니다.'
+                  styleType='filled'
                   onClick={install}
                 >
                   설치
                 </SettingButton>
               )}
               <SettingButton
-                optionName="모든 데이터 삭제"
-                optionDescription="Dashify에 저장된 모든 로컬 데이터(프로파일 등)을 삭제합니다."
-                styleType="warning"
+                optionName='모든 데이터 삭제'
+                optionDescription='Dashify에 저장된 모든 로컬 데이터(프로필 등)을 삭제합니다.'
+                styleType='warning'
                 onClick={ClearData}
               >
                 데이터 삭제

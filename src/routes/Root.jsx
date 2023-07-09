@@ -350,7 +350,7 @@ const Root = () => {
           <FullLogo color='black' />
 
           <InputFieldContainer>
-            <InputFieldBox label='프로파일 이름'>
+            <InputFieldBox label='프로필 이름'>
               <InputField
                 value={profileName}
                 onChange={(e) => setProfileName(e.target.value)}
@@ -404,7 +404,7 @@ const Root = () => {
                 handleAddProfile();
               }}
             >
-              프로파일 생성 후 연결
+              프로필 생성 후 연결
             </Button>
           </ButtonContainer>
         </ConnectSection>
@@ -413,7 +413,7 @@ const Root = () => {
 
         <ConnectSection $gap='0px'>
           <ProfileDataContainer>
-            <ProfileDataLabel>프로파일로 연결</ProfileDataLabel>
+            <ProfileDataLabel>프로필로 연결</ProfileDataLabel>
             <EditProfilesButton
               tabIndex={0}
               onClick={() => {
@@ -548,7 +548,7 @@ const ProfileItem = ({
           <EditModeButton
             onClick={(uuid) => {
               Profile.delete(uuid);
-              toast.success('성공적으로 프로파일을 삭제했습니다!');
+              toast.success('성공적으로 프로필을 삭제했습니다!');
               updateProfile();
             }}
           >
