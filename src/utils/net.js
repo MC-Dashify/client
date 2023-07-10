@@ -71,6 +71,30 @@ const Network = {
    **/
   ping: (host, port, key, isSecureConnection = false) => {
     return axios.get(
+      `${isSecureConnection ? 'https' : 'http'}://${host}:${port}/`,
+      {
+        headers: {
+          Authorization: `Bearer ${key}`
+        }
+      }
+    );
+  }
+  /**
+   * @param {string} host
+   * @param {number} port
+   * @param {boolean} isSecureConnection
+   * @returns {Promise}
+   * @example
+   * Network.get('foo.com', 8080, 'bar', false)
+   * .then((res) => {
+   *  console.log(res);
+   * })
+   * .catch((err) => {
+   * console.log(err);
+   * });
+   **/,
+  pingWS: (host, port, key, isSecureConnection = false) => {
+    return axios.get(
       `${isSecureConnection ? 'https' : 'http'}://${host}:${port}/ping`,
       {
         headers: {
