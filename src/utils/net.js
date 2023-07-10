@@ -9,7 +9,7 @@ const Network = {
    * @param {string} path
    * @returns {Promise}
    * @example
-   * Network.get('foo.com', 25565, 'bar', false, 'ping')
+   * Network.get('foo.com', 8080, 'bar', false, 'ping')
    * .then((res) => {
    * console.log(res);
    * })
@@ -36,7 +36,7 @@ const Network = {
    * @param {object} body
    * @returns {Promise}
    * @example
-   * Network.post('foo.com', 25565, 'bar', false, 'ping', { foo: 'bar' })
+   * Network.post('foo.com', 8080, 'bar', false, 'ping', { foo: 'bar' })
    * .then((res) => {
    * console.log(res);
    * })
@@ -61,7 +61,7 @@ const Network = {
    * @param {boolean} isSecureConnection
    * @returns {Promise}
    * @example
-   * Network.ping('foo.com', 25565, false)
+   * Network.get('foo.com', 8080, 'bar', false)
    * .then((res) => {
    *  console.log(res);
    * })
@@ -70,7 +70,14 @@ const Network = {
    * });
    **/
   ping: (host, port, key, isSecureConnection = false) => {
-    return this.get(host, port, key, isSecureConnection, 'ping');
+    return axios.get(
+      `${isSecureConnection ? 'https' : 'http'}://${host}:${port}/ping`,
+      {
+        headers: {
+          Authorization: `Bearer ${key}`
+        }
+      }
+    );
   }
 };
 
