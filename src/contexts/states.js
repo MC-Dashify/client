@@ -1,12 +1,17 @@
 import { atom } from 'recoil';
 
-const testState = atom({
-  key: 'test', // unique ID (with respect to other atoms/selectors)
-  default: 0 // default value (aka initial value)
-});
-
 const statsState = atom({
   key: 'stats',
+  default: []
+});
+
+const worldsState = atom({
+  key: 'worlds',
+  default: []
+});
+
+const playersState = atom({
+  key: 'players',
   default: []
 });
 
@@ -15,4 +20,27 @@ const profilesState = atom({
   default: []
 });
 
-export { testState, statsState, profilesState };
+const currentProfileState = atom({
+  key: 'currentProfile',
+  default: {}
+});
+
+const refreshRateState = atom({
+  key: 'refreshRate',
+  default: 15000
+});
+
+const hideAddressState = atom({
+  key: 'hideAddress',
+  default: false
+});
+
+export {
+  statsState,
+  profilesState,
+  currentProfileState,
+  refreshRateState,
+  hideAddressState,
+  worldsState,
+  playersState
+};

@@ -1,9 +1,11 @@
 import { styled, css } from 'styled-components';
-import { RecoilRoot } from 'recoil';
+import { useSetRecoilState } from 'recoil';
 import { useNavigate } from 'react-router-dom';
 
 import ProfileCreateForm from '../components/common/ProfileCreateForm';
 import ProfileList from '../components/common/ProfileList';
+import { useEffect } from 'react';
+import { currentProfileState } from '../contexts/states';
 
 const RootContainer = styled.div`
   display: flex;
@@ -35,22 +37,25 @@ const Separator = styled.div`
 
 const Root = () => {
   const navigate = useNavigate();
+  const setCurrentProfile = useSetRecoilState(currentProfileState);
+
+  useEffect(() => {
+    setCurrentProfile({});
+  });
 
   return (
     <RootContainer>
-      <RecoilRoot>
-        <Content>
-          <ProfileCreateForm
-            hasSettingButton
-            submitButtonText='프로필 생성 후 연결'
-            onAfterSubmit={() => navigate('/dashboard')}
-          />
+      <Content>
+        <ProfileCreateForm
+          hasSettingButton
+          submitButtonText='프로필 생성 후 연결'
+          onAfterSubmit={() => navigate('/dashboard')}
+        />
 
-          <Separator $width='2px' />
+        <Separator $width='2px' />
 
-          <ProfileList />
-        </Content>
-      </RecoilRoot>
+        <ProfileList />
+      </Content>
     </RootContainer>
   );
 };

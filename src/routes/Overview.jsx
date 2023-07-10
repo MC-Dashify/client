@@ -4,6 +4,13 @@ import styled, { css } from 'styled-components';
 import { Doughnut } from 'react-chartjs-2';
 import { stringToBytes } from '../utils/convert';
 import Chart from '../components/common/Chart';
+import { useRecoilValue } from 'recoil';
+import {
+  statsState,
+  worldsState,
+  currentProfileState
+} from '../contexts/states';
+import Network from '../utils/net';
 
 const CardContainer = styled.div`
   display: flex;
@@ -212,40 +219,6 @@ const VerticalDivider = styled.div`
   opacity: 0.2;
 `;
 
-const tempStatsData = {
-  jvm: {
-    usedMemory: '815 MB',
-    totalMemory: '2048 MB',
-    maxMemory: '2048 MB',
-    freeMemory: '1232 MB'
-  },
-  disk: {
-    freeSpace: '30763 MB',
-    totalSpace: '65517 MB'
-  },
-  mem: {
-    usedMem: '24750 MB',
-    totalMem: '32637 MB'
-  },
-  tps: [20.000113700646388, 17.999996940000468, 19.999989268894648],
-  cpu: {
-    cpuCores: 16,
-    cpuLoad: 98.23
-  }
-};
-
-const tempWorldDatas = [0, 0, 0].map(() => {
-  return {
-    difficulty: 'EASY',
-    gamerule: {},
-    size: '17.8 MB',
-    entities: 207,
-    name: 'world',
-    loadedChunks: 774,
-    player: 1
-  };
-});
-
 /**
  * @param {string} used
  * @param {string} total
@@ -266,11 +239,16 @@ const colorType = (value, min = 0, max = 100, reverse = false) => {
 };
 
 const Overview = () => {
+  const [worlds, setWorlds] = useState([]);
+  console.log('a', worlds);
   // eslint-disable-next-line no-unused-vars
   const [refreshFn, setRefreshFn] = useOutletContext();
-  const [data, setData] = useState(tempStatsData);
+  const worldsList = useRecoilValue(worldsState);
+  const statsData = useRecoilValue(statsState);
+  const currentProfile = useRecoilValue(currentProfileState);
 
-  const { jvm, disk, mem, tps, cpu } = data;
+  // if (!statsData?.length) return <></>;
+  const { jvm, disk, mem, tps, cpu } = statsData[statsData.length - 1];
 
   const cpuValue = cpu.cpuLoad.toFixed(1);
   const ramValue = getUsedPercantage(mem.usedMem, mem.totalMem);
@@ -278,19 +256,40 @@ const Overview = () => {
   const diskValue = getUsedPercantage(disk.freeSpace, disk.totalSpace);
   const tpsValue = (tps.reduce((a, b) => a + b, 0) / tps.length).toFixed(1);
 
-  const worldNames = tempWorldDatas.map((worldData) => worldData.name);
+  const worldNames = worldsList.map(({ name }) => name);
 
-  const countOfEntities = tempWorldDatas.map((worldData) => worldData.entities);
-  const countOfPlayers = tempWorldDatas.map((worldData) => worldData.player);
-  const countOfSize = tempWorldDatas.map(
-    (worldData) => stringToBytes(worldData.size) / 1024 ** 3
+  const countOfEntities = worlds.map((world) => world.data.entities);
+  const countOfPlayers = worlds.map((world) => world.data.player);
+  const countOfSize = worlds.map(
+    (world) => stringToBytes(world.data.size) / 1024 ** 3
   );
 
   useEffect(() => {
     // 이 컴포넌트에서 DashboardLayout으로 정보 새로 고침 함수를 넘겨야 합니다
     // TODO 정보 새로 고침
-    setRefreshFn(() => console.log('refreshed'));
+    setRefreshFn(() => {
+      console.log('refreshed');
+    });
   }, [setRefreshFn]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setWorlds(
+        await Promise.all(
+          worldsList.map(({ uuid }) =>
+            Network.get(
+              currentProfile.address,
+              currentProfile.port,
+              currentProfile.key,
+              currentProfile.isSecureConnection,
+              `worlds/${uuid}`
+            )
+          )
+        )
+      );
+    };
+    fetchData();
+  }, [worldsList, currentProfile]);
 
   return (
     <CardContainer>

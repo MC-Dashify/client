@@ -2,11 +2,18 @@ import { useEffect, useState } from 'react';
 import { useOutletContext } from 'react-router-dom';
 import styled from 'styled-components';
 import DashboardSummary from '../components/dashboard/DashboardSummary';
-import { BanIcon, ReceiveIcon, SendAndReceiveIcon, SendIcon } from '../assets/24x-icons';
+import {
+  BanIcon,
+  ReceiveIcon,
+  SendAndReceiveIcon,
+  SendIcon
+} from '../assets/24x-icons';
 import Chart from '../components/common/Chart';
 import { Line } from 'react-chartjs-2';
 import Searchbar from '../components/common/Searchbar';
 import { showModal } from '../utils/modal';
+import { useRecoilBridgeAcrossReactRoots_UNSTABLE } from 'recoil';
+import { Toaster } from 'react-hot-toast';
 
 const TrafficContainer = styled.div`
   display: flex;
@@ -79,7 +86,7 @@ const ChartContainer = styled.div`
   flex: 1 0 0;
   align-self: stretch;
   border-radius: 12px;
-  background: #FBFBFB;
+  background: #fbfbfb;
 `;
 
 const ChartTopContainer = styled.div`
@@ -142,17 +149,27 @@ const TrafficAddress = styled.div`
   letter-spacing: -0.36px;
 `;
 
-const TrafficInfo = ({ address, received, sent }) => (
-  <TrafficInfoContainer
-    onClick={() => {
-      showModal(<TrafficInfoModal address={address} />, '62.5rem');
-    }}
-  >
-    <TrafficAddress>{address}</TrafficAddress>
-    <ByteInfo icon={<SendIcon />} value={sent} />
-    <ByteInfo icon={<ReceiveIcon />} value={received} />
-  </TrafficInfoContainer>
-);
+const TrafficInfo = ({ address, received, sent }) => {
+  const RecoilBridge = useRecoilBridgeAcrossReactRoots_UNSTABLE();
+
+  return (
+    <TrafficInfoContainer
+      onClick={() => {
+        showModal(
+          <RecoilBridge>
+            <TrafficInfoModal address={address} />{' '}
+            <Toaster position='bottom-center' style={{ zIndex: '20' }} />
+          </RecoilBridge>,
+          '62.5rem'
+        );
+      }}
+    >
+      <TrafficAddress>{address}</TrafficAddress>
+      <ByteInfo icon={<SendIcon />} value={sent} />
+      <ByteInfo icon={<ReceiveIcon />} value={received} />
+    </TrafficInfoContainer>
+  );
+};
 
 const ByteInfoContainer = styled.div`
   display: flex;
@@ -252,7 +269,7 @@ const TrafficInfoModal = ({ address }) => {
               labels={sendDataset.map((_, index) => index)}
               datasets={[
                 { data: sendDataset, label: '송신' },
-                { data: receiveDataset, label: '수신' },
+                { data: receiveDataset, label: '수신' }
               ]}
               width='100%'
               height='100%'
@@ -332,14 +349,10 @@ const Traffic = () => {
           <ChartContentContainer>
             <Chart
               ChartComponent={Line}
-              labels={[
-                '1',
-                '2',
-                '3'
-              ]}
+              labels={['1', '2', '3']}
               datasets={[
                 { data: [3600, 4800, 4200], label: '송신' },
-                { data: [4700, 5000, 6000], label: '수신' },
+                { data: [4700, 5000, 6000], label: '수신' }
               ]}
               width='100%'
               height='100%'
@@ -362,12 +375,20 @@ const Traffic = () => {
           </ChartContentContainer>
         </ChartContainer>
         <IPListContainer>
-          <Searchbar
-            placeholder='IP로 검색'
-          />
-          {Object.entries(tempTrafficData.traffic).map(([address, { ReceivedBytes: received, SentBytes: sent }], index) => (
-            <TrafficInfo key={index} address={address} received={received} sent={sent} />
-          ))}
+          <Searchbar placeholder='IP로 검색' />
+          {Object.entries(tempTrafficData.traffic).map(
+            (
+              [address, { ReceivedBytes: received, SentBytes: sent }],
+              index
+            ) => (
+              <TrafficInfo
+                key={index}
+                address={address}
+                received={received}
+                sent={sent}
+              />
+            )
+          )}
         </IPListContainer>
       </ContentContainer>
     </TrafficContainer>

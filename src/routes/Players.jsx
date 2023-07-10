@@ -4,6 +4,8 @@ import DashboardSummary from '../components/dashboard/DashboardSummary';
 import styled from 'styled-components';
 import Searchbar from '../components/common/Searchbar';
 import { BanIcon, KickIcon } from '../assets/24x-icons';
+import axios from 'axios';
+import { toast } from 'react-hot-toast';
 
 const PlayersContainer = styled.div`
   display: flex;
@@ -188,6 +190,7 @@ const Players = () => {
   useEffect(() => {
     // 이 컴포넌트에서 DashboardLayout으로 정보 새로 고침 함수를 넘겨야 합니다
     // TODO 정보 새로 고침
+
     setRefreshFn(() => console.log('refreshed'));
   }, [setRefreshFn]);
 
