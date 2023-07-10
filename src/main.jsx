@@ -23,6 +23,7 @@ import GlobalStyle, {
   defaultFontFamily
 } from './components/common/globalstyles';
 import './styles/font-settings.css';
+import { RecoilRoot } from 'recoil';
 
 ChartJS.register(
   ArcElement,
@@ -35,6 +36,10 @@ ChartJS.register(
 );
 chartDefaults.font.family = defaultFontFamily;
 chartDefaults.font.size = 16;
+chartDefaults.animation.duration = 0; // general animation time
+chartDefaults.animations.x = false; // disables all animations
+chartDefaults.animations.y = false; // disables all animations
+chartDefaults.transitions.active.animation.duration = 0; // disables the animation for 'active' mode
 
 const VERSION = '0.0.1';
 AppData.set('etc.version', VERSION);
@@ -58,10 +63,11 @@ root.render(
   <React.StrictMode>
     <GlobalStyle />
 
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>
-
+    <RecoilRoot>
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+    </RecoilRoot>
     <ReactTooltip id='dashify__tooltip' place='bottom' />
     <Toaster position='bottom-center' style={{ zIndex: '20' }} />
   </React.StrictMode>
