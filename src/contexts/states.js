@@ -10,6 +10,11 @@ const worldsState = atom({
   default: []
 });
 
+const worldDetailState = atom({
+  key: 'worldDetail',
+  default: {}
+});
+
 const playersState = atom({
   key: 'players',
   default: []
@@ -42,5 +47,6 @@ export {
   refreshRateState,
   hideAddressState,
   worldsState,
-  playersState
+  playersState,
+  worldDetailState
 };

@@ -8,12 +8,19 @@ import Button from './Button';
 import { CogIcon } from '../../assets/24x-icons';
 import {
   useRecoilBridgeAcrossReactRoots_UNSTABLE,
-  useRecoilState
+  useRecoilState,
+  useSetRecoilState
 } from 'recoil';
 import SyntaxHighlighter from 'react-syntax-highlighter';
 import { docco } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 
-import { profilesState, currentProfileState } from '../../contexts/states';
+import {
+  profilesState,
+  currentProfileState,
+  statsState,
+  worldsState,
+  playersState
+} from '../../contexts/states';
 import { showModal } from '../../utils/modal';
 import ProfileCreateForm from './ProfileCreateForm';
 import { useNavigate } from 'react-router-dom';
@@ -187,7 +194,9 @@ const ProfileItem = ({
 }) => {
   const [currentProfile, setCurrentProfile] =
     useRecoilState(currentProfileState);
-  // const setCurrentProfile = useSetRecoilState(currentProfileState);
+  const setStats = useSetRecoilState(statsState);
+  const setWorlds = useSetRecoilState(worldsState);
+  const setPlayers = useSetRecoilState(playersState);
 
   const profile = Profile.get(uuid);
 
@@ -199,6 +208,7 @@ const ProfileItem = ({
     ) : (
       <ProfileItemDiv
         onClick={() => {
+          if (currentProfile.uuid === uuid) return;
           toast.loading('서버에 연결 중입니다...', { id: 'profile-adding' });
 
           Network.ping(

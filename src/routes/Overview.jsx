@@ -1,16 +1,11 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useOutletContext } from 'react-router-dom';
 import styled, { css } from 'styled-components';
 import { Doughnut } from 'react-chartjs-2';
 import { stringToBytes } from '../utils/convert';
 import Chart from '../components/common/Chart';
 import { useRecoilValue } from 'recoil';
-import {
-  statsState,
-  worldsState,
-  currentProfileState
-} from '../contexts/states';
-import Network from '../utils/net';
+import { statsState, worldsState, worldDetailState } from '../contexts/states';
 
 const CardContainer = styled.div`
   display: flex;
@@ -239,13 +234,11 @@ const colorType = (value, min = 0, max = 100, reverse = false) => {
 };
 
 const Overview = () => {
-  const [worlds, setWorlds] = useState([]);
-  console.log('a', worlds);
   // eslint-disable-next-line no-unused-vars
   const [refreshFn, setRefreshFn] = useOutletContext();
   const worldsList = useRecoilValue(worldsState);
+  const worlds = useRecoilValue(worldDetailState);
   const statsData = useRecoilValue(statsState);
-  const currentProfile = useRecoilValue(currentProfileState);
 
   // if (!statsData?.length) return <></>;
   const { jvm, disk, mem, tps, cpu } = statsData[statsData.length - 1];
@@ -258,9 +251,14 @@ const Overview = () => {
 
   const worldNames = worldsList.map(({ name }) => name);
 
-  const countOfEntities = worlds.map((world) => world.data.entities);
-  const countOfPlayers = worlds.map((world) => world.data.player);
-  const countOfSize = worlds.map(
+  console.log('worlds', worlds);
+
+  const values = Object.values(worlds);
+  console.log('Values', values);
+
+  const countOfEntities = values.map((world) => world.data.entities);
+  const countOfPlayers = values.map((world) => world.data.player);
+  const countOfSize = values.map(
     (world) => stringToBytes(world.data.size) / 1024 ** 3
   );
 
@@ -271,25 +269,6 @@ const Overview = () => {
       console.log('refreshed');
     });
   }, [setRefreshFn]);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      setWorlds(
-        await Promise.all(
-          worldsList.map(({ uuid }) =>
-            Network.get(
-              currentProfile.address,
-              currentProfile.port,
-              currentProfile.key,
-              currentProfile.isSecureConnection,
-              `worlds/${uuid}`
-            )
-          )
-        )
-      );
-    };
-    fetchData();
-  }, [worldsList, currentProfile]);
 
   return (
     <CardContainer>

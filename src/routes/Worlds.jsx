@@ -4,12 +4,11 @@ import styled from 'styled-components';
 import { showModal } from '../utils/modal';
 import DashboardSummary from '../components/dashboard/DashboardSummary';
 import Searchbar from '../components/common/Searchbar';
-import { worldsState, currentProfileState } from '../contexts/states';
+import { worldsState, worldDetailState } from '../contexts/states';
 import {
   useRecoilBridgeAcrossReactRoots_UNSTABLE,
   useRecoilValue
 } from 'recoil';
-import Network from '../utils/net';
 import { Toaster } from 'react-hot-toast';
 
 const WorldsContainer = styled.div`
@@ -68,25 +67,15 @@ const NameDisplay = styled.div`
   letter-spacing: -0.48px;
 `;
 
-const WorldInfoContainer = ({ uuid, name, profile }) => {
+const WorldInfoContainer = ({ uuid, name }) => {
   const RecoilBridge = useRecoilBridgeAcrossReactRoots_UNSTABLE();
-
-  const [world, setWorld] = useState(undefined);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      const world = await getWorldInfo(uuid, profile);
-      setWorld(world);
-    };
-    fetchData();
-  }, [profile, uuid]);
 
   return (
     <WorldContainer
       onClick={() => {
         showModal(
           <RecoilBridge>
-            <WorldInfoModal uuid={uuid} name={name} world={world} />
+            <WorldInfoModal uuid={uuid} name={name} />
             <Toaster position='bottom-center' style={{ zIndex: '20' }} />
           </RecoilBridge>,
           '62.5rem'
@@ -172,9 +161,11 @@ const ModalGamerulesSeparator = styled.div`
   background-color: #000;
 `;
 
-const WorldInfoModal = ({ uuid, name, world }) => {
+const WorldInfoModal = ({ uuid, name }) => {
   const [rightGamerules, setRightGamerules] = useState([]);
   const [leftGamerules, setLeftGamerules] = useState([]);
+  const worldDetails = useRecoilValue(worldDetailState);
+  const world = worldDetails[uuid].data;
 
   useEffect(() => {
     const right = Object.keys(world.gamerule);
@@ -357,17 +348,6 @@ const GameruleDisplay = ({ name, value }) => {
   );
 };
 
-const getWorldInfo = async (uuid, profile) =>
-  (
-    await Network.get(
-      profile.address,
-      profile.port,
-      profile.key,
-      profile.isSecureConnection,
-      'worlds/' + uuid
-    )
-  ).data;
-
 const Worlds = () => {
   // eslint-disable-next-line no-unused-vars
   const [refreshFn, setRefreshFn] = useOutletContext();
@@ -376,7 +356,6 @@ const Worlds = () => {
     label: '이름'
   });
   const [searchValue, setSearchValue] = useState('');
-  const currentProfile = useRecoilValue(currentProfileState);
   const worlds = useRecoilValue(worldsState);
 
   console.log('W', refreshFn);
@@ -414,12 +393,7 @@ const Worlds = () => {
             return true;
           })
           .map(({ uuid, name }, index) => (
-            <WorldInfoContainer
-              key={index}
-              uuid={uuid}
-              name={name}
-              profile={currentProfile}
-            />
+            <WorldInfoContainer key={index} uuid={uuid} name={name} />
           ))}
       </WorldsListContainer>
     </WorldsContainer>

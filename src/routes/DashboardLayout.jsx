@@ -27,7 +27,8 @@ import {
   refreshRateState,
   statsState,
   worldsState,
-  playersState
+  playersState,
+  worldDetailState
 } from '../contexts/states';
 import AppData from '../storage/data';
 import Profile from '../storage/profile';
@@ -332,6 +333,7 @@ const DashboardLayout = () => {
     useRecoilState(currentProfileState);
   const setStats = useSetRecoilState(statsState);
   const setWorlds = useSetRecoilState(worldsState);
+  const setWorldDetails = useSetRecoilState(worldDetailState);
   const setPlayers = useSetRecoilState(playersState);
 
   const reloadTask = useCallback(
@@ -343,7 +345,6 @@ const DashboardLayout = () => {
         profile.isSecureConnection
       )
         .then(async () => {
-          if (refreshFn) refreshFn();
           const statResults = await Network.get(
             profile.address,
             profile.port,
@@ -352,13 +353,15 @@ const DashboardLayout = () => {
             'stats'
           );
 
-          const worldResults = await Network.get(
-            profile.address,
-            profile.port,
-            profile.key,
-            profile.isSecureConnection,
-            'worlds'
-          );
+          const worldResults = (
+            await Network.get(
+              profile.address,
+              profile.port,
+              profile.key,
+              profile.isSecureConnection,
+              'worlds'
+            )
+          ).data.worlds;
 
           const playerResults = await Network.get(
             profile.address,
@@ -369,10 +372,37 @@ const DashboardLayout = () => {
           );
 
           setStats((stats) => [...stats.slice(-19), statResults.data]);
-          setWorlds(worldResults.data.worlds);
+          setWorlds(worldResults);
           setPlayers(playerResults.data.players);
-
           setConnected(true);
+
+          const result = await Promise.all(
+            worldResults.map(
+              ({ uuid }) =>
+                new Promise(async (resolve, reject) =>
+                  resolve([
+                    uuid,
+                    await Network.get(
+                      profile.address,
+                      profile.port,
+                      profile.key,
+                      profile.isSecureConnection,
+                      `worlds/${uuid}`
+                    )
+                  ])
+                )
+            )
+          );
+
+          setWorldDetails(
+            result.reduce(
+              (prev, [uuid, current]) => ({
+                ...prev,
+                [uuid]: current
+              }),
+              {}
+            )
+          );
         })
         .catch((error) => setConnected(false));
     },
