@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { Outlet, Link, useLocation } from 'react-router-dom';
+import { useEffect, useState, useCallback } from 'react';
+import { Outlet, Link, useLocation, BrowserRouter } from 'react-router-dom';
 import { css, styled } from 'styled-components';
 
 import { Logo, LogoText } from '../assets/logo';
@@ -14,9 +14,27 @@ import {
 } from '../assets/24x-icons';
 import { ArrowRightAndLeftIcon } from '../assets/16x-icons';
 import DashboardPageTitle from '../components/dashboard/DashboardPageTitle';
-import { RecoilRoot, useRecoilState } from 'recoil';
+import {
+  useRecoilBridgeAcrossReactRoots_UNSTABLE,
+  useRecoilState,
+  useRecoilValue,
+  useSetRecoilState
+} from 'recoil';
 import { useInterval } from '../hooks/interval';
-import { testState } from '../contexts/states';
+import {
+  currentProfileState,
+  hideAddressState,
+  refreshRateState,
+  statsState,
+  worldsState,
+  playersState
+} from '../contexts/states';
+import AppData from '../storage/data';
+import Profile from '../storage/profile';
+import Network from '../utils/net';
+import { showModal } from '../utils/modal';
+import ProfileList from '../components/common/ProfileList';
+import { Toaster } from 'react-hot-toast';
 
 const Aside = styled.aside`
   display: flex;
@@ -196,11 +214,30 @@ const ProfileAddress = styled.div`
 `;
 
 const ProfileChanger = () => {
+  const currentProfile = useRecoilValue(currentProfileState);
+  const hideAddress = useRecoilValue(hideAddressState);
+  const RecoilBridge = useRecoilBridgeAcrossReactRoots_UNSTABLE();
+
   return (
-    <ProfileChangerBox>
+    <ProfileChangerBox
+      onClick={() => {
+        showModal(
+          <RecoilBridge>
+            <BrowserRouter>
+              <ProfileList />
+            </BrowserRouter>
+            <Toaster position='bottom-center' style={{ zIndex: '20' }} />
+          </RecoilBridge>,
+          484,
+          { showCloseButton: false }
+        );
+      }}
+    >
       <ProfileInfoContainer>
-        <ProfileTitle>하이픽셀하이픽셀하이픽셀하이픽셀</ProfileTitle>
-        <ProfileAddress>hypixel.nethypixel.nethypixel.net:25555</ProfileAddress>
+        <ProfileTitle>{currentProfile.name}</ProfileTitle>
+        {!hideAddress && (
+          <ProfileAddress>{`${currentProfile.address}:${currentProfile.port}`}</ProfileAddress>
+        )}
       </ProfileInfoContainer>
 
       <ArrowRightAndLeftIcon />
@@ -208,16 +245,8 @@ const ProfileChanger = () => {
   );
 };
 
-const Sidebar = () => {
+const Sidebar = ({ connected, setConnected, refreshFn }) => {
   const location = useLocation();
-
-  const [test, setTest] = useRecoilState(testState);
-
-  // 백그라운드에서 일정 시간마다 작업 실행
-  useInterval(async () => {
-    console.log(test);
-    setTest(test + 1);
-  }, 1000);
 
   const menus = [
     { path: '/dashboard', label: '대시보드', icon: <ChartIcon /> },
@@ -282,19 +311,108 @@ const OutletContainer = styled.div`
   overflow: auto;
 `;
 
+const UnconnectedDisplay = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  font-size: 64px;
+  font-weight: 700;
+
+  padding-top: 64px;
+`;
+
 const DashboardLayout = () => {
   const [refreshFn, setRefreshFn] = useState(null);
+  const [connected, setConnected] = useState(false);
   // Outlet -> DashboardLayout로 새로 고침 함수를 전달해야 합니다
+
+  const [refreshRate, setRefreshRate] = useRecoilState(refreshRateState);
+  const [currentProfile, setCurrentProfile] =
+    useRecoilState(currentProfileState);
+  const setStats = useSetRecoilState(statsState);
+  const setWorlds = useSetRecoilState(worldsState);
+  const setPlayers = useSetRecoilState(playersState);
+
+  const reloadTask = useCallback(
+    async (profile = currentProfile) => {
+      Network.ping(
+        profile.address,
+        profile.port,
+        profile.key,
+        profile.isSecureConnection
+      )
+        .then(async () => {
+          if (refreshFn) refreshFn();
+          const statResults = await Network.get(
+            profile.address,
+            profile.port,
+            profile.key,
+            profile.isSecureConnection,
+            'stats'
+          );
+
+          const worldResults = await Network.get(
+            profile.address,
+            profile.port,
+            profile.key,
+            profile.isSecureConnection,
+            'worlds'
+          );
+
+          const playerResults = await Network.get(
+            profile.address,
+            profile.port,
+            profile.key,
+            profile.isSecureConnection,
+            'players'
+          );
+
+          setStats((stats) => [...stats.slice(-19), statResults.data]);
+          setWorlds(worldResults.data.worlds);
+          setPlayers(playerResults.data.players);
+
+          setConnected(true);
+        })
+        .catch((error) => setConnected(false));
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [currentProfile]
+  );
+
+  useEffect(() => {
+    if (currentProfile.uuid === undefined) {
+      const profile = Profile.get(AppData.get('etc.last_profile'));
+      setCurrentProfile(profile);
+      console.log('P', profile);
+      if (profile && !connected) reloadTask(profile);
+    }
+  }, [currentProfile, setCurrentProfile, connected, reloadTask]);
+
+  useEffect(() => {
+    setRefreshRate(AppData.get('settings.auto_refresh_rate'));
+  }, [setRefreshRate]);
+
+  // 백그라운드에서 일정 시간마다 작업 실행
+  useInterval(reloadTask, refreshRate);
 
   return (
     <PageContentContainer>
-      <RecoilRoot>
-        <Sidebar />
-        <OutletContainer>
-          <DashboardPageTitle refreshFn={refreshFn} />
+      <Sidebar
+        setConnected={setConnected}
+        connected={connected}
+        refreshFn={refreshFn}
+      />
+      <OutletContainer>
+        <DashboardPageTitle reloadTask={reloadTask} />
+        {connected ? (
           <Outlet context={[refreshFn, setRefreshFn]} />
-        </OutletContainer>{' '}
-      </RecoilRoot>
+        ) : (
+          <UnconnectedDisplay>
+            서버랑 연결이 되어 있지 않습니다
+          </UnconnectedDisplay>
+        )}
+      </OutletContainer>
     </PageContentContainer>
   );
 };

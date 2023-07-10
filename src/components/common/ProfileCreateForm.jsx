@@ -14,7 +14,8 @@ import { FullLogo } from '../../assets/logo';
 import Network from '../../utils/net';
 import { CogIcon } from '../../assets/24x-icons';
 import { useSetRecoilState } from 'recoil';
-import { profilesState } from '../../contexts/states';
+import { currentProfileState, profilesState } from '../../contexts/states';
+import AppData from '../../storage/data';
 
 const modal = withReactContent(Swal);
 
@@ -51,6 +52,8 @@ const InputFieldContainer = styled.div`
   align-items: flex-start;
   gap: 24px;
   align-self: stretch;
+  margin-left: 4px;
+  margin-right: 4px;
 `;
 
 const InputLabelPair = styled.div`
@@ -190,6 +193,7 @@ const ProfileCreateForm = ({
   onAfterSubmit
 }) => {
   const setProfiles = useSetRecoilState(profilesState);
+  const setCurrentProfiles = useSetRecoilState(currentProfileState);
   const [profileName, setProfileName] = useState('');
   const [serverAddress, setServerAddress] = useState('');
   const [serverPort, setServerPort] = useState('');
@@ -218,9 +222,17 @@ const ProfileCreateForm = ({
       return;
     }
 
-    Network.ping(serverAddress, serverPort, securityKey, secureConnection)
+    toast.loading('서버에 연결 중입니다...', { id: 'profile-adding' });
+
+    Network.ping(
+      serverAddress === '' ? 'localhost' : serverAddress,
+      serverPort === '' ? 8080 : serverPort,
+      securityKey,
+      secureConnection
+    )
       .then((res) => {
         if (res.status === 200) {
+          toast.dismiss();
           const profile = {
             uuid: uuid4(),
             name: profileName,
@@ -231,13 +243,18 @@ const ProfileCreateForm = ({
           };
 
           Profile.add(profile);
+          AppData.set('etc.last_profile', profile.uuid);
+          setProfiles(Profile.getAll());
+          setCurrentProfiles(profile);
+
+          Swal.close();
           toast.success('프로필이 추가되었습니다.', { id: 'profile-added' });
 
           onAfterSubmit && onAfterSubmit();
-          setProfiles(Profile.getAll());
         }
       })
       .catch((err) => {
+        toast.dismiss();
         const errorText = `${err.stack}`.replace(/\\n/g, '\n');
         const copyToClipboard = async () => {
           const { clipboard } = navigator;

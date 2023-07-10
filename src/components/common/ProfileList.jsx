@@ -1,17 +1,29 @@
-import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
 import { styled } from 'styled-components';
-import { toast } from 'react-hot-toast';
+import { Toaster, toast } from 'react-hot-toast';
 
 import Profile from '../../storage/profile';
 import { PlusIcon } from '../../assets/16x-icons';
 import { XIcon } from '../../assets/16x-icons';
 import Button from './Button';
 import { CogIcon } from '../../assets/24x-icons';
-import { useRecoilState } from 'recoil';
-import { profilesState } from '../../contexts/states';
+import {
+  useRecoilBridgeAcrossReactRoots_UNSTABLE,
+  useRecoilState
+} from 'recoil';
+import SyntaxHighlighter from 'react-syntax-highlighter';
+import { docco } from 'react-syntax-highlighter/dist/esm/styles/hljs';
+
+import { profilesState, currentProfileState } from '../../contexts/states';
 import { showModal } from '../../utils/modal';
 import ProfileCreateForm from './ProfileCreateForm';
+import { useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import AppData from '../../storage/data';
+import Swal from 'sweetalert2';
+import Network from '../../utils/net';
+import withReactContent from 'sweetalert2-react-content';
+
+const modal = withReactContent(Swal);
 
 const Section = styled.section`
   display: flex;
@@ -63,6 +75,10 @@ const EditProfilesButton = styled.div`
   }
 `;
 
+const ProfileItemDiv = styled.div`
+  cursor: pointer;
+`;
+
 const ProfilesContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -85,6 +101,7 @@ const ProfileItemBox = styled.div`
   align-items: center;
   align-self: stretch;
   background: #fff;
+
   ${({ $showBorder }) =>
     $showBorder && 'border-top: 1px solid rgba(0, 0, 0, 0.10);'}
 `;
@@ -168,15 +185,112 @@ const ProfileItem = ({
   isEditing,
   updateProfile
 }) => {
+  const [currentProfile, setCurrentProfile] =
+    useRecoilState(currentProfileState);
+  // const setCurrentProfile = useSetRecoilState(currentProfileState);
+
+  const profile = Profile.get(uuid);
+
+  const navigate = useNavigate();
+
+  const Component = ({ children }) =>
+    isEditing ? (
+      <>{children}</>
+    ) : (
+      <ProfileItemDiv
+        onClick={() => {
+          toast.loading('서버에 연결 중입니다...', { id: 'profile-adding' });
+
+          Network.ping(
+            profile.address,
+            profile.port,
+            profile.key,
+            profile.isSecureConnection
+          )
+            .then((res) => {
+              if (res.status === 200) {
+                toast.dismiss();
+                setCurrentProfile(profile);
+                AppData.set('etc.last_profile', uuid);
+                Swal.close();
+                navigate('/dashboard');
+              }
+            })
+            .catch((err) => {
+              toast.dismiss();
+              const errorText = `${err.stack}`.replace(/\\n/g, '\n');
+              const copyToClipboard = async () => {
+                const { clipboard } = navigator;
+
+                if (typeof clipboard == 'undefined') {
+                  toast.error(
+                    '복사에 실패했습니다. 브라우저가 복사 기능을 지원하지 않거나, 애플리케이션이 HTTPS로 연결되지 않았습니다.',
+                    { id: 'clipboard' }
+                  );
+                  return;
+                }
+
+                try {
+                  await clipboard.writeText(errorText);
+                  toast.success('복사되었습니다.', { id: 'clipboard' });
+                } catch (e) {
+                  toast.error('복사에 실패했습니다.', { id: 'clipboard' });
+                }
+              };
+
+              modal.fire({
+                icon: 'error',
+                html: (
+                  <div
+                    style={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      justifyContent: 'center',
+                      alignItems: 'center'
+                    }}
+                  >
+                    <h3>연결 실패</h3>
+                    {errorText.includes('418') ? (
+                      <>
+                        <p>서버가 Dashify를 비활성화 하였습니다.</p>
+                      </>
+                    ) : (
+                      <>
+                        <p>다음과 같은 오류가 발생하였습니다</p>
+                        <hr />
+                        <SyntaxHighlighter language='js' style={docco}>
+                          {errorText}
+                        </SyntaxHighlighter>
+                        <Button onClick={copyToClipboard}>
+                          <div>클립보드에 복사하기</div>
+                        </Button>
+                      </>
+                    )}
+                  </div>
+                ),
+                width: errorText.includes('418') ? '' : '75%',
+                showConfirmButton: true,
+                showCancelButton: false,
+                timerProgressBar: true,
+                allowEscapeKey: false,
+                allowOutsideClick: false
+              });
+            });
+        }}
+      >
+        {children}
+      </ProfileItemDiv>
+    );
+
   return (
-    <Link to='/dashboard'>
+    <Component>
       <ProfileItemBox $showBorder={showBorder}>
         <ProfileItemInfo>
           <ProfileItemName>{name}</ProfileItemName>
           <ProfileItemAddress>{address}</ProfileItemAddress>
         </ProfileItemInfo>
 
-        {isEditing && (
+        {isEditing && currentProfile.uuid !== uuid && (
           <>
             <EditModeButton
               onClick={(uuid) => {
@@ -190,11 +304,13 @@ const ProfileItem = ({
           </>
         )}
       </ProfileItemBox>
-    </Link>
+    </Component>
   );
 };
 
 const ProfileList = () => {
+  const RecoilBridge = useRecoilBridgeAcrossReactRoots_UNSTABLE();
+
   const [profiles, setProfiles] = useRecoilState(profilesState);
   const [isEditing, setIsEditing] = useState(false);
 
@@ -234,10 +350,16 @@ const ProfileList = () => {
 
       <AddProfileButton
         onClick={() => {
-          showModal(<ProfileCreateForm />, 484, { showCloseButton: false });
+          showModal(
+            <RecoilBridge>
+              <ProfileCreateForm />
+              <Toaster position='bottom-center' style={{ zIndex: '20' }} />
+            </RecoilBridge>,
+            484,
+            { showCloseButton: false }
+          );
         }}
         icon={<PlusIcon />}
-        // TODO 생성 시 모달 닫기
       >
         프로필 추가
       </AddProfileButton>
