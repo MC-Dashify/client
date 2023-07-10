@@ -36,7 +36,6 @@ const Profile = {
    * //   port: 25565,
    * //   key: 'bar',
    * //   isSecureConnection: false,
-   * //   refreshInterval: 5,
    * // }
    * // or undefined
    **/
@@ -85,7 +84,6 @@ const Profile = {
     const profiles = Profile.getAll();
     const index = profiles.findIndex((p) => p.id === id);
     profiles[index] = editedProfile;
-    // localStorage.setItem('profiles', JSON.stringify(profiles));
     AppData.set('profiles', profiles);
   },
 
@@ -100,7 +98,6 @@ const Profile = {
     const profiles = Profile.getAll();
     const index = profiles.findIndex((profile) => profile.id === id);
     profiles.splice(index, 1);
-    // localStorage.setItem('profiles', JSON.stringify(profiles));
     AppData.set('profiles', profiles);
   }
 };
