@@ -270,17 +270,25 @@ const ProfileCreateForm = ({
               }}
             >
               <h3>연결 실패</h3>
-              <p>다음과 같은 오류가 발생하였습니다</p>
-              <hr />
-              <SyntaxHighlighter language='js' style={docco}>
-                {errorText}
-              </SyntaxHighlighter>
-              <Button onClick={copyToClipboard}>
-                <div>클립보드에 복사하기</div>
-              </Button>
+              {errorText.includes('418') ? (
+                <>
+                  <p>서버가 Dashify를 비활성화 하였습니다.</p>
+                </>
+              ) : (
+                <>
+                  <p>다음과 같은 오류가 발생하였습니다</p>
+                  <hr />
+                  <SyntaxHighlighter language='js' style={docco}>
+                    {errorText}
+                  </SyntaxHighlighter>
+                  <Button onClick={copyToClipboard}>
+                    <div>클립보드에 복사하기</div>
+                  </Button>
+                </>
+              )}
             </div>
           ),
-          width: '80%',
+          width: errorText.includes('418') ? '' : '75%',
           showConfirmButton: true,
           showCancelButton: false,
           timerProgressBar: true,
