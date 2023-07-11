@@ -4,8 +4,6 @@ import DashboardSummary from '../components/dashboard/DashboardSummary';
 import styled from 'styled-components';
 import Searchbar from '../components/common/Searchbar';
 import { BanIcon, KickIcon } from '../assets/24x-icons';
-import axios from 'axios';
-import { toast } from 'react-hot-toast';
 
 const PlayersContainer = styled.div`
   display: flex;
@@ -28,7 +26,7 @@ const getPlayerData = async (uuid) => ({
   ping: 0,
   name: 'aroxu',
   clientBrandName: 'vanilla',
-  avatar: 'https://crafatar.com/avatars/762dea11-9c45-4b18-95fc-a86aab3b39ee',
+  avatar: 'https://mc-heads.net/avatar/762dea11-9c45-4b18-95fc-a86aab3b39ee',
   uuid: '762dea11-9c45-4b18-95fc-a86aab3b39ee'
 });
 
@@ -148,7 +146,7 @@ const PlayerInfoContainer = ({ uuid, name }) => {
 
   return player ? (
     <PlayerContainer>
-      <HeadDisplay $src={player.avatar} />
+      <HeadDisplay $src={`${player.avatar}/46.png`} />
       <PlayerDataDisplay
         topText={uuid}
         bottomText={name}
