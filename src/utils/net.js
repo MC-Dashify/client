@@ -78,7 +78,7 @@ const Network = {
         }
       }
     );
-  }
+  },
   /**
    * @param {string} host
    * @param {number} port
@@ -92,7 +92,7 @@ const Network = {
    * .catch((err) => {
    * console.log(err);
    * });
-   **/,
+   **/
   pingWS: (host, port, key, isSecureConnection = false) => {
     return axios.get(
       `${isSecureConnection ? 'https' : 'http'}://${host}:${port}/ping`,
