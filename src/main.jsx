@@ -14,7 +14,7 @@ import {
   Legend,
   defaults as chartDefaults
 } from 'chart.js';
-import { registerSW } from 'virtual:pwa-register';
+// import { registerSW } from 'virtual:pwa-register';
 
 import App from './App';
 
@@ -44,18 +44,6 @@ chartDefaults.transitions.active.animation.duration = 0; // disables the animati
 const VERSION = '0.0.1';
 AppData.set('etc.version', VERSION);
 // XXX VERSION 파일 삭제 논의
-
-const updateSW = registerSW({
-  onOfflineReady() {
-    toast.success(
-      '오프라인 준비를 완료했습니다. 이제 오프라인 상태에서도 애플리케이션을 사용할 수 있습니다.',
-      {
-        id: 'offline-ready',
-        duration: 4000
-      }
-    );
-  }
-});
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
