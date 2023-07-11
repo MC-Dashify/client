@@ -4,7 +4,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { Logo80, LogoText } from '../assets/logo';
 import { styled } from 'styled-components';
 import Select from 'react-select';
-import { toast } from 'react-hot-toast';
+import { open } from '@tauri-apps/api/shell';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
 
@@ -188,7 +188,9 @@ const Modal = ({ install }) => {
                 padding={'8px 16px'}
                 styleType='filled'
                 onClick={() => {
-                  window.open('https://github.com/MC-Dashify', '_blank');
+                  window.location.hostname === 'dashify.localhost'
+                    ? open('https://github.com/MC-Dashify')
+                    : window.open('https://github.com/MC-Dashify', '_blank');
                 }}
               >
                 GitHub 리포지토리 방문
@@ -216,7 +218,7 @@ const Modal = ({ install }) => {
               />
             </PopupSection> */}
             <PopupSection title='애플리케이션' gap='0' titleMargin='18px'>
-              {install === undefined ? (
+              {/* {install === undefined ? (
                 ''
               ) : (
                 <SettingButton
@@ -227,7 +229,7 @@ const Modal = ({ install }) => {
                 >
                   설치
                 </SettingButton>
-              )}
+              )} */}
               <SettingButton
                 optionName='모든 데이터 삭제'
                 optionDescription='Dashify에 저장된 모든 로컬 데이터(프로필 등)을 삭제합니다.'
