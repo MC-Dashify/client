@@ -245,7 +245,9 @@ const ProfileCreateForm = ({
           Profile.add(profile);
           AppData.set('etc.last_profile', profile.uuid);
           setProfiles(Profile.getAll());
-          setCurrentProfiles(profile);
+          if (hasSettingButton) {
+            setCurrentProfiles(profile);
+          }
 
           Swal.close();
           toast.success('프로필이 추가되었습니다.', { id: 'profile-added' });

@@ -35,7 +35,7 @@ import Profile from '../storage/profile';
 import Network from '../utils/net';
 import { showModal } from '../utils/modal';
 import ProfileList from '../components/common/ProfileList';
-import { Toaster } from 'react-hot-toast';
+import { Toaster, toast } from 'react-hot-toast';
 
 const Aside = styled.aside`
   display: flex;
@@ -326,6 +326,7 @@ const UnconnectedDisplay = styled.div`
 const DashboardLayout = () => {
   const [refreshFn, setRefreshFn] = useState(null);
   const [connected, setConnected] = useState(false);
+  const [firstLoadComplete, setFirstLoadComplete] = useState(false);
   // Outlet -> DashboardLayout로 새로 고침 함수를 전달해야 합니다
 
   const [refreshRate, setRefreshRate] = useRecoilState(refreshRateState);
@@ -403,6 +404,9 @@ const DashboardLayout = () => {
               {}
             )
           );
+          if (firstLoadComplete === false) {
+            setFirstLoadComplete(true);
+          }
         })
         .catch((error) => setConnected(false));
     },
@@ -411,13 +415,29 @@ const DashboardLayout = () => {
   );
 
   useEffect(() => {
+    if (firstLoadComplete === false) {
+      toast.loading('데이터 로드중...', { id: 'data-loading' });
+    } else if (firstLoadComplete === true) {
+      toast.dismiss('data-loading');
+    }
+  }, [firstLoadComplete]);
+
+  useEffect(() => {
     if (currentProfile.uuid === undefined) {
       const profile = Profile.get(AppData.get('etc.last_profile'));
       setCurrentProfile(profile);
       console.log('P', profile);
-      if (profile && !connected) reloadTask(profile);
     }
-  }, [currentProfile, setCurrentProfile, connected, reloadTask]);
+    if (currentProfile && !connected) {
+      reloadTask(currentProfile);
+    }
+  }, [
+    currentProfile,
+    setCurrentProfile,
+    connected,
+    reloadTask,
+    firstLoadComplete
+  ]);
 
   useEffect(() => {
     setRefreshRate(AppData.get('settings.auto_refresh_rate'));

@@ -208,8 +208,12 @@ const ProfileItem = ({
     ) : (
       <ProfileItemDiv
         onClick={() => {
-          if (currentProfile.uuid === uuid) return;
-          toast.loading('서버에 연결 중입니다...', { id: 'profile-adding' });
+          if (currentProfile.uuid === uuid) {
+            return;
+          }
+          toast.loading('서버에 연결 중입니다...', {
+            id: 'profile-connecting'
+          });
 
           Network.ping(
             profile.address,
@@ -276,6 +280,10 @@ const ProfileItem = ({
                         </Button>
                       </>
                     )}
+                    <Toaster
+                      position='bottom-center'
+                      style={{ zIndex: '20' }}
+                    />
                   </div>
                 ),
                 width: errorText.includes('418') ? '' : '75%',
