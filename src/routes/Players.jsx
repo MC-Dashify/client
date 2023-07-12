@@ -4,6 +4,8 @@ import DashboardSummary from '../components/dashboard/DashboardSummary';
 import styled from 'styled-components';
 import Searchbar from '../components/common/Searchbar';
 import { BanIcon, KickIcon } from '../assets/24x-icons';
+import { playerDetailState, playersState } from '../contexts/states';
+import { useRecoilValue } from 'recoil';
 
 const PlayersContainer = styled.div`
   display: flex;
@@ -17,18 +19,6 @@ const PlayersListContainer = styled.div`
 
   gap: 12px;
 `;
-
-const tempPlayerData = {
-  players: [{ uuid: '762dea11-9c45-4b18-95fc-a86aab3b39ee', name: 'aroxu' }]
-};
-
-const getPlayerData = async (uuid) => ({
-  ping: 0,
-  name: 'aroxu',
-  clientBrandName: 'vanilla',
-  avatar: 'https://mc-heads.net/avatar/762dea11-9c45-4b18-95fc-a86aab3b39ee',
-  uuid: '762dea11-9c45-4b18-95fc-a86aab3b39ee'
-});
 
 const PlayerContainer = styled.div`
   display: flex;
@@ -134,15 +124,10 @@ const PlayerButton = styled.button`
 `;
 
 const PlayerInfoContainer = ({ uuid, name }) => {
-  const [player, setPlayer] = useState(undefined);
+  const playerDetails = useRecoilValue(playerDetailState);
+  const player = playerDetails[uuid]?.data;
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const player = await getPlayerData(uuid);
-      setPlayer(player);
-    };
-    fetchData();
-  }, [uuid]);
+  console.log(playerDetails, player)
 
   return player ? (
     <PlayerContainer>
@@ -184,6 +169,7 @@ const Players = () => {
     label: '이름'
   });
   const [searchValue, setSearchValue] = useState('');
+  const players = useRecoilValue(playersState);
 
   useEffect(() => {
     // 이 컴포넌트에서 DashboardLayout으로 정보 새로 고침 함수를 넘겨야 합니다
@@ -196,7 +182,7 @@ const Players = () => {
     <PlayersContainer>
       <DashboardSummary
         label='플레이어 수'
-        value={tempPlayerData.players.length}
+        value={players.length}
       />
       <PlayersListContainer>
         <Searchbar
@@ -209,12 +195,13 @@ const Players = () => {
             { value: 'uuid', label: 'UUID' }
           ]}
         />
-        {tempPlayerData.players
+        {players
           .filter((player) => {
             if (selectedValue.value === 'name')
-              return player.name.includes(searchValue);
+              return player.name.toLowerCase().includes(searchValue);
             if (selectedValue.value === 'uuid')
               return player.uuid
+                .toLowerCase()
                 .replace(/-/g, '')
                 .includes(searchValue.replace(/-/g, ''));
             return true;

@@ -385,9 +385,10 @@ const Worlds = () => {
         {worlds
           .filter((world) => {
             if (selectedFilter.value === 'name')
-              return world.name.includes(searchValue);
+              return world.name.toLowerCase().includes(searchValue);
             if (selectedFilter.value === 'uuid')
               return world.uuid
+                .toLowerCase()
                 .replace(/-/g, '')
                 .includes(searchValue.replace(/-/g, ''));
             return true;

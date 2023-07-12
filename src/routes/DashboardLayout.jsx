@@ -28,7 +28,8 @@ import {
   statsState,
   worldsState,
   playersState,
-  worldDetailState
+  worldDetailState,
+  playerDetailState
 } from '../contexts/states';
 import AppData from '../storage/data';
 import Profile from '../storage/profile';
@@ -336,6 +337,7 @@ const DashboardLayout = () => {
   const setWorlds = useSetRecoilState(worldsState);
   const setWorldDetails = useSetRecoilState(worldDetailState);
   const setPlayers = useSetRecoilState(playersState);
+  const setPlayerDetails = useSetRecoilState(playerDetailState);
 
   const reloadTask = useCallback(
     async (profile = currentProfile) => {
@@ -364,23 +366,23 @@ const DashboardLayout = () => {
             )
           ).data.worlds;
 
-          const playerResults = await Network.get(
+          const playerResults = (await Network.get(
             profile.address,
             profile.port,
             profile.key,
             profile.isSecureConnection,
             'players'
-          );
+          )).data.players;
 
           setStats((stats) => [...stats.slice(-19), statResults.data]);
           setWorlds(worldResults);
-          setPlayers(playerResults.data.players);
+          setPlayers(playerResults);
           setConnected(true);
 
-          const result = await Promise.all(
+          Promise.all(
             worldResults.map(
               ({ uuid }) =>
-                new Promise(async (resolve, reject) =>
+                new Promise(async (resolve) =>
                   resolve([
                     uuid,
                     await Network.get(
@@ -393,22 +395,47 @@ const DashboardLayout = () => {
                   ])
                 )
             )
-          );
-
-          setWorldDetails(
-            result.reduce(
+          ).then((worldResult) => setWorldDetails(
+            worldResult.reduce(
               (prev, [uuid, current]) => ({
                 ...prev,
                 [uuid]: current
               }),
               {}
             )
+          ));
+
+          const playerResult = await Promise.all(
+            playerResults.map(
+              ({ uuid }) =>
+                new Promise(async (resolve) =>
+                  resolve([
+                    uuid,
+                    await Network.get(
+                      profile.address,
+                      profile.port,
+                      profile.key,
+                      profile.isSecureConnection,
+                      `players/${uuid}`
+                    )
+                  ])
+                )
+            )
           );
+
+          setPlayerDetails(playerResult.reduce(
+            (prev, [uuid, current]) => ({
+              ...prev,
+              [uuid]: current
+            }),
+            {}
+          ));
+
           if (firstLoadComplete === false) {
             setFirstLoadComplete(true);
           }
         })
-        .catch((error) => setConnected(false));
+        .catch(() => setConnected(false));
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [currentProfile]
