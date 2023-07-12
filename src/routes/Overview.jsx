@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useOutletContext } from 'react-router-dom';
 import styled, { css } from 'styled-components';
 import { Doughnut } from 'react-chartjs-2';
@@ -177,6 +177,17 @@ const ChartValueUnit = styled.span`
   opacity: 0.6;
 `;
 
+const EmptyChartContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  flex: 1 0 0;
+
+  font-size: 128px;
+  color: #111;
+`;
+
 /**
  * @param {Object} props
  * @param {string} props.label
@@ -185,24 +196,27 @@ const ChartValueUnit = styled.span`
  * @param {number[]} props.chartData
  */
 const ChartSection = ({ label, valueUnit, chartLabels, chartData }) => {
+
+  const sum = useMemo(() => chartData.reduce((a, b) => a + b, 0), [chartData]);
+
   return (
     <ChartSectionBox>
       <ChartTextContainer>
         <ChartLabel>{label}</ChartLabel>
 
         <ChartValue>
-          {Math.round(chartData.reduce((a, b) => a + b, 0) * 10) / 10 + ' '}
+          {Math.round(sum * 10) / 10 + ' '}
           <ChartValueUnit>{valueUnit}</ChartValueUnit>
         </ChartValue>
       </ChartTextContainer>
 
-      <Chart
+      {sum > 0 ? <Chart
         ChartComponent={Doughnut}
         labels={chartLabels}
         data={chartData}
         width='100%'
         flex='1 0 0'
-      />
+      /> : <EmptyChartContainer>-</EmptyChartContainer>}
     </ChartSectionBox>
   );
 };
