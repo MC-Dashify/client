@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { useOutletContext } from "react-router-dom";
 import { styled } from "styled-components";
 import Button from "../components/common/Button";
+import { useRecoilValue } from "recoil";
+import { currentProfileState } from "../contexts/states";
 
 const ConsolePageContainer = styled.div`
   display: flex;
@@ -140,6 +142,8 @@ const Console = () => {
   const [refreshFn, setRefreshFn] = useOutletContext();
   const [logs, setLogs] = useState([]);
   const [command, setCommand] = useState("");
+  const [sendCommand, setSendCommand] = useState(() => {});
+  const currentProfile = useRecoilValue(currentProfileState);
 
   useEffect(() => {
     // 이 컴포넌트에서 DashboardLayout으로 정보 새로 고침 함수를 넘겨야 합니다
@@ -148,12 +152,34 @@ const Console = () => {
   }, [setRefreshFn]);
 
   useEffect(() => {
-    setLogs(
-      new Array(20).fill(
-        "[23:39:52] [Server thread/INFO]: Entity Tracking Range: Pl 48 / An 48 / Mo 48 / Mi 32 / Other 64"
-      )
-    );
-  }, []);
+    if (!currentProfile) return;
+    
+    const client = new WebSocket(`ws://${currentProfile.address}:${currentProfile.port}/console?auth_key=${encodeURIComponent(currentProfile.key)}`);
+
+    client.addEventListener("open", (event) => {
+      console.log("Socket opened!");
+    });
+
+    client.addEventListener("close", (event) => {
+      console.log("Socket closed!");
+    });
+
+    client.addEventListener("message", (event) => {
+      console.log('adding ', event.data, ' to ', logs);
+      setLogs((before) => [...before, event.data]);
+    });
+
+    setSendCommand(() => ((message) => {
+      if (client.readyState === WebSocket.OPEN) client.send(message);
+      setLogs((before) => [...before, `> ${message}`]);
+    }));
+    
+    return () => {
+      setSendCommand(() => {});
+      client.close();
+    };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentProfile]);
 
   return (
     <ConsolePageContainer>
@@ -183,6 +209,7 @@ const Console = () => {
                 if (event.key === "Enter") {
                   if (!event.shiftKey) {
                     event.preventDefault();
+                    if (command !== "") sendCommand(command);
                     setCommand("");
                   }
                 }
