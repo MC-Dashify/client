@@ -1,3 +1,7 @@
+import { Store } from 'tauri-plugin-store-api';
+
+const store = new Store('dashify.dat');
+
 const AppData = {
   /**
    * Get data from localStorage
@@ -59,11 +63,14 @@ const AppData = {
    * // clears all data from localStorage
    */
   clear: () => {
-    for (var a in localStorage) {
-      if (`${a}` !== 'etc.version') {
-        localStorage.removeItem(a);
+    Object.keys(localStorage).forEach(async (key) => {
+      if (key !== 'etc.version') {
+        await localStorage.removeItem(key);
+        if (window.location.hostname === 'dashify.localhost') {
+          await store.delete(key);
+        }
       }
-    }
+    });
   }
 };
 
