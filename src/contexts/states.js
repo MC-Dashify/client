@@ -20,6 +20,11 @@ const playersState = atom({
   default: []
 });
 
+const playerDetailState = atom({
+  key: 'playerDetail',
+  default: []
+});
+
 const profilesState = atom({
   key: 'profiles',
   default: []
@@ -48,5 +53,6 @@ export {
   hideAddressState,
   worldsState,
   playersState,
+  playerDetailState,
   worldDetailState
 };
