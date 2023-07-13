@@ -272,10 +272,7 @@ const Overview = () => {
 
   const worldNames = worldsList.map(({ name }) => name);
 
-  console.log('worlds', worlds);
-
   const values = Object.values(worlds);
-  console.log('Values', values);
 
   const countOfEntities = values.map((world) => world.data.entities);
   const countOfPlayers = values.map((world) => world.data.player);
