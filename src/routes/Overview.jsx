@@ -196,7 +196,6 @@ const EmptyChartContainer = styled.div`
  * @param {number[]} props.chartData
  */
 const ChartSection = ({ label, valueUnit, chartLabels, chartData }) => {
-
   const sum = useMemo(() => chartData.reduce((a, b) => a + b, 0), [chartData]);
 
   return (
@@ -210,13 +209,17 @@ const ChartSection = ({ label, valueUnit, chartLabels, chartData }) => {
         </ChartValue>
       </ChartTextContainer>
 
-      {sum > 0 ? <Chart
-        ChartComponent={Doughnut}
-        labels={chartLabels}
-        data={chartData}
-        width='100%'
-        flex='1 0 0'
-      /> : <EmptyChartContainer>-</EmptyChartContainer>}
+      {sum > 0 ? (
+        <Chart
+          ChartComponent={Doughnut}
+          labels={chartLabels}
+          data={chartData}
+          width='100%'
+          flex='1 0 0'
+        />
+      ) : (
+        <EmptyChartContainer>N/A</EmptyChartContainer>
+      )}
     </ChartSectionBox>
   );
 };
