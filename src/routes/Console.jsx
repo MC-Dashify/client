@@ -180,6 +180,7 @@ const Console = () => {
   const [sendCommand, setSendCommand] = useState(() => {});
   const invisibleAnchor = useRef(undefined);
   const currentProfile = useRecoilValue(currentProfileState);
+  const commandInput = useRef(undefined);
 
   useEffect(() => {
     // 이 컴포넌트에서 DashboardLayout으로 정보 새로 고침 함수를 넘겨야 합니다
@@ -230,6 +231,10 @@ const Console = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentProfile]);
 
+  useEffect(() => {
+    commandInput.current?.focus();
+  }, [commandInput]);
+
   return (
     <ConsolePageContainer>
       <ButtonsContainer>
@@ -260,6 +265,7 @@ const Console = () => {
           <CommandCaretContainer>{'>'}</CommandCaretContainer>
           <CommandInputContainer className='custom-scroll' value={command}>
             <CommandInput
+              ref={commandInput}
               spellCheck={false}
               onChange={(event) => {
                 setCommand(event.target.value);
