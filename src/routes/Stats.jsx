@@ -179,7 +179,7 @@ const Stats = () => {
 
   const statsData = useRecoilValue(statsState);
   const { jvm, disk, mem, tps, cpu } = statsData[statsData.length - 1];
-  const labels = statsData.map((_, index) => index);
+  const labels = statsData.map(({ timestamp }) => timestamp);
 
   return (
     <StatContainer>

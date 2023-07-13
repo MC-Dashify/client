@@ -362,6 +362,14 @@ const DashboardLayout = () => {
             stringToBytes(statResults.disk.totalSpace) -
             stringToBytes(statResults.disk.freeSpace);
 
+          const date = new Date();
+          const hours = date.getHours();
+          const minutes = date.getMinutes();
+          const seconds = date.getSeconds();
+          statResults.timestamp = `${hours < 10 ? '0' : ''}${hours}:${
+            minutes < 10 ? '0' : ''
+          }${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+
           const worldResults = (
             await Network.get(
               profile.address,
