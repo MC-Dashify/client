@@ -4,6 +4,7 @@ import { styled } from "styled-components";
 import Button from "../components/common/Button";
 import { useRecoilValue } from "recoil";
 import { currentProfileState } from "../contexts/states";
+import ansiToElements from '../utils/ansi';
 
 const ConsolePageContainer = styled.div`
   display: flex;
@@ -191,7 +192,7 @@ const Console = () => {
         <LogsOuterContainer className="custom-scroll">
           <LogsContainer>
             {logs.map((log, index) => (
-              <LogLine key={index}>{log}</LogLine>
+              <LogLine key={index}>{ansiToElements(log)}</LogLine>
             ))}
           </LogsContainer>
         </LogsOuterContainer>
