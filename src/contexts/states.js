@@ -35,6 +35,11 @@ const currentProfileState = atom({
   default: {}
 });
 
+const lastSentCommandsState = atom({
+  key: 'lastSent',
+  default: []
+});
+
 const refreshRateState = atom({
   key: 'refreshRate',
   default: 15000
@@ -54,5 +59,6 @@ export {
   worldsState,
   playersState,
   playerDetailState,
-  worldDetailState
+  worldDetailState,
+  lastSentCommandsState
 };

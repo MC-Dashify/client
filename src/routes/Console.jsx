@@ -2,8 +2,8 @@ import { useEffect, useRef, useState } from 'react';
 import { useOutletContext } from 'react-router-dom';
 import { styled } from 'styled-components';
 import Button from '../components/common/Button';
-import { useRecoilValue } from 'recoil';
-import { currentProfileState } from '../contexts/states';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { currentProfileState, lastSentCommandsState } from '../contexts/states';
 import Network from '../utils/net';
 import ansiToElements from '../utils/ansi';
 
@@ -177,9 +177,12 @@ const Console = () => {
   const [refreshFn, setRefreshFn] = useOutletContext();
   const [logs, setLogs] = useState([]);
   const [command, setCommand] = useState('');
+  const [lastSentIndex, setLastSentIndex] = useState(0);
   const [sendCommand, setSendCommand] = useState(() => {});
-  const invisibleAnchor = useRef(undefined);
   const currentProfile = useRecoilValue(currentProfileState);
+  const [lastSent, setLastSent] = useRecoilState(lastSentCommandsState);
+
+  const invisibleAnchor = useRef(undefined);
   const commandInput = useRef(undefined);
 
   useEffect(() => {
@@ -221,7 +224,11 @@ const Console = () => {
 
     setSendCommand(() => (message) => {
       if (client.readyState === WebSocket.OPEN) client.send(message);
-      setLogs((before) => [...before, `> ${message}`]);
+      setLogs((before) => [...before.slice(-999), `> ${message}`]);
+      setLastSent((last) =>
+        last[last.length - 1] === message ? last : [...last, message]
+      );
+      setLastSentIndex(0);
     });
 
     return () => {
@@ -273,11 +280,21 @@ const Console = () => {
               value={command}
               onKeyDown={(event) => {
                 if (event.key === 'Enter') {
-                  if (!event.shiftKey) {
-                    event.preventDefault();
-                    if (/[\S]/g.test(command)) sendCommand(command);
-                    setCommand('');
-                  }
+                  event.preventDefault();
+                  if (/[\S]/g.test(command)) sendCommand(command);
+                  setCommand('');
+                } else if (event.key === 'ArrowUp') {
+                  event.preventDefault();
+                  const index = lastSentIndex + 1;
+                  if (index > lastSent.length) return;
+                  setLastSentIndex(index);
+                  setCommand(lastSent[lastSent.length - index]);
+                } else if (event.key === 'ArrowDown') {
+                  event.preventDefault();
+                  const index = lastSentIndex - 1;
+                  if (index < 1) return;
+                  setLastSentIndex(index);
+                  setCommand(lastSent[lastSent.length - index]);
                 }
               }}
             />
