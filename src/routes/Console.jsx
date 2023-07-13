@@ -4,6 +4,7 @@ import { styled } from "styled-components";
 import Button from "../components/common/Button";
 import { useRecoilValue } from "recoil";
 import { currentProfileState } from "../contexts/states";
+import Network from '../utils/net';
 import ansiToElements from '../utils/ansi';
 
 const ConsolePageContainer = styled.div`
@@ -159,6 +160,15 @@ const Console = () => {
 
     client.addEventListener("open", (event) => {
       console.log("Socket opened!");
+      const loaded = await Network.get(
+        currentProfile.address,
+        currentProfile.port,
+        currentProfile.key,
+        currentProfile.isSecureConnection,
+        'logs?lines=1000'
+      );
+
+      setLogs(loaded.data.logs);
     });
 
     client.addEventListener("close", (event) => {
