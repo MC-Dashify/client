@@ -38,6 +38,7 @@ const GlobalStyle = styled.createGlobalStyle`
   .swal2-html-container {
     margin: 0 !important;
     user-select: none;
+    overflow: hidden !important;
   }
 
   .swal2-modal {
