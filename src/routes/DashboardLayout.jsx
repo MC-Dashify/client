@@ -37,6 +37,7 @@ import Network from '../utils/net';
 import { showModal } from '../utils/modal';
 import ProfileList from '../components/common/ProfileList';
 import { Toaster, toast } from 'react-hot-toast';
+import { stringToBytes } from '../utils/convert';
 
 const Aside = styled.aside`
   display: flex;
@@ -380,13 +381,15 @@ const DashboardLayout = () => {
             )
           ).data.worlds;
 
-          const playerResults = (await Network.get(
-            profile.address,
-            profile.port,
-            profile.key,
-            profile.isSecureConnection,
-            'players'
-          )).data.players;
+          const playerResults = (
+            await Network.get(
+              profile.address,
+              profile.port,
+              profile.key,
+              profile.isSecureConnection,
+              'players'
+            )
+          ).data.players;
 
           setStats((stats) => [...stats.slice(-19), statResults]);
           setWorlds(worldResults);
@@ -409,15 +412,17 @@ const DashboardLayout = () => {
                   ])
                 )
             )
-          ).then((worldResult) => setWorldDetails(
-            worldResult.reduce(
-              (prev, [uuid, current]) => ({
-                ...prev,
-                [uuid]: current
-              }),
-              {}
+          ).then((worldResult) =>
+            setWorldDetails(
+              worldResult.reduce(
+                (prev, [uuid, current]) => ({
+                  ...prev,
+                  [uuid]: current
+                }),
+                {}
+              )
             )
-          ));
+          );
 
           const playerResult = await Promise.all(
             playerResults.map(
@@ -437,13 +442,15 @@ const DashboardLayout = () => {
             )
           );
 
-          setPlayerDetails(playerResult.reduce(
-            (prev, [uuid, current]) => ({
-              ...prev,
-              [uuid]: current
-            }),
-            {}
-          ));
+          setPlayerDetails(
+            playerResult.reduce(
+              (prev, [uuid, current]) => ({
+                ...prev,
+                [uuid]: current
+              }),
+              {}
+            )
+          );
 
           if (firstLoadComplete === false) {
             setFirstLoadComplete(true);
@@ -467,7 +474,6 @@ const DashboardLayout = () => {
     if (currentProfile.uuid === undefined) {
       const profile = Profile.get(AppData.get('etc.last_profile'));
       setCurrentProfile(profile);
-      console.log('P', profile);
     }
     if (currentProfile && !connected) {
       reloadTask(currentProfile);
