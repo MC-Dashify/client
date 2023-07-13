@@ -1,9 +1,9 @@
-import { useEffect, useState } from "react";
-import { useOutletContext } from "react-router-dom";
-import { styled } from "styled-components";
-import Button from "../components/common/Button";
-import { useRecoilValue } from "recoil";
-import { currentProfileState } from "../contexts/states";
+import { useEffect, useState } from 'react';
+import { useOutletContext } from 'react-router-dom';
+import { styled } from 'styled-components';
+import Button from '../components/common/Button';
+import { useRecoilValue } from 'recoil';
+import { currentProfileState } from '../contexts/states';
 import Network from '../utils/net';
 import ansiToElements from '../utils/ansi';
 
@@ -69,7 +69,7 @@ const CommandContainer = styled.div`
   align-self: stretch;
 
   div {
-    font-family: "JetBrains Mono";
+    font-family: 'JetBrains Mono';
     color: #cacaca;
   }
 `;
@@ -90,7 +90,7 @@ const CommandInputContainer = styled.div`
   overflow-y: auto;
 
   &::after {
-    content: attr(value) " ";
+    content: attr(value) ' ';
     white-space: pre-wrap;
     visibility: hidden;
     flex: 1 0 0;
@@ -100,7 +100,7 @@ const CommandInputContainer = styled.div`
   &::after {
     grid-area: 1 / 1 / 2 / 2;
 
-    font-family: "JetBrains Mono";
+    font-family: 'JetBrains Mono';
     font-size: 16px;
     font-weight: 400;
     word-break: break-all;
@@ -128,38 +128,46 @@ const CommandInput = styled.textarea`
 const LogLine = styled.div`
   display: flex;
   padding: 4px 6px;
-  gap: 10px;
   align-self: stretch;
 
-  color: #cacaca;
-  font-family: "JetBrains Mono";
-  font-size: 14px;
-  font-weight: 300;
-  line-height: 140%;
-  letter-spacing: -0.154px;
+  span {
+    color: #cacaca;
+    font-family: 'JetBrains Mono';
+    font-size: 14px;
+    font-weight: 300;
+    line-height: 140%;
+    letter-spacing: -0.154px;
+    word-break: break-all;
+    white-space: pre-wrap;
+  }
 `;
 
 const Console = () => {
   // eslint-disable-next-line no-unused-vars
   const [refreshFn, setRefreshFn] = useOutletContext();
   const [logs, setLogs] = useState([]);
-  const [command, setCommand] = useState("");
+  const [command, setCommand] = useState('');
   const [sendCommand, setSendCommand] = useState(() => {});
   const currentProfile = useRecoilValue(currentProfileState);
 
   useEffect(() => {
     // 이 컴포넌트에서 DashboardLayout으로 정보 새로 고침 함수를 넘겨야 합니다
     // TODO 정보 새로 고침
-    setRefreshFn(() => console.log("refreshed"));
+    setRefreshFn(() => console.log('refreshed'));
   }, [setRefreshFn]);
 
   useEffect(() => {
     if (!currentProfile) return;
-    
-    const client = new WebSocket(`ws://${currentProfile.address}:${currentProfile.port}/console?auth_key=${encodeURIComponent(currentProfile.key)}`);
 
-    client.addEventListener("open", (event) => {
-      console.log("Socket opened!");
+    const client = new WebSocket(
+      `ws://${currentProfile.address}:${
+        currentProfile.port
+      }/console?auth_key=${encodeURIComponent(currentProfile.key)}`
+    );
+
+    client.addEventListener('open', async (event) => {
+      console.log('Socket opened!');
+
       const loaded = await Network.get(
         currentProfile.address,
         currentProfile.port,
@@ -171,35 +179,34 @@ const Console = () => {
       setLogs(loaded.data.logs);
     });
 
-    client.addEventListener("close", (event) => {
-      console.log("Socket closed!");
+    client.addEventListener('close', (event) => {
+      console.log('Socket closed!');
     });
 
-    client.addEventListener("message", (event) => {
-      console.log('adding ', event.data, ' to ', logs);
-      setLogs((before) => [...before, event.data]);
+    client.addEventListener('message', (event) => {
+      setLogs((before) => [...before.slice(-999), event.data]);
     });
 
-    setSendCommand(() => ((message) => {
+    setSendCommand(() => (message) => {
       if (client.readyState === WebSocket.OPEN) client.send(message);
       setLogs((before) => [...before, `> ${message}`]);
-    }));
-    
+    });
+
     return () => {
       setSendCommand(() => {});
       client.close();
     };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentProfile]);
 
   return (
     <ConsolePageContainer>
       <ButtonsContainer>
-        <Button styleType="outline">최근 로그 500줄 다운로드</Button>
-        <Button styleType="outline">최근 로그 1,000줄 다운로드</Button>
+        <Button styleType='outline'>최근 로그 500줄 다운로드</Button>
+        <Button styleType='outline'>최근 로그 1,000줄 다운로드</Button>
       </ButtonsContainer>
       <ConsoleContainer>
-        <LogsOuterContainer className="custom-scroll">
+        <LogsOuterContainer className='custom-scroll'>
           <LogsContainer>
             {logs.map((log, index) => (
               <LogLine key={index}>{ansiToElements(log)}</LogLine>
@@ -208,8 +215,8 @@ const Console = () => {
         </LogsOuterContainer>
         <LogsSeparator />
         <CommandContainer>
-          <CommandCaretContainer>{">"}</CommandCaretContainer>
-          <CommandInputContainer className="custom-scroll" value={command}>
+          <CommandCaretContainer>{'>'}</CommandCaretContainer>
+          <CommandInputContainer className='custom-scroll' value={command}>
             <CommandInput
               spellCheck={false}
               onChange={(event) => {
@@ -217,11 +224,11 @@ const Console = () => {
               }}
               value={command}
               onKeyDown={(event) => {
-                if (event.key === "Enter") {
+                if (event.key === 'Enter') {
                   if (!event.shiftKey) {
                     event.preventDefault();
-                    if (command !== "") sendCommand(command);
-                    setCommand("");
+                    if (command !== '') sendCommand(command);
+                    setCommand('');
                   }
                 }
               }}
