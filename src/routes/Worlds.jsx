@@ -358,8 +358,6 @@ const Worlds = () => {
   const [searchValue, setSearchValue] = useState('');
   const worlds = useRecoilValue(worldsState);
 
-  console.log('W', refreshFn);
-
   useEffect(() => {
     // 이 컴포넌트에서 DashboardLayout으로 정보 새로 고침 함수를 넘겨야 합니다
     // TODO 정보 새로 고침
