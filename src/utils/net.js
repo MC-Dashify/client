@@ -47,11 +47,11 @@ const Network = {
   set: (host, port, key, isSecureConnection = false, path, body) => {
     return axios.post(
       `${isSecureConnection ? 'https' : 'http'}://${host}:${port}/${path}`,
+      body,
       {
         headers: {
           Authorization: `Bearer ${key}`
-        },
-        body
+        }
       }
     );
   },
