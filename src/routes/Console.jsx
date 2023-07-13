@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useOutletContext } from 'react-router-dom';
 import { styled } from 'styled-components';
 import Button from '../components/common/Button';
@@ -142,12 +142,43 @@ const LogLine = styled.div`
   }
 `;
 
+const HiddenDownloadLink = styled.a`
+  display: none;
+`;
+
+const downloadLogs = async (profile, invisibleAnchor, size) => {
+  const logs = await Network.get(
+    profile.address,
+    profile.port,
+    profile.key,
+    profile.isSecureConnection,
+    'logs?lines=' + size
+  );
+
+  console.log(logs.data);
+
+  const blob = new Blob([logs.data.logs.join('\n')], {
+    type: 'text/plain'
+  });
+
+  const element = invisibleAnchor.current;
+  const url = URL.createObjectURL(blob);
+
+  element.href = url;
+  element.download = `logs-${size}.log`;
+
+  element.click();
+
+  URL.revokeObjectURL(url);
+};
+
 const Console = () => {
   // eslint-disable-next-line no-unused-vars
   const [refreshFn, setRefreshFn] = useOutletContext();
   const [logs, setLogs] = useState([]);
   const [command, setCommand] = useState('');
   const [sendCommand, setSendCommand] = useState(() => {});
+  const invisibleAnchor = useRef(undefined);
   const currentProfile = useRecoilValue(currentProfileState);
 
   useEffect(() => {
@@ -202,8 +233,19 @@ const Console = () => {
   return (
     <ConsolePageContainer>
       <ButtonsContainer>
-        <Button styleType='outline'>최근 로그 500줄 다운로드</Button>
-        <Button styleType='outline'>최근 로그 1,000줄 다운로드</Button>
+        <HiddenDownloadLink ref={invisibleAnchor} />
+        <Button
+          styleType='outline'
+          onClick={() => downloadLogs(currentProfile, invisibleAnchor, 500)}
+        >
+          최근 로그 500줄 다운로드
+        </Button>
+        <Button
+          styleType='outline'
+          onClick={() => downloadLogs(currentProfile, invisibleAnchor, 1000)}
+        >
+          최근 로그 1,000줄 다운로드
+        </Button>
       </ButtonsContainer>
       <ConsoleContainer>
         <LogsOuterContainer className='custom-scroll'>
