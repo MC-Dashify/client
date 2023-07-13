@@ -260,7 +260,7 @@ const Overview = () => {
   const cpuValue = cpu.cpuLoad.toFixed(1);
   const ramValue = getUsedPercantage(mem.usedMem, mem.totalMem);
   const jvmValue = getUsedPercantage(jvm.usedMemory, jvm.totalMemory);
-  const diskValue = getUsedPercantage(disk.freeSpace, disk.totalSpace);
+  const diskValue = getUsedPercantage(disk.usedSpace, disk.totalSpace);
   const tpsValue = (tps.reduce((a, b) => a + b, 0) / tps.length).toFixed(1);
 
   const worldNames = worldsList.map(({ name }) => name);

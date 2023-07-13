@@ -157,9 +157,9 @@ const CurrentValue = ({ additional, value, max }) => {
   );
 };
 
-const stringToMegabytes = (value) => stringToBytes(value) / 1024 ** 2;
-const stringToMegabytesWithCommas = (value) =>
-  stringToMegabytes(value).toLocaleString();
+const numberToMegabytes = (value) => value / 1024 ** 2;
+const stringToMegabytes = (value) => numberToMegabytes(stringToBytes(value));
+const withCommas = (value) => value.toLocaleString();
 
 const Stats = () => {
   /*
@@ -206,8 +206,8 @@ const Stats = () => {
         chartData={statsData.map(({ mem }) => stringToMegabytes(mem.usedMem))}
         currentValue={
           <CurrentValue
-            value={stringToMegabytesWithCommas(mem.usedMem)}
-            max={stringToMegabytesWithCommas(mem.totalMem)}
+            value={withCommas(stringToMegabytes(mem.usedMem))}
+            max={withCommas(stringToMegabytes(mem.totalMem))}
           />
         }
         maxY={stringToMegabytes(mem.totalMem)}
@@ -223,8 +223,8 @@ const Stats = () => {
         )}
         currentValue={
           <CurrentValue
-            value={stringToMegabytesWithCommas(jvm.usedMemory)}
-            max={stringToMegabytesWithCommas(jvm.totalMemory)}
+            value={withCommas(stringToMegabytes(jvm.usedMemory))}
+            max={withCommas(stringToMegabytes(jvm.totalMemory))}
           />
         }
         maxY={stringToMegabytes(jvm.totalMemory)}
@@ -236,12 +236,12 @@ const Stats = () => {
         icon={<HardDiskIcon />}
         chartLabels={labels}
         chartData={statsData.map(({ disk }) =>
-          stringToMegabytes(disk.freeSpace)
+          numberToMegabytes(disk.usedSpace)
         )}
         currentValue={
           <CurrentValue
-            value={stringToMegabytesWithCommas(disk.freeSpace)}
-            max={stringToMegabytesWithCommas(disk.totalSpace)}
+            value={withCommas(numberToMegabytes(disk.usedSpace))}
+            max={withCommas(stringToMegabytes(disk.totalSpace))}
           />
         }
         maxY={stringToMegabytes(disk.totalSpace)}

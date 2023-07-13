@@ -348,13 +348,19 @@ const DashboardLayout = () => {
         profile.isSecureConnection
       )
         .then(async () => {
-          const statResults = await Network.get(
-            profile.address,
-            profile.port,
-            profile.key,
-            profile.isSecureConnection,
-            'stats'
-          );
+          const statResults = (
+            await Network.get(
+              profile.address,
+              profile.port,
+              profile.key,
+              profile.isSecureConnection,
+              'stats'
+            )
+          ).data;
+
+          statResults.disk.usedSpace =
+            stringToBytes(statResults.disk.totalSpace) -
+            stringToBytes(statResults.disk.freeSpace);
 
           const worldResults = (
             await Network.get(
@@ -374,7 +380,7 @@ const DashboardLayout = () => {
             'players'
           )).data.players;
 
-          setStats((stats) => [...stats.slice(-19), statResults.data]);
+          setStats((stats) => [...stats.slice(-19), statResults]);
           setWorlds(worldResults);
           setPlayers(playerResults);
           setConnected(true);
