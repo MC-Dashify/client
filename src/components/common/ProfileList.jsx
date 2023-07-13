@@ -305,7 +305,9 @@ const ProfileItem = ({
       <ProfileItemBox $showBorder={showBorder}>
         <ProfileItemInfo>
           <ProfileItemName>{name}</ProfileItemName>
-          <ProfileItemAddress>{address}</ProfileItemAddress>
+          {!AppData.get('settings.hide_address') && (
+            <ProfileItemAddress>{address}</ProfileItemAddress>
+          )}
         </ProfileItemInfo>
 
         {isEditing && currentProfile.uuid !== uuid && (
