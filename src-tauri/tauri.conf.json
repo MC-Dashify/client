@@ -17,7 +17,7 @@
     "bundle": {
       "active": true,
       "category": "DeveloperTool",
-      "copyright": "Dashify Team",
+      "copyright": "\"Dashify\" Development Team",
       "deb": {
         "depends": []
       },
