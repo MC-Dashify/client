@@ -269,7 +269,7 @@ const Console = () => {
                 if (event.key === 'Enter') {
                   if (!event.shiftKey) {
                     event.preventDefault();
-                    if (command !== '') sendCommand(command);
+                    if (/[\S]/g.test(command)) sendCommand(command);
                     setCommand('');
                   }
                 }
