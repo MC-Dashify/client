@@ -229,11 +229,15 @@ const VerticalDivider = styled.div`
 `;
 
 /**
- * @param {string} used
+ * @param {string | number} used
  * @param {string} total
  */
 const getUsedPercantage = (used, total) => {
-  return ((stringToBytes(used) / stringToBytes(total)) * 100).toFixed(1);
+  return (
+    ((typeof used === 'number' ? used : stringToBytes(used)) /
+      stringToBytes(total)) *
+    100
+  ).toFixed(1);
 };
 
 const colorType = (value, min = 0, max = 100, reverse = false) => {
