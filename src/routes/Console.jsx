@@ -223,6 +223,7 @@ const Console = () => {
     });
 
     setSendCommand(() => (message) => {
+      message = message.replace(/\s+/g, ' ');
       if (client.readyState === WebSocket.OPEN) client.send(message);
       setLogs((before) => [...before.slice(-999), `> ${message}`]);
       setLastSent((last) =>
