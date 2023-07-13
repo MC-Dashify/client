@@ -4,8 +4,14 @@ import DashboardSummary from '../components/dashboard/DashboardSummary';
 import styled from 'styled-components';
 import Searchbar from '../components/common/Searchbar';
 import { BanIcon, KickIcon } from '../assets/24x-icons';
-import { playerDetailState, playersState } from '../contexts/states';
-import { useRecoilValue } from 'recoil';
+import {
+  currentProfileState,
+  playerDetailState,
+  playersState
+} from '../contexts/states';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import Network from '../utils/net';
+import { toast } from 'react-hot-toast';
 
 const PlayersContainer = styled.div`
   display: flex;
@@ -124,10 +130,9 @@ const PlayerButton = styled.button`
 `;
 
 const PlayerInfoContainer = ({ uuid, name }) => {
-  const playerDetails = useRecoilValue(playerDetailState);
+  const [playerDetails, setPlayerDetails] = useRecoilState(playerDetailState);
   const player = playerDetails[uuid]?.data;
-
-  console.log(playerDetails, player)
+  const profile = useRecoilValue(currentProfileState);
 
   return player ? (
     <PlayerContainer>
@@ -148,10 +153,46 @@ const PlayerInfoContainer = ({ uuid, name }) => {
         extraStyle='width: 140px;'
       />
       <ButtonsContainer>
-        <PlayerButton>
+        <PlayerButton
+          onClick={async () => {
+            await Network.set(
+              profile.address,
+              profile.port,
+              profile.key,
+              profile.isSecureConnection,
+              `players/${uuid}/kick`,
+              { reason: 'Reason' }
+            );
+
+            setPlayerDetails((details) => ({
+              ...details,
+              [uuid]: undefined
+            }));
+
+            toast.success(`${name}을(를) 추방했습니다!`);
+          }}
+        >
           <KickIcon />
         </PlayerButton>
-        <PlayerButton>
+        <PlayerButton
+          onClick={async () => {
+            await Network.set(
+              profile.address,
+              profile.port,
+              profile.key,
+              profile.isSecureConnection,
+              `players/${uuid}/ban`,
+              { reason: 'Reason' }
+            );
+
+            setPlayerDetails((details) => ({
+              ...details,
+              [uuid]: undefined
+            }));
+
+            toast.success(`${name}을(를) 밴했습니다!`);
+          }}
+        >
           <BanIcon />
         </PlayerButton>
       </ButtonsContainer>
@@ -180,10 +221,7 @@ const Players = () => {
 
   return (
     <PlayersContainer>
-      <DashboardSummary
-        label='플레이어 수'
-        value={players.length}
-      />
+      <DashboardSummary label='플레이어 수' value={players.length} />
       <PlayersListContainer>
         <Searchbar
           searchValue={searchValue}
