@@ -65,10 +65,9 @@ const components = (
     <Toaster position='bottom-center' style={{ zIndex: '20' }} />
   </React.StrictMode>
 );
+const { hostname, port } = window.location;
 
-if (
-  !(window.location.hostname === 'localhost' && window.location.port === '5173')
-) {
+if (!(hostname === 'localhost' && port === '5173')) {
   tauriWindow
     .getCurrent()
     .listen(TauriEvent.WINDOW_CLOSE_REQUESTED, async () => {

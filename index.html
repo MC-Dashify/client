@@ -34,12 +34,8 @@
     <div id="root"></div>
     <script>
       const disableMenu = () => {
-        if (
-          !(
-            window.location.hostname === 'localhost' &&
-            window.location.port === '5173'
-          )
-        ) {
+        const { hostname, port } = window.location;
+        if (!(hostname === 'localhost' && port === '5173')) {
           return;
         }
         document.addEventListener(
