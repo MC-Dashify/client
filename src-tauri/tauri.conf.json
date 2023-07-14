@@ -12,7 +12,10 @@
   },
   "tauri": {
     "allowlist": {
-      "all": true
+      "all": true,
+      "http": {
+        "all": true
+      }
     },
     "bundle": {
       "active": true,
@@ -30,7 +33,7 @@
         "icons/icon.ico"
       ],
       "identifier": "cc.dashify.client",
-      "longDescription": "",
+      "longDescription": "Easily and quickly monitor Minecraft servers.",
       "macOS": {
         "entitlements": null,
         "exceptionDomain": "",
