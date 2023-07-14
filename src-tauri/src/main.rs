@@ -8,9 +8,7 @@ fn main() {
     // let port = 80;
 
     let mut context = tauri::generate_context!();
-    let url = format!("http://dashify.localhost:{}", port)
-        .parse()
-        .unwrap();
+    let url = format!("http://localhost:{}", port).parse().unwrap();
     let window_url = WindowUrl::External(url);
     // rewrite the config so the IPC is enabled on this URL
     context.config_mut().build.dist_dir = AppUrl::Url(window_url.clone());

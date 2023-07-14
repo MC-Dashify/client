@@ -188,7 +188,10 @@ const Modal = ({ install }) => {
                 padding={'8px 16px'}
                 styleType='filled'
                 onClick={() => {
-                  window.location.hostname === 'dashify.localhost'
+                  !(
+                    window.location.hostname === 'localhost' &&
+                    window.location.port === '5173'
+                  )
                     ? open('https://github.com/MC-Dashify')
                     : window.open('https://github.com/MC-Dashify', '_blank');
                 }}

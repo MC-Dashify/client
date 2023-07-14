@@ -66,7 +66,9 @@ const components = (
   </React.StrictMode>
 );
 
-if (window.location.hostname === 'dashify.localhost') {
+if (
+  !(window.location.hostname === 'localhost' && window.location.port === '5173')
+) {
   tauriWindow
     .getCurrent()
     .listen(TauriEvent.WINDOW_CLOSE_REQUESTED, async () => {

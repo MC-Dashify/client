@@ -66,7 +66,12 @@ const AppData = {
     Object.keys(localStorage).forEach(async (key) => {
       if (key !== 'etc.version') {
         await localStorage.removeItem(key);
-        if (window.location.hostname === 'dashify.localhost') {
+        if (
+          !(
+            window.location.hostname === 'localhost' &&
+            window.location.port === '5173'
+          )
+        ) {
           await store.delete(key);
         }
       }

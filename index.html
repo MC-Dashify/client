@@ -34,7 +34,12 @@
     <div id="root"></div>
     <script>
       const disableMenu = () => {
-        if (window.location.hostname !== 'dashify.localhost') {
+        if (
+          !(
+            window.location.hostname === 'localhost' &&
+            window.location.port === '5173'
+          )
+        ) {
           return;
         }
         document.addEventListener(
