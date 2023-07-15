@@ -161,7 +161,7 @@ const PlayerInfoContainer = ({ uuid, name }) => {
               profile.key,
               profile.isSecureConnection,
               `players/${uuid}/kick`,
-              { reason: 'Reason' }
+              { reason: '' }
             );
 
             setPlayerDetails((details) => ({
@@ -182,7 +182,7 @@ const PlayerInfoContainer = ({ uuid, name }) => {
               profile.key,
               profile.isSecureConnection,
               `players/${uuid}/ban`,
-              { reason: 'Reason' }
+              { reason: '' }
             );
 
             setPlayerDetails((details) => ({
@@ -190,7 +190,7 @@ const PlayerInfoContainer = ({ uuid, name }) => {
               [uuid]: undefined
             }));
 
-            toast.success(`${name}을(를) 밴했습니다!`);
+            toast.success(`${name}을(를) 차단했습니다!`);
           }}
         >
           <BanIcon />
