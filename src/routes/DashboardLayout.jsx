@@ -29,7 +29,8 @@ import {
   worldsState,
   playersState,
   worldDetailState,
-  playerDetailState
+  playerDetailState,
+  trafficState
 } from '../contexts/states';
 import AppData from '../storage/data';
 import Profile from '../storage/profile';
@@ -339,6 +340,7 @@ const DashboardLayout = () => {
   const setWorldDetails = useSetRecoilState(worldDetailState);
   const setPlayers = useSetRecoilState(playersState);
   const setPlayerDetails = useSetRecoilState(playerDetailState);
+  const setTraffic = useSetRecoilState(trafficState);
 
   const reloadTask = useCallback(
     async (profile = currentProfile) => {
@@ -367,9 +369,12 @@ const DashboardLayout = () => {
           const hours = date.getHours();
           const minutes = date.getMinutes();
           const seconds = date.getSeconds();
-          statResults.timestamp = `${hours < 10 ? '0' : ''}${hours}:${
+
+          const timestamp = `${hours < 10 ? '0' : ''}${hours}:${
             minutes < 10 ? '0' : ''
           }${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+
+          statResults.timestamp = timestamp;
 
           const worldResults = (
             await Network.get(
@@ -391,7 +396,19 @@ const DashboardLayout = () => {
             )
           ).data.players;
 
+          const trafficData = (
+            await Network.get(
+              profile.address,
+              profile.port,
+              profile.key,
+              profile.isSecureConnection,
+              'traffic'
+            )
+          ).data;
+          trafficData.timestamp = timestamp;
+
           setStats((stats) => [...stats.slice(-19), statResults]);
+          setTraffic((traffic) => [...traffic.slice(-19), trafficData]);
           setWorlds(worldResults);
           setPlayers(playerResults);
           setConnected(true);

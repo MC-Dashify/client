@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useOutletContext } from 'react-router-dom';
 import styled from 'styled-components';
 import DashboardSummary from '../components/dashboard/DashboardSummary';
@@ -12,8 +12,12 @@ import Chart from '../components/common/Chart';
 import { Line } from 'react-chartjs-2';
 import Searchbar from '../components/common/Searchbar';
 import { showModal } from '../utils/modal';
-import { useRecoilBridgeAcrossReactRoots_UNSTABLE } from 'recoil';
+import {
+  useRecoilBridgeAcrossReactRoots_UNSTABLE,
+  useRecoilValue
+} from 'recoil';
 import { Toaster } from 'react-hot-toast';
+import { trafficState } from '../contexts/states';
 
 const TrafficContainer = styled.div`
   display: flex;
@@ -157,7 +161,11 @@ const TrafficInfo = ({ address, received, sent }) => {
       onClick={() => {
         showModal(
           <RecoilBridge>
-            <TrafficInfoModal address={address} />{' '}
+            <TrafficInfoModal
+              address={address}
+              received={received}
+              sent={sent}
+            />{' '}
             <Toaster position='bottom-center' style={{ zIndex: '20' }} />
           </RecoilBridge>,
           '62.5rem'
@@ -238,38 +246,41 @@ const ModalChartContainer = styled.div`
   border-radius: 26px;
 `;
 
-const TrafficInfoModal = ({ address }) => {
-  const [traffic, setTraffic] = useState(undefined);
-  const [sendDataset, setSendDataset] = useState([]);
-  const [receiveDataset, setReceiveDataset] = useState([]);
+const TrafficInfoModal = ({ address, received, sent }) => {
+  const trafficInfo = useRecoilValue(trafficState);
+  const dataset = useMemo(
+    () =>
+      trafficInfo.map(({ traffic, timestamp }) => {
+        const send = traffic[address]?.SentBytes ?? 0;
+        const receive = traffic[address]?.ReceivedBytes ?? 0;
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const data = await getTrafficInfo(address);
-      setTraffic(data);
-
-      setSendDataset([data.SentBytes]);
-      setReceiveDataset([data.ReceivedBytes]);
-    };
-    fetchData();
-  }, [address]);
+        return [send, receive, timestamp];
+      }),
+    [trafficInfo, address]
+  );
 
   return (
     <ModalContainer>
       <AddressDisplay>{address}</AddressDisplay>
-      {traffic ? (
+      {trafficInfo ? (
         <ModalBodyContainer>
           <ModalSummaryContainer>
-            <ByteInfo icon={<SendIcon />} value={traffic.SentBytes} />
-            <ByteInfo icon={<ReceiveIcon />} value={traffic.ReceivedBytes} />
+            <ByteInfo icon={<SendIcon />} value={sent} />
+            <ByteInfo icon={<ReceiveIcon />} value={received} />
           </ModalSummaryContainer>
           <ModalChartContainer>
             <Chart
               ChartComponent={Line}
-              labels={sendDataset.map((_, index) => index)}
+              labels={dataset.map((traffic) => traffic[2])}
               datasets={[
-                { data: sendDataset, label: '송신' },
-                { data: receiveDataset, label: '수신' }
+                {
+                  data: dataset.map((traffic) => traffic[0]),
+                  label: '송신'
+                },
+                {
+                  data: dataset.map((traffic) => traffic[1]),
+                  label: '수신'
+                }
               ]}
               width='100%'
               height='100%'
@@ -277,6 +288,7 @@ const TrafficInfoModal = ({ address }) => {
               useLegend={false}
               scales={{
                 y: {
+                  min: 0,
                   ticks: {
                     font: { size: 12 }
                   }
@@ -298,25 +310,39 @@ const TrafficInfoModal = ({ address }) => {
   );
 };
 
-const getTrafficInfo = async (address) => tempTrafficData.traffic[address];
-
-const tempTrafficData = {
-  status: 'ok',
-  traffic: {
-    '127.0.0.1:1223': {
-      ReceivedBytes: 28,
-      SentBytes: 147
-    },
-    '127.0.0.1:1224': {
-      ReceivedBytes: 28,
-      SentBytes: 147
-    }
-  }
-};
-
 const Traffic = () => {
   // eslint-disable-next-line no-unused-vars
   const [refreshFn, setRefreshFn] = useOutletContext();
+  const trafficInfo = useRecoilValue(trafficState);
+  const totalSendReceives = useMemo(
+    () =>
+      trafficInfo.map((data) => {
+        let send = 0;
+        let receive = 0;
+
+        Object.values(data.traffic).forEach(({ SentBytes, ReceivedBytes }) => {
+          send += SentBytes ?? 0;
+          receive += ReceivedBytes ?? 0;
+        });
+
+        return [send, receive, data.timestamp];
+      }),
+    [trafficInfo]
+  );
+
+  const entries = useMemo(() => {
+    const resultValue = {};
+    trafficInfo.forEach(({ traffic }) => {
+      Object.keys(traffic).forEach((key) => {
+        resultValue[key] = traffic[key];
+      });
+    });
+    return resultValue;
+  }, [trafficInfo]);
+
+  const last = totalSendReceives[totalSendReceives.length - 1];
+
+  console.log('Traffic', last, totalSendReceives, trafficInfo, entries);
 
   useEffect(() => {
     // 이 컴포넌트에서 DashboardLayout으로 정보 새로 고침 함수를 넘겨야 합니다
@@ -349,10 +375,16 @@ const Traffic = () => {
           <ChartContentContainer>
             <Chart
               ChartComponent={Line}
-              labels={['1', '2', '3']}
+              labels={totalSendReceives.map(([_, __, timestamp]) => timestamp)}
               datasets={[
-                { data: [3600, 4800, 4200], label: '송신' },
-                { data: [4700, 5000, 6000], label: '수신' }
+                {
+                  data: totalSendReceives.map(([send]) => send),
+                  label: '송신'
+                },
+                {
+                  data: totalSendReceives.map(([_, receive]) => receive),
+                  label: '수신'
+                }
               ]}
               width='100%'
               height='100%'
@@ -360,6 +392,7 @@ const Traffic = () => {
               useLegend={false}
               scales={{
                 y: {
+                  min: 0,
                   ticks: {
                     font: { size: 12 }
                   }
@@ -376,7 +409,7 @@ const Traffic = () => {
         </ChartContainer>
         <IPListContainer>
           <Searchbar placeholder='IP로 검색' />
-          {Object.entries(tempTrafficData.traffic).map(
+          {Object.entries(entries).map(
             (
               [address, { ReceivedBytes: received, SentBytes: sent }],
               index

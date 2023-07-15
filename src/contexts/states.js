@@ -50,6 +50,11 @@ const hideAddressState = atom({
   default: false
 });
 
+const trafficState = atom({
+  key: 'traffic',
+  default: []
+});
+
 export {
   statsState,
   profilesState,
@@ -60,5 +65,6 @@ export {
   playersState,
   playerDetailState,
   worldDetailState,
-  lastSentCommandsState
+  lastSentCommandsState,
+  trafficState
 };
