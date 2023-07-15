@@ -259,14 +259,16 @@ const TrafficInfoModal = ({ address, received, sent }) => {
     [trafficInfo, address]
   );
 
+  const lastTraffic = dataset[dataset.length - 1];
+
   return (
     <ModalContainer>
       <AddressDisplay>{address}</AddressDisplay>
       {trafficInfo ? (
         <ModalBodyContainer>
           <ModalSummaryContainer>
-            <ByteInfo icon={<SendIcon />} value={sent} />
-            <ByteInfo icon={<ReceiveIcon />} value={received} />
+            <ByteInfo icon={<SendIcon />} value={lastTraffic[0]} />
+            <ByteInfo icon={<ReceiveIcon />} value={lastTraffic[1]} />
           </ModalSummaryContainer>
           <ModalChartContainer>
             <Chart
