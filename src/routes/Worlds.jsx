@@ -165,7 +165,7 @@ const WorldInfoModal = ({ uuid, name }) => {
   const [rightGamerules, setRightGamerules] = useState([]);
   const [leftGamerules, setLeftGamerules] = useState([]);
   const worldDetails = useRecoilValue(worldDetailState);
-  const world = worldDetails[uuid].data;
+  const world = worldDetails[uuid];
 
   useEffect(() => {
     const right = Object.keys(world.gamerule);

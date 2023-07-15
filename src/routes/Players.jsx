@@ -131,7 +131,7 @@ const PlayerButton = styled.button`
 
 const PlayerInfoContainer = ({ uuid, name }) => {
   const [playerDetails, setPlayerDetails] = useRecoilState(playerDetailState);
-  const player = playerDetails[uuid]?.data;
+  const player = playerDetails[uuid];
   const profile = useRecoilValue(currentProfileState);
 
   return player ? (

@@ -1,6 +1,7 @@
 import { useEffect, useState, useCallback } from 'react';
 import { Outlet, Link, useLocation, BrowserRouter } from 'react-router-dom';
 import { css, styled } from 'styled-components';
+import * as dayjs from 'dayjs';
 
 import { Logo, LogoText } from '../assets/logo';
 import {
@@ -343,137 +344,112 @@ const DashboardLayout = () => {
   const setTraffic = useSetRecoilState(trafficState);
 
   const reloadTask = useCallback(
-    async (profile = currentProfile) => {
-      Network.ping(
-        profile.address,
-        profile.port,
-        profile.key,
-        profile.isSecureConnection
-      )
-        .then(async () => {
-          const statResults = (
-            await Network.get(
-              profile.address,
-              profile.port,
-              profile.key,
-              profile.isSecureConnection,
-              'stats'
-            )
-          ).data;
+    async (profile = currentProfile) => { 
+      try {
+        await Network.ping(
+          profile.address,
+          profile.port,
+          profile.key,
+          profile.isSecureConnection
+        )
 
-          statResults.disk.usedSpace =
+        const statResults = (
+          await Network.get(
+            profile.address,
+            profile.port,
+            profile.key,
+            profile.isSecureConnection,
+            'stats'
+          )
+        ).data;
+
+        statResults.disk.usedSpace =
             stringToBytes(statResults.disk.totalSpace) -
             stringToBytes(statResults.disk.freeSpace);
 
-          const date = new Date();
-          const hours = date.getHours();
-          const minutes = date.getMinutes();
-          const seconds = date.getSeconds();
+        const date = dayjs().format('HH:mm:ss');
+        statResults.timestamp = date;
+        
+        const worldResults = (
+          await Network.get(
+            profile.address,
+            profile.port,
+            profile.key,
+            profile.isSecureConnection,
+            'worlds'
+          )
+        ).data.worlds;
 
-          const timestamp = `${hours < 10 ? '0' : ''}${hours}:${
-            minutes < 10 ? '0' : ''
-          }${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+        const playerResults = (
+          await Network.get(
+            profile.address,
+            profile.port,
+            profile.key,
+            profile.isSecureConnection,
+            'players'
+          )
+        ).data.players;
 
-          statResults.timestamp = timestamp;
+        const trafficData = (
+          await Network.get(
+            profile.address,
+            profile.port,
+            profile.key,
+            profile.isSecureConnection,
+            'traffic'
+          )
+        ).data || { traffic: {} };
+        trafficData.timestamp = date;
 
-          const worldResults = (
-            await Network.get(
+        const worlds = [];
+        const _worlds = await Promise.all(
+          worldResults.map(({ uuid }) => 
+            Network.get(
               profile.address,
               profile.port,
               profile.key,
               profile.isSecureConnection,
-              'worlds'
+              `worlds/${uuid}`
             )
-          ).data.worlds;
+          )
+        )
+        
+        for (const { data } of _worlds) {
+          worlds[data.uuid] = data
+        }
 
-          const playerResults = (
-            await Network.get(
+        const players = []
+        const _players = await Promise.all(
+          playerResults.map(({ uuid }) =>
+            Network.get(
               profile.address,
               profile.port,
               profile.key,
               profile.isSecureConnection,
-              'players'
+              `players/${uuid}`
             )
-          ).data.players;
+          )
+        );
 
-          const trafficData = (
-            await Network.get(
-              profile.address,
-              profile.port,
-              profile.key,
-              profile.isSecureConnection,
-              'traffic'
-            )
-          ).data || { traffic: {} };
-          trafficData.timestamp = timestamp;
+        for (const { data } of _players) {
+          players[data.uuid] = data
+        }
 
-          setStats((stats) => [...stats.slice(-19), statResults]);
-          setTraffic((traffic) => [...traffic.slice(-19), trafficData]);
-          setWorlds(worldResults);
-          setPlayers(playerResults);
-          setConnected(true);
+        setStats((stats) => [...stats.slice(-19), statResults]);
+        setTraffic((traffic) => [...traffic.slice(-19), trafficData]);
+        setWorlds(worldResults);
+        setWorldDetails(worlds);
+        setPlayers(playerResults);
+        setPlayerDetails(players);
+        setConnected(true);
 
-          Promise.all(
-            worldResults.map(
-              ({ uuid }) =>
-                new Promise(async (resolve) =>
-                  resolve([
-                    uuid,
-                    await Network.get(
-                      profile.address,
-                      profile.port,
-                      profile.key,
-                      profile.isSecureConnection,
-                      `worlds/${uuid}`
-                    )
-                  ])
-                )
-            )
-          ).then((worldResult) =>
-            setWorldDetails(
-              worldResult.reduce(
-                (prev, [uuid, current]) => ({
-                  ...prev,
-                  [uuid]: current
-                }),
-                {}
-              )
-            )
-          );
-
-          const playerResult = await Promise.all(
-            playerResults.map(
-              ({ uuid }) =>
-                new Promise(async (resolve) =>
-                  resolve([
-                    uuid,
-                    await Network.get(
-                      profile.address,
-                      profile.port,
-                      profile.key,
-                      profile.isSecureConnection,
-                      `players/${uuid}`
-                    )
-                  ])
-                )
-            )
-          );
-
-          setPlayerDetails(
-            playerResult.reduce(
-              (prev, [uuid, current]) => ({
-                ...prev,
-                [uuid]: current
-              }),
-              {}
-            )
-          );
-
-          if (firstLoadComplete === false) {
-            setFirstLoadComplete(true);
-          }
-        })
-        .catch(() => setConnected(false));
+        if (firstLoadComplete === false) {
+          setFirstLoadComplete(true);
+        }
+      } catch (e) {
+        setConnected(false);
+        return;
+      }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [currentProfile]

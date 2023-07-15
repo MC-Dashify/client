@@ -274,10 +274,10 @@ const Overview = () => {
 
   const values = Object.values(worlds);
 
-  const countOfEntities = values.map((world) => world.data.entities);
-  const countOfPlayers = values.map((world) => world.data.player);
+  const countOfEntities = values.map((world) => world.entities);
+  const countOfPlayers = values.map((world) => world.player);
   const countOfSize = values.map(
-    (world) => stringToBytes(world.data.size) / 1024 ** 3
+    (world) => stringToBytes(world.size) / 1024 ** 3
   );
 
   useEffect(() => {
