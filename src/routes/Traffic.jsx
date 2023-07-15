@@ -80,6 +80,7 @@ const ContentContainer = styled.div`
   gap: 2rem;
   align-self: stretch;
   flex: 1 0 0;
+  overflow-y: hidden;
 `;
 
 const ChartContainer = styled.div`
@@ -120,6 +121,11 @@ const IPListContainer = styled.div`
   flex-direction: column;
   gap: 0.75rem;
   flex: 1 0 0;
+  overflow-y: auto;
+
+  div {
+    min-height: 44px;
+  }
 `;
 
 const TrafficInfoContainer = styled.div`
