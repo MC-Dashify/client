@@ -254,7 +254,7 @@ const TrafficInfoModal = ({ address, received, sent }) => {
         const send = traffic[address]?.SentBytes ?? 0;
         const receive = traffic[address]?.ReceivedBytes ?? 0;
 
-        return [send, receive, timestamp];
+        return [(send * 8) / 1000, (receive * 8) / 1000, timestamp];
       }),
     [trafficInfo, address]
   );
@@ -274,11 +274,11 @@ const TrafficInfoModal = ({ address, received, sent }) => {
               labels={dataset.map((traffic) => traffic[2])}
               datasets={[
                 {
-                  data: dataset.map((traffic) => (traffic[0] * 8) / 1024),
+                  data: dataset.map((traffic) => traffic[0]),
                   label: '송신'
                 },
                 {
-                  data: dataset.map((traffic) => (traffic[1] * 8) / 1024),
+                  data: dataset.map((traffic) => traffic[1]),
                   label: '수신'
                 }
               ]}
@@ -325,7 +325,7 @@ const Traffic = () => {
           receive += ReceivedBytes ?? 0;
         });
 
-        return [send, receive, data.timestamp];
+        return [(send * 8) / 1000, (receive * 8) / 1000, data.timestamp];
       }),
     [trafficInfo]
   );
@@ -378,12 +378,12 @@ const Traffic = () => {
               labels={totalSendReceives.map(([_, __, timestamp]) => timestamp)}
               datasets={[
                 {
-                  data: totalSendReceives.map(([send]) => (send * 8) / 1024),
+                  data: totalSendReceives.map(([send]) => (send * 8) / 1000),
                   label: '송신'
                 },
                 {
                   data: totalSendReceives.map(
-                    ([_, receive]) => (receive * 8) / 1024
+                    ([_, receive]) => (receive * 8) / 1000
                   ),
                   label: '수신'
                 }
@@ -419,8 +419,8 @@ const Traffic = () => {
               <TrafficInfo
                 key={index}
                 address={address}
-                received={received}
-                sent={sent}
+                received={(received * 8) / 1000}
+                sent={(sent * 8) / 1000}
               />
             )
           )}
