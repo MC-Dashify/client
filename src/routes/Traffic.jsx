@@ -252,18 +252,14 @@ const ModalChartContainer = styled.div`
   border-radius: 26px;
 `;
 
-const TrafficInfoModal = ({ address, received, sent }) => {
+const TrafficInfoModal = ({ address }) => {
   const trafficInfo = useRecoilValue(trafficState);
-  const dataset = useMemo(
-    () =>
-      trafficInfo.map(({ traffic, timestamp }) => {
-        const send = traffic[address]?.SentBytes ?? 0;
-        const receive = traffic[address]?.ReceivedBytes ?? 0;
+  const dataset = trafficInfo.map(({ traffic, timestamp }) => {
+    const send = Math.floor((traffic[address].SentBytes * 8) / 1000 * 100) / 100;
+    const receive = Math.floor((traffic[address].ReceivedBytes * 8) / 1000 * 100) / 100;
 
-        return [(send * 8) / 1000, (receive * 8) / 1000, timestamp];
-      }),
-    [trafficInfo, address]
-  );
+    return [send, receive, timestamp];
+  })
 
   const lastTraffic = dataset[dataset.length - 1];
 
@@ -328,7 +324,10 @@ const Traffic = () => {
     let receive = 0;
 
     for (const key of Object.keys(data.traffic)) {
-      const { SentBytes, ReceivedBytes } = data.traffic[key];
+      const traffic = data.traffic[key]
+      const SentBytes = Math.floor((traffic.SentBytes * 8) / 1000 * 100) / 100;
+      const ReceivedBytes = Math.floor((traffic.ReceivedBytes * 8) / 1000 * 100) / 100;
+
       const index = entries.findIndex(([address]) => address === key);
       if (index !== -1) {
         entries[index] = [key, { SentBytes, ReceivedBytes }]
@@ -340,7 +339,7 @@ const Traffic = () => {
       receive += ReceivedBytes ?? 0;
     }
 
-    return [(send * 8) / 1000, (receive * 8) / 1000, data.timestamp];
+    return [send, receive, data.timestamp];
   });
 
   console.log('Traffic', totalSendReceives, trafficInfo, entries);
@@ -379,12 +378,12 @@ const Traffic = () => {
               labels={totalSendReceives.map(([_, __, timestamp]) => timestamp)}
               datasets={[
                 {
-                  data: totalSendReceives.map(([send]) => (send * 8) / 1000),
+                  data: totalSendReceives.map(([send]) => send),
                   label: '송신'
                 },
                 {
                   data: totalSendReceives.map(
-                    ([_, receive]) => (receive * 8) / 1000
+                    ([_, receive]) => receive
                   ),
                   label: '수신'
                 }
@@ -420,8 +419,8 @@ const Traffic = () => {
               <TrafficInfo
                 key={index}
                 address={address}
-                received={(received * 8) / 1000}
-                sent={(sent * 8) / 1000}
+                received={received}
+                sent={sent}
               />
             )
           )}
