@@ -316,35 +316,28 @@ const Traffic = () => {
   // eslint-disable-next-line no-unused-vars
   const [refreshFn, setRefreshFn] = useOutletContext();
   const trafficInfo = useRecoilValue(trafficState);
-  const totalSendReceives = useMemo(
-    () =>
-      trafficInfo.map((data) => {
-        let send = 0;
-        let receive = 0;
+  const entries = [];
+  const totalSendReceives = trafficInfo.map((data) => {
+    let send = 0;
+    let receive = 0;
 
-        Object.values(data.traffic).forEach(({ SentBytes, ReceivedBytes }) => {
-          send += SentBytes ?? 0;
-          receive += ReceivedBytes ?? 0;
-        });
+    for (const key of Object.keys(data.traffic)) {
+      const { SentBytes, ReceivedBytes } = data.traffic[key];
+      const index = entries.findIndex(([address]) => address === key);
+      if (index !== -1) {
+        entries[index] = [key, { SentBytes, ReceivedBytes }]
+      } else {
+        entries.push([key, { SentBytes, ReceivedBytes }]);
+      }
 
-        return [(send * 8) / 1000, (receive * 8) / 1000, data.timestamp];
-      }),
-    [trafficInfo]
-  );
+      send += SentBytes ?? 0;
+      receive += ReceivedBytes ?? 0;
+    }
 
-  const entries = useMemo(() => {
-    const resultValue = {};
-    trafficInfo.forEach(({ traffic }) => {
-      Object.keys(traffic).forEach((key) => {
-        resultValue[key] = traffic[key];
-      });
-    });
-    return resultValue;
-  }, [trafficInfo]);
+    return [(send * 8) / 1000, (receive * 8) / 1000, data.timestamp];
+  });
 
-  const last = totalSendReceives[totalSendReceives.length - 1];
-
-  console.log('Traffic', last, totalSendReceives, trafficInfo, entries);
+  console.log('Traffic', totalSendReceives, trafficInfo, entries);
 
   useEffect(() => {
     // 이 컴포넌트에서 DashboardLayout으로 정보 새로 고침 함수를 넘겨야 합니다
@@ -355,7 +348,7 @@ const Traffic = () => {
   return (
     <TrafficContainer>
       <PageSummaryContainer>
-        <DashboardSummary label='커넥션 수' value={0} />
+        <DashboardSummary label='커넥션 수' value={entries.length} />
         <ErrorContainer>
           <ErrorContainerTop>
             <BanIcon color='#B72C25' transform='scale(0.666666666666667)' />
@@ -413,7 +406,7 @@ const Traffic = () => {
         </ChartContainer>
         <IPListContainer>
           <Searchbar placeholder='IP로 검색' />
-          {Object.entries(entries).map(
+          {entries.map(
             (
               [address, { ReceivedBytes: received, SentBytes: sent }],
               index
