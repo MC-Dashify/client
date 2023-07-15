@@ -404,7 +404,7 @@ const DashboardLayout = () => {
               profile.isSecureConnection,
               'traffic'
             )
-          ).data;
+          ).data || { traffic: {} };
           trafficData.timestamp = timestamp;
 
           setStats((stats) => [...stats.slice(-19), statResults]);
