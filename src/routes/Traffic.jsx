@@ -203,7 +203,7 @@ const ByteInfoValue = styled.div`
 const ByteInfo = ({ icon, value }) => (
   <ByteInfoContainer>
     {icon}
-    <ByteInfoValue>{value} 바이트</ByteInfoValue>
+    <ByteInfoValue>{value} Kbps</ByteInfoValue>
   </ByteInfoContainer>
 );
 
@@ -274,11 +274,11 @@ const TrafficInfoModal = ({ address, received, sent }) => {
               labels={dataset.map((traffic) => traffic[2])}
               datasets={[
                 {
-                  data: dataset.map((traffic) => traffic[0]),
+                  data: dataset.map((traffic) => (traffic[0] * 8) / 1024),
                   label: '송신'
                 },
                 {
-                  data: dataset.map((traffic) => traffic[1]),
+                  data: dataset.map((traffic) => (traffic[1] * 8) / 1024),
                   label: '수신'
                 }
               ]}
@@ -370,7 +370,7 @@ const Traffic = () => {
         <ChartContainer>
           <ChartTopContainer>
             <SendAndReceiveIcon />
-            <ChartNameDisplay>총 트래픽(바이트)</ChartNameDisplay>
+            <ChartNameDisplay>총 트래픽(Kbps)</ChartNameDisplay>
           </ChartTopContainer>
           <ChartContentContainer>
             <Chart
@@ -378,11 +378,13 @@ const Traffic = () => {
               labels={totalSendReceives.map(([_, __, timestamp]) => timestamp)}
               datasets={[
                 {
-                  data: totalSendReceives.map(([send]) => send),
+                  data: totalSendReceives.map(([send]) => (send * 8) / 1024),
                   label: '송신'
                 },
                 {
-                  data: totalSendReceives.map(([_, receive]) => receive),
+                  data: totalSendReceives.map(
+                    ([_, receive]) => (receive * 8) / 1024
+                  ),
                   label: '수신'
                 }
               ]}
