@@ -336,22 +336,33 @@ const DashboardLayout = () => {
   const setPlayers = useSetRecoilState(playersState);
   const setTraffic = useSetRecoilState(trafficState);
 
+  const location = useLocation();
+
   const reloadTask = useCallback(
     async (profile = currentProfile) => { 
       try {
         await ping(profile);
 
-        const statResults = await getStatus(profile);
-        setStats((stats) => [...stats.slice(-19), statResults]);
+        // TODO: 개선 필요
+        if (!firstLoadComplete || location.pathname === '/dashboard' || location.pathname === '/dashboard/stats') {
+          const statResults = await getStatus(profile);
+          setStats((stats) => [...stats.slice(-19), statResults]);
+        }
 
-        const worlds = await getWorlds(profile);
-        setWorlds(worlds);
-      
-        const players = await getPlayers(profile);
-        setPlayers(players);
+        if (!firstLoadComplete || location.pathname === '/dashboard' || location.pathname === '/dashboard/world') {
+          const worlds = await getWorlds(profile);
+          setWorlds(worlds);
+        }
+        
+        if (!firstLoadComplete || location.pathname === '/dashboard/player') {
+          const players = await getPlayers(profile);
+          setPlayers(players);
+        }
 
-        const trafficData = await getTraffic(profile);
-        setTraffic((traffic) => [...traffic.slice(-19), trafficData]);
+        if (location.pathname === '/dashboard/traffic') {
+          const trafficData = await getTraffic(profile);
+          setTraffic((traffic) => [...traffic.slice(-19), trafficData]);
+        }
         
         setConnected(true);
 
@@ -364,7 +375,7 @@ const DashboardLayout = () => {
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [currentProfile]
+    [currentProfile, firstLoadComplete, location]
   );
 
   useEffect(() => {
