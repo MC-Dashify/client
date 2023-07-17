@@ -30,7 +30,7 @@ jobs:
         if: matrix.platform == 'macos-latest'
         uses: dtolnay/rust-toolchain@stable
         with:
-          targets: universal-apple-darwin
+          targets: x86_64-apple-darwin,aarch64-apple-darwin
 
       - name: Rust setup (Windows only)
         if: matrix.platform == 'windows-latest'
@@ -57,7 +57,7 @@ jobs:
         # If you don't have `beforeBuildCommand` configured you may want to build your frontend here too.
         run: yarn install # Change this to npm, yarn or pnpm.
 
-      - name: Build macOS Universal Binary
+      - name: Build macOS x64 Binary
         if: matrix.platform == 'macos-latest'
         uses: tauri-apps/tauri-action@v0
         env:
@@ -70,7 +70,22 @@ jobs:
           releaseBody: 'See the assets to download this version and install.'
           releaseDraft: false
           prerelease: false
-          args: --target universal-apple-darwin
+          args: --target x86_64-apple-darwin
+
+      - name: Build macOS aarch64 Binary
+        if: matrix.platform == 'macos-latest'
+        uses: tauri-apps/tauri-action@v0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAURI_PRIVATE_KEY: ${{ secrets.TAURI_PRIVATE_KEY }}
+          TAURI_KEY_PASSWORD: ${{ secrets.TAURI_KEY_PASSWORD }}
+        with:
+          tagName: dashify-v__VERSION__ # the action automatically replaces \_\_VERSION\_\_ with the app version
+          releaseName: 'Dashify v__VERSION__'
+          releaseBody: 'See the assets to download this version and install.'
+          releaseDraft: false
+          prerelease: false
+          args: --target aarch64-apple-darwin
 
       - name: Build Windows x64 Binary
         if: matrix.platform == 'windows-latest'
@@ -88,7 +103,7 @@ jobs:
           args: --target x86_64-pc-windows-msvc
 
       - name: Build Linux AppImage
-        if: matrix.platform == 'windows-latest'
+        if: matrix.platform == 'ubuntu-20.04'
         uses: tauri-apps/tauri-action@v0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
