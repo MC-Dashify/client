@@ -5,7 +5,7 @@ import { Doughnut } from 'react-chartjs-2';
 import { stringToBytes } from '../utils/convert';
 import Chart from '../components/common/Chart';
 import { useRecoilValue } from 'recoil';
-import { statsState, worldsState, worldDetailState } from '../contexts/states';
+import { statsState, worldsState } from '../contexts/states';
 
 const CardContainer = styled.div`
   display: flex;
@@ -257,8 +257,8 @@ const colorType = (value, min = 0, max = 100, reverse = false) => {
 const Overview = () => {
   // eslint-disable-next-line no-unused-vars
   const [refreshFn, setRefreshFn] = useOutletContext();
-  const worldsList = useRecoilValue(worldsState);
-  const worlds = useRecoilValue(worldDetailState);
+  const worldDetails = useRecoilValue(worldsState);
+  const worlds = useMemo(() => Object.values(worldDetails), [worldDetails]);
   const statsData = useRecoilValue(statsState);
 
   // if (!statsData?.length) return <></>;
@@ -270,13 +270,11 @@ const Overview = () => {
   const diskValue = getUsedPercantage(disk.usedSpace, disk.totalSpace);
   const tpsValue = (tps.reduce((a, b) => a + b, 0) / tps.length).toFixed(1);
 
-  const worldNames = worldsList.map(({ name }) => name);
+  const worldNames = worlds.map(({ name }) => name);
 
-  const values = Object.values(worlds);
-
-  const countOfEntities = values.map((world) => world.entities);
-  const countOfPlayers = values.map((world) => world.player);
-  const countOfSize = values.map(
+  const countOfEntities = worlds.map((world) => world.entities);
+  const countOfPlayers = worlds.map((world) => world.player);
+  const countOfSize = worlds.map(
     (world) => stringToBytes(world.size) / 1024 ** 3
   );
 

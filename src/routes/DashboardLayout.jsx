@@ -1,7 +1,6 @@
 import { useEffect, useState, useCallback } from 'react';
 import { Outlet, Link, useLocation, BrowserRouter } from 'react-router-dom';
 import { css, styled } from 'styled-components';
-import * as dayjs from 'dayjs';
 
 import { Logo, LogoText } from '../assets/logo';
 import {
@@ -29,17 +28,14 @@ import {
   statsState,
   worldsState,
   playersState,
-  worldDetailState,
-  playerDetailState,
   trafficState
 } from '../contexts/states';
 import AppData from '../storage/data';
 import Profile from '../storage/profile';
-import Network from '../utils/net';
 import { showModal } from '../utils/modal';
 import ProfileList from '../components/common/ProfileList';
 import { Toaster, toast } from 'react-hot-toast';
-import { stringToBytes } from '../utils/convert';
+import { getPlayers, getStatus, getTraffic, getWorlds, ping } from '../utils/data';
 
 const Aside = styled.aside`
   display: flex;
@@ -334,113 +330,29 @@ const DashboardLayout = () => {
   // Outlet -> DashboardLayout로 새로 고침 함수를 전달해야 합니다
 
   const [refreshRate, setRefreshRate] = useRecoilState(refreshRateState);
-  const [currentProfile, setCurrentProfile] =
-    useRecoilState(currentProfileState);
+  const [currentProfile, setCurrentProfile] = useRecoilState(currentProfileState);
   const setStats = useSetRecoilState(statsState);
   const setWorlds = useSetRecoilState(worldsState);
-  const setWorldDetails = useSetRecoilState(worldDetailState);
   const setPlayers = useSetRecoilState(playersState);
-  const setPlayerDetails = useSetRecoilState(playerDetailState);
   const setTraffic = useSetRecoilState(trafficState);
 
   const reloadTask = useCallback(
     async (profile = currentProfile) => { 
       try {
-        await Network.ping(
-          profile.address,
-          profile.port,
-          profile.key,
-          profile.isSecureConnection
-        )
+        await ping(profile);
 
-        const statResults = (
-          await Network.get(
-            profile.address,
-            profile.port,
-            profile.key,
-            profile.isSecureConnection,
-            'stats'
-          )
-        ).data;
-
-        statResults.disk.usedSpace =
-            stringToBytes(statResults.disk.totalSpace) -
-            stringToBytes(statResults.disk.freeSpace);
-
-        const date = dayjs().format('HH:mm:ss');
-        statResults.timestamp = date;
-        
-        const worldResults = (
-          await Network.get(
-            profile.address,
-            profile.port,
-            profile.key,
-            profile.isSecureConnection,
-            'worlds'
-          )
-        ).data.worlds;
-
-        const playerResults = (
-          await Network.get(
-            profile.address,
-            profile.port,
-            profile.key,
-            profile.isSecureConnection,
-            'players'
-          )
-        ).data.players;
-
-        const trafficData = (
-          await Network.get(
-            profile.address,
-            profile.port,
-            profile.key,
-            profile.isSecureConnection,
-            'traffic'
-          )
-        ).data || { traffic: {} };
-        trafficData.timestamp = date;
-
-        const worlds = [];
-        const _worlds = await Promise.all(
-          worldResults.map(({ uuid }) => 
-            Network.get(
-              profile.address,
-              profile.port,
-              profile.key,
-              profile.isSecureConnection,
-              `worlds/${uuid}`
-            )
-          )
-        )
-        
-        for (const { data } of _worlds) {
-          worlds[data.uuid] = data
-        }
-
-        const players = []
-        const _players = await Promise.all(
-          playerResults.map(({ uuid }) =>
-            Network.get(
-              profile.address,
-              profile.port,
-              profile.key,
-              profile.isSecureConnection,
-              `players/${uuid}`
-            )
-          )
-        );
-
-        for (const { data } of _players) {
-          players[data.uuid] = data
-        }
-
+        const statResults = await getStatus(profile);
         setStats((stats) => [...stats.slice(-19), statResults]);
+
+        const worlds = await getWorlds(profile);
+        setWorlds(worlds);
+      
+        const players = await getPlayers(profile);
+        setPlayers(players);
+
+        const trafficData = await getTraffic(profile);
         setTraffic((traffic) => [...traffic.slice(-19), trafficData]);
-        setWorlds(worldResults);
-        setWorldDetails(worlds);
-        setPlayers(playerResults);
-        setPlayerDetails(players);
+        
         setConnected(true);
 
         if (firstLoadComplete === false) {

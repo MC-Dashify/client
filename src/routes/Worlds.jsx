@@ -1,10 +1,10 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useOutletContext } from 'react-router-dom';
 import styled from 'styled-components';
 import { showModal } from '../utils/modal';
 import DashboardSummary from '../components/dashboard/DashboardSummary';
 import Searchbar from '../components/common/Searchbar';
-import { worldsState, worldDetailState } from '../contexts/states';
+import { worldsState } from '../contexts/states';
 import {
   useRecoilBridgeAcrossReactRoots_UNSTABLE,
   useRecoilValue
@@ -164,8 +164,8 @@ const ModalGamerulesSeparator = styled.div`
 const WorldInfoModal = ({ uuid, name }) => {
   const [rightGamerules, setRightGamerules] = useState([]);
   const [leftGamerules, setLeftGamerules] = useState([]);
-  const worldDetails = useRecoilValue(worldDetailState);
-  const world = worldDetails[uuid];
+  const worlds = useRecoilValue(worldsState)
+  const world = worlds[uuid];
 
   useEffect(() => {
     const right = Object.keys(world.gamerule);
@@ -356,7 +356,8 @@ const Worlds = () => {
     label: '이름'
   });
   const [searchValue, setSearchValue] = useState('');
-  const worlds = useRecoilValue(worldsState);
+  const worldDetails = useRecoilValue(worldsState);
+  const worlds = useMemo(() => Object.values(worldDetails), [worldDetails]);
 
   useEffect(() => {
     // 이 컴포넌트에서 DashboardLayout으로 정보 새로 고침 함수를 넘겨야 합니다
