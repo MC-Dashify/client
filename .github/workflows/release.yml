@@ -35,8 +35,6 @@ jobs:
       - name: Rust setup (Windows only)
         if: matrix.platform == 'windows-latest'
         uses: dtolnay/rust-toolchain@stable
-        with:
-          targets: x86_64-pc-windows-msvc
 
       - name: Rust setup (Linux only)
         if: matrix.platform == 'ubuntu-20.04'
@@ -100,7 +98,6 @@ jobs:
           releaseBody: 'See the assets to download this version and install.'
           releaseDraft: false
           prerelease: false
-          args: --target x86_64-pc-windows-msvc
 
       - name: Build Linux AppImage
         if: matrix.platform == 'ubuntu-20.04'
