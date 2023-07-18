@@ -2,8 +2,7 @@ name: Release
 on:
   push:
     branches:
-      - feature/tauri-updater
-      # TODO: change branch to release
+      - release
 
 jobs:
   release:
