@@ -8,7 +8,7 @@
   },
   "package": {
     "productName": "Dashify",
-    "version": "0.0.1"
+    "version": "0.0.2"
   },
   "tauri": {
     "allowlist": {
@@ -20,7 +20,7 @@
     "bundle": {
       "active": true,
       "category": "DeveloperTool",
-      "copyright": "\"Dashify\" Development Team",
+      "copyright": "Dashify Development Team",
       "deb": {
         "depends": []
       },
@@ -43,18 +43,35 @@
       },
       "resources": [],
       "shortDescription": "",
-      "targets": "all",
+      "targets": [
+        "deb",
+        "appimage",
+        "nsis",
+        "app",
+        "dmg",
+        "updater"
+      ],
       "windows": {
         "certificateThumbprint": null,
         "digestAlgorithm": "sha256",
-        "timestampUrl": ""
-      }
+        "timestampUrl": "",
+        "allowDowngrades": false
+      },
+      "publisher": "Dashify Development Team"
     },
     "security": {
       "csp": null
     },
     "updater": {
-      "active": false
+      "active": true,
+      "endpoints": [
+        "https://update.dashify.cc"
+      ],
+      "dialog": false,
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDUxODJDNkQ2NzA5ODRFMUQKUldRZFRwaHcxc2FDVWFGaU9Cei9FVFlwWnlENWNuQllsZTdrRXFqZVpwOURleHVhUmhLNUhKcW0K",
+      "windows": {
+        "installMode": "passive"
+      }
     },
     "windows": []
   }
