@@ -8,7 +8,7 @@
   },
   "package": {
     "productName": "Dashify",
-    "version": "0.0.2"
+    "version": "0.0.1"
   },
   "tauri": {
     "allowlist": {
@@ -54,7 +54,8 @@
       "windows": {
         "certificateThumbprint": null,
         "digestAlgorithm": "sha256",
-        "timestampUrl": ""
+        "timestampUrl": "",
+        "allowDowngrades": false
       },
       "publisher": "Dashify Development Team"
     },

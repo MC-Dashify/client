@@ -27,6 +27,8 @@ import { RecoilRoot } from 'recoil';
 import { window as tauriWindow } from '@tauri-apps/api';
 import { TauriEvent } from '@tauri-apps/api/event';
 import { Store } from 'tauri-plugin-store-api';
+import { onUpdaterEvent } from '@tauri-apps/api/updater';
+import tauriConfig from '../src-tauri/tauri.conf.json';
 
 const store = new Store('dashify.dat');
 
@@ -46,7 +48,7 @@ chartDefaults.animations.x = false; // disables all animations
 chartDefaults.animations.y = false; // disables all animations
 chartDefaults.transitions.active.animation.duration = 0; // disables the animation for 'active' mode
 
-const VERSION = '0.0.1';
+const VERSION = tauriConfig.package.version;
 AppData.set('etc.version', VERSION);
 // XXX VERSION 파일 삭제 논의
 
@@ -96,3 +98,8 @@ if (!(hostname === 'localhost' && port === '5173')) {
 } else {
   root.render(components);
 }
+
+await onUpdaterEvent(({ error, status }) => {
+  // This will log all updater events, including status updates and errors.
+  console.log('Updater event:', error === null ? status : error);
+});
