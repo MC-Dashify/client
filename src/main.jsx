@@ -28,7 +28,7 @@ import { window as tauriWindow } from '@tauri-apps/api';
 import { TauriEvent } from '@tauri-apps/api/event';
 import { Store } from 'tauri-plugin-store-api';
 import { onUpdaterEvent } from '@tauri-apps/api/updater';
-import tauriConfig from '../src-tauri/tauri.conf.json';
+import { getVersion } from '@tauri-apps/api/app';
 
 const store = new Store('dashify.dat');
 
@@ -47,10 +47,6 @@ chartDefaults.animation.duration = 0; // general animation time
 chartDefaults.animations.x = false; // disables all animations
 chartDefaults.animations.y = false; // disables all animations
 chartDefaults.transitions.active.animation.duration = 0; // disables the animation for 'active' mode
-
-const VERSION = tauriConfig.package.version;
-AppData.set('etc.version', VERSION);
-// XXX VERSION 파일 삭제 논의
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
@@ -100,6 +96,8 @@ if (!(hostname === 'localhost' && port === '5173')) {
 }
 
 (async () => {
+  const VERSION = await getVersion();
+  AppData.set('etc.version', VERSION);
   await onUpdaterEvent(({ error, status }) => {
     // This will log all updater events, including status updates and errors.
     console.log('Updater event:', error === null ? status : error);
