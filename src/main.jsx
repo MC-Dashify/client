@@ -99,7 +99,9 @@ if (!(hostname === 'localhost' && port === '5173')) {
   root.render(components);
 }
 
-await onUpdaterEvent(({ error, status }) => {
-  // This will log all updater events, including status updates and errors.
-  console.log('Updater event:', error === null ? status : error);
-});
+(async () => {
+  await onUpdaterEvent(({ error, status }) => {
+    // This will log all updater events, including status updates and errors.
+    console.log('Updater event:', error === null ? status : error);
+  });
+})();
