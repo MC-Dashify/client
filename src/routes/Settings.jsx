@@ -169,6 +169,7 @@ const Modal = ({ install }) => {
 
   const setCurrentTrapPauseState = useSetRecoilState(trapPauseState);
   const [isModalOpen, setIsModalOpen] = useState(true);
+  const [isCheckingUpdate, setIsCheckingUpdate] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -182,8 +183,9 @@ const Modal = ({ install }) => {
     }
   };
 
-  const Update = async () => {
+  const update = async () => {
     try {
+      setIsCheckingUpdate(true);
       toast.dismiss('update-latest');
       toast.loading('업데이트 확인중...', {
         id: 'update-checking'
@@ -192,6 +194,7 @@ const Modal = ({ install }) => {
       const { shouldUpdate, manifest } = await checkUpdate();
 
       if (shouldUpdate) {
+        setCurrentTrapPauseState({ settings: true });
         // You could show a dialog asking the user if they want to install the update here.
         console.log(
           `Latest Update Info: ${manifest?.version}, ${manifest?.date}, ${manifest?.body}`
@@ -244,11 +247,10 @@ const Modal = ({ install }) => {
                 await relaunch();
               }
             }
-          })
-          .then(() => {
-            setCurrentTrapPauseState({ settings: false });
           });
       } else {
+        // XXX toast.promise
+        toast.dismiss('update-checking');
         toast.success('최신 버전입니다.', {
           id: 'update-latest'
         });
@@ -257,6 +259,8 @@ const Modal = ({ install }) => {
     } catch (error) {
       console.error(error);
     }
+    setCurrentTrapPauseState({ settings: false });
+    setIsCheckingUpdate(false);
   };
 
   return (
@@ -291,9 +295,8 @@ const Modal = ({ install }) => {
                 padding={'8px 16px'}
                 styleType='accent'
                 onClick={async () => {
-                  setCurrentTrapPauseState({ settings: true });
-
-                  await Update();
+                  if (isCheckingUpdate) return;
+                  await update();
                 }}
               >
                 업데이트 확인
