@@ -28,17 +28,14 @@ import {
   statsState,
   worldsState,
   playersState,
-  worldDetailState,
-  playerDetailState,
   trafficState
 } from '../contexts/states';
 import AppData from '../storage/data';
 import Profile from '../storage/profile';
-import Network from '../utils/net';
 import { showModal } from '../utils/modal';
 import ProfileList from '../components/common/ProfileList';
 import { Toaster, toast } from 'react-hot-toast';
-import { stringToBytes } from '../utils/convert';
+import { getPlayers, getStatus, getTraffic, getWorlds, ping } from '../utils/data';
 
 const Aside = styled.aside`
   display: flex;
@@ -333,150 +330,52 @@ const DashboardLayout = () => {
   // Outlet -> DashboardLayout로 새로 고침 함수를 전달해야 합니다
 
   const [refreshRate, setRefreshRate] = useRecoilState(refreshRateState);
-  const [currentProfile, setCurrentProfile] =
-    useRecoilState(currentProfileState);
+  const [currentProfile, setCurrentProfile] = useRecoilState(currentProfileState);
   const setStats = useSetRecoilState(statsState);
   const setWorlds = useSetRecoilState(worldsState);
-  const setWorldDetails = useSetRecoilState(worldDetailState);
   const setPlayers = useSetRecoilState(playersState);
-  const setPlayerDetails = useSetRecoilState(playerDetailState);
   const setTraffic = useSetRecoilState(trafficState);
 
+  const location = useLocation();
+
   const reloadTask = useCallback(
-    async (profile = currentProfile) => {
-      Network.ping(
-        profile.address,
-        profile.port,
-        profile.key,
-        profile.isSecureConnection
-      )
-        .then(async () => {
-          const statResults = (
-            await Network.get(
-              profile.address,
-              profile.port,
-              profile.key,
-              profile.isSecureConnection,
-              'stats'
-            )
-          ).data;
+    async (profile = currentProfile) => { 
+      try {
+        await ping(profile);
 
-          statResults.disk.usedSpace =
-            stringToBytes(statResults.disk.totalSpace) -
-            stringToBytes(statResults.disk.freeSpace);
-
-          const date = new Date();
-          const hours = date.getHours();
-          const minutes = date.getMinutes();
-          const seconds = date.getSeconds();
-
-          const timestamp = `${hours < 10 ? '0' : ''}${hours}:${
-            minutes < 10 ? '0' : ''
-          }${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
-
-          statResults.timestamp = timestamp;
-
-          const worldResults = (
-            await Network.get(
-              profile.address,
-              profile.port,
-              profile.key,
-              profile.isSecureConnection,
-              'worlds'
-            )
-          ).data.worlds;
-
-          const playerResults = (
-            await Network.get(
-              profile.address,
-              profile.port,
-              profile.key,
-              profile.isSecureConnection,
-              'players'
-            )
-          ).data.players;
-
-          const trafficData = (
-            await Network.get(
-              profile.address,
-              profile.port,
-              profile.key,
-              profile.isSecureConnection,
-              'traffic'
-            )
-          ).data || { traffic: {} };
-          trafficData.timestamp = timestamp;
-
+        // TODO: 개선 필요
+        if (!firstLoadComplete || location.pathname === '/dashboard' || location.pathname === '/dashboard/stats') {
+          const statResults = await getStatus(profile);
           setStats((stats) => [...stats.slice(-19), statResults]);
+        }
+
+        if (!firstLoadComplete || location.pathname === '/dashboard' || location.pathname === '/dashboard/world') {
+          const worlds = await getWorlds(profile);
+          setWorlds(worlds);
+        }
+        
+        if (!firstLoadComplete || location.pathname === '/dashboard/player') {
+          const players = await getPlayers(profile);
+          setPlayers(players);
+        }
+
+        if (location.pathname === '/dashboard/traffic') {
+          const trafficData = await getTraffic(profile);
           setTraffic((traffic) => [...traffic.slice(-19), trafficData]);
-          setWorlds(worldResults);
-          setPlayers(playerResults);
-          setConnected(true);
+        }
+        
+        setConnected(true);
 
-          Promise.all(
-            worldResults.map(
-              ({ uuid }) =>
-                new Promise(async (resolve) =>
-                  resolve([
-                    uuid,
-                    await Network.get(
-                      profile.address,
-                      profile.port,
-                      profile.key,
-                      profile.isSecureConnection,
-                      `worlds/${uuid}`
-                    )
-                  ])
-                )
-            )
-          ).then((worldResult) =>
-            setWorldDetails(
-              worldResult.reduce(
-                (prev, [uuid, current]) => ({
-                  ...prev,
-                  [uuid]: current
-                }),
-                {}
-              )
-            )
-          );
-
-          const playerResult = await Promise.all(
-            playerResults.map(
-              ({ uuid }) =>
-                new Promise(async (resolve) =>
-                  resolve([
-                    uuid,
-                    await Network.get(
-                      profile.address,
-                      profile.port,
-                      profile.key,
-                      profile.isSecureConnection,
-                      `players/${uuid}`
-                    )
-                  ])
-                )
-            )
-          );
-
-          setPlayerDetails(
-            playerResult.reduce(
-              (prev, [uuid, current]) => ({
-                ...prev,
-                [uuid]: current
-              }),
-              {}
-            )
-          );
-
-          if (firstLoadComplete === false) {
-            setFirstLoadComplete(true);
-          }
-        })
-        .catch(() => setConnected(false));
+        if (firstLoadComplete === false) {
+          setFirstLoadComplete(true);
+        }
+      } catch (e) {
+        setConnected(false);
+        return;
+      }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [currentProfile]
+    [currentProfile, firstLoadComplete, location]
   );
 
   useEffect(() => {

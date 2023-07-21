@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useOutletContext } from 'react-router-dom';
 import DashboardSummary from '../components/dashboard/DashboardSummary';
 import styled from 'styled-components';
@@ -6,7 +6,6 @@ import Searchbar from '../components/common/Searchbar';
 import { BanIcon, KickIcon } from '../assets/24x-icons';
 import {
   currentProfileState,
-  playerDetailState,
   playersState
 } from '../contexts/states';
 import { useRecoilState, useRecoilValue } from 'recoil';
@@ -130,8 +129,8 @@ const PlayerButton = styled.button`
 `;
 
 const PlayerInfoContainer = ({ uuid, name }) => {
-  const [playerDetails, setPlayerDetails] = useRecoilState(playerDetailState);
-  const player = playerDetails[uuid]?.data;
+  const [players, setPlayers] = useRecoilState(playersState);
+  const player = players[uuid];
   const profile = useRecoilValue(currentProfileState);
 
   return player ? (
@@ -161,10 +160,10 @@ const PlayerInfoContainer = ({ uuid, name }) => {
               profile.key,
               profile.isSecureConnection,
               `players/${uuid}/kick`,
-              { reason: 'Reason' }
+              { reason: '' }
             );
 
-            setPlayerDetails((details) => ({
+            setPlayers((details) => ({
               ...details,
               [uuid]: undefined
             }));
@@ -182,15 +181,15 @@ const PlayerInfoContainer = ({ uuid, name }) => {
               profile.key,
               profile.isSecureConnection,
               `players/${uuid}/ban`,
-              { reason: 'Reason' }
+              { reason: '' }
             );
 
-            setPlayerDetails((details) => ({
+            setPlayers((details) => ({
               ...details,
               [uuid]: undefined
             }));
 
-            toast.success(`${name}을(를) 밴했습니다!`);
+            toast.success(`${name}을(를) 차단했습니다!`);
           }}
         >
           <BanIcon />
@@ -210,7 +209,8 @@ const Players = () => {
     label: '이름'
   });
   const [searchValue, setSearchValue] = useState('');
-  const players = useRecoilValue(playersState);
+  const playerDetails = useRecoilValue(playersState);
+  const players = useMemo(() => Object.values(playerDetails), [playerDetails])
 
   useEffect(() => {
     // 이 컴포넌트에서 DashboardLayout으로 정보 새로 고침 함수를 넘겨야 합니다

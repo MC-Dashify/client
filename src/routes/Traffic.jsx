@@ -80,6 +80,7 @@ const ContentContainer = styled.div`
   gap: 2rem;
   align-self: stretch;
   flex: 1 0 0;
+  overflow-y: hidden;
 `;
 
 const ChartContainer = styled.div`
@@ -120,6 +121,11 @@ const IPListContainer = styled.div`
   flex-direction: column;
   gap: 0.75rem;
   flex: 1 0 0;
+  overflow-y: auto;
+
+  div {
+    min-height: 44px;
+  }
 `;
 
 const TrafficInfoContainer = styled.div`
@@ -246,18 +252,14 @@ const ModalChartContainer = styled.div`
   border-radius: 26px;
 `;
 
-const TrafficInfoModal = ({ address, received, sent }) => {
+const TrafficInfoModal = ({ address }) => {
   const trafficInfo = useRecoilValue(trafficState);
-  const dataset = useMemo(
-    () =>
-      trafficInfo.map(({ traffic, timestamp }) => {
-        const send = traffic[address]?.SentBytes ?? 0;
-        const receive = traffic[address]?.ReceivedBytes ?? 0;
+  const dataset = trafficInfo.map(({ traffic, timestamp }) => {
+    const send = Math.floor((traffic[address].SentBytes * 8) / 1000 * 100) / 100;
+    const receive = Math.floor((traffic[address].ReceivedBytes * 8) / 1000 * 100) / 100;
 
-        return [(send * 8) / 1000, (receive * 8) / 1000, timestamp];
-      }),
-    [trafficInfo, address]
-  );
+    return [send, receive, timestamp];
+  })
 
   const lastTraffic = dataset[dataset.length - 1];
 
@@ -316,35 +318,31 @@ const Traffic = () => {
   // eslint-disable-next-line no-unused-vars
   const [refreshFn, setRefreshFn] = useOutletContext();
   const trafficInfo = useRecoilValue(trafficState);
-  const totalSendReceives = useMemo(
-    () =>
-      trafficInfo.map((data) => {
-        let send = 0;
-        let receive = 0;
+  const entries = [];
+  const totalSendReceives = trafficInfo.map((data) => {
+    let send = 0;
+    let receive = 0;
 
-        Object.values(data.traffic).forEach(({ SentBytes, ReceivedBytes }) => {
-          send += SentBytes ?? 0;
-          receive += ReceivedBytes ?? 0;
-        });
+    for (const key of Object.keys(data.traffic)) {
+      const traffic = data.traffic[key]
+      const SentBytes = Math.floor((traffic.SentBytes * 8) / 1000 * 100) / 100;
+      const ReceivedBytes = Math.floor((traffic.ReceivedBytes * 8) / 1000 * 100) / 100;
 
-        return [(send * 8) / 1000, (receive * 8) / 1000, data.timestamp];
-      }),
-    [trafficInfo]
-  );
+      const index = entries.findIndex(([address]) => address === key);
+      if (index !== -1) {
+        entries[index] = [key, { SentBytes, ReceivedBytes }]
+      } else {
+        entries.push([key, { SentBytes, ReceivedBytes }]);
+      }
 
-  const entries = useMemo(() => {
-    const resultValue = {};
-    trafficInfo.forEach(({ traffic }) => {
-      Object.keys(traffic).forEach((key) => {
-        resultValue[key] = traffic[key];
-      });
-    });
-    return resultValue;
-  }, [trafficInfo]);
+      send += SentBytes ?? 0;
+      receive += ReceivedBytes ?? 0;
+    }
 
-  const last = totalSendReceives[totalSendReceives.length - 1];
+    return [send, receive, data.timestamp];
+  });
 
-  console.log('Traffic', last, totalSendReceives, trafficInfo, entries);
+  console.log('Traffic', totalSendReceives, trafficInfo, entries);
 
   useEffect(() => {
     // 이 컴포넌트에서 DashboardLayout으로 정보 새로 고침 함수를 넘겨야 합니다
@@ -355,7 +353,7 @@ const Traffic = () => {
   return (
     <TrafficContainer>
       <PageSummaryContainer>
-        <DashboardSummary label='커넥션 수' value={0} />
+        <DashboardSummary label='커넥션 수' value={entries.length} />
         <ErrorContainer>
           <ErrorContainerTop>
             <BanIcon color='#B72C25' transform='scale(0.666666666666667)' />
@@ -380,12 +378,12 @@ const Traffic = () => {
               labels={totalSendReceives.map(([_, __, timestamp]) => timestamp)}
               datasets={[
                 {
-                  data: totalSendReceives.map(([send]) => (send * 8) / 1000),
+                  data: totalSendReceives.map(([send]) => send),
                   label: '송신'
                 },
                 {
                   data: totalSendReceives.map(
-                    ([_, receive]) => (receive * 8) / 1000
+                    ([_, receive]) => receive
                   ),
                   label: '수신'
                 }
@@ -413,7 +411,7 @@ const Traffic = () => {
         </ChartContainer>
         <IPListContainer>
           <Searchbar placeholder='IP로 검색' />
-          {Object.entries(entries).map(
+          {entries.map(
             (
               [address, { ReceivedBytes: received, SentBytes: sent }],
               index
@@ -421,8 +419,8 @@ const Traffic = () => {
               <TrafficInfo
                 key={index}
                 address={address}
-                received={(received * 8) / 1000}
-                sent={(sent * 8) / 1000}
+                received={received}
+                sent={sent}
               />
             )
           )}

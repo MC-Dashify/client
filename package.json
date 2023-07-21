@@ -8,6 +8,7 @@
     "anser": "^2.1.1",
     "axios": "^1.4.0",
     "chart.js": "^4.3.0",
+    "dayjs": "^1.11.9",
     "focus-trap-react": "^10.1.4",
     "framer-motion": "^10.12.17",
     "postcss-styled-components": "^0.2.1",

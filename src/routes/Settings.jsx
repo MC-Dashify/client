@@ -11,6 +11,16 @@ import withReactContent from 'sweetalert2-react-content';
 import Button from '../components/common/Button';
 import LayerPopup, { PopupSection } from '../components/common/LayerPopup';
 import AppData from '../storage/data';
+import { checkUpdate, installUpdate } from '@tauri-apps/api/updater';
+import { relaunch } from '@tauri-apps/api/process';
+import { toast } from 'react-hot-toast';
+import {
+  useRecoilBridgeAcrossReactRoots_UNSTABLE,
+  useRecoilState,
+  useSetRecoilState
+} from 'recoil';
+import { platform } from '@tauri-apps/api/os';
+import { trapPauseState } from '../contexts/states';
 
 const WebsiteInfoContainer = styled.div`
   display: flex;
@@ -70,6 +80,8 @@ const SettingDescription = styled.div`
   opacity: 0.6;
 `;
 
+const modal = withReactContent(Swal);
+
 const SettingOption = ({ options, optionName, optionDescription }) => {
   const [value, setValue] = useState(options[0]);
 
@@ -128,8 +140,6 @@ const SettingButton = ({
 };
 
 const ClearData = () => {
-  const modal = withReactContent(Swal);
-
   AppData.clear();
   modal.fire({
     icon: 'success',
@@ -154,7 +164,12 @@ const ClearData = () => {
 };
 
 const Modal = ({ install }) => {
+  // const [currentTrapPauseState, setCurrentTrapPauseState] =
+  //   useRecoilState(trapPauseState);
+
+  const setCurrentTrapPauseState = useSetRecoilState(trapPauseState);
   const [isModalOpen, setIsModalOpen] = useState(true);
+  const [isCheckingUpdate, setIsCheckingUpdate] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -166,6 +181,86 @@ const Modal = ({ install }) => {
     } else {
       navigate('/');
     }
+  };
+
+  const update = async () => {
+    try {
+      setIsCheckingUpdate(true);
+      toast.dismiss('update-latest');
+      toast.loading('업데이트 확인중...', {
+        id: 'update-checking'
+      });
+
+      const { shouldUpdate, manifest } = await checkUpdate();
+
+      if (shouldUpdate) {
+        setCurrentTrapPauseState({ settings: true });
+        // You could show a dialog asking the user if they want to install the update here.
+        console.log(
+          `Latest Update Info: ${manifest?.version}, ${manifest?.date}, ${manifest?.body}`
+        );
+
+        modal
+          .fire({
+            icon: 'info',
+            html: (
+              <>
+                <h3>업데이트 발견</h3>
+                <p>업데이트를 설치할까요?</p>
+              </>
+            ),
+            showConfirmButton: true,
+            showCancelButton: true,
+            allowEscapeKey: true,
+            allowOutsideClick: false,
+            confirmButtonText: '지금 업데이트',
+            cancelButtonText: '나중에 업데이트'
+          })
+          .then(async (result) => {
+            toast.dismiss('update-checking');
+
+            console.log(result);
+            /* Read more about isConfirmed, isDenied below */
+            if (result.isConfirmed) {
+              const platformName = await platform();
+
+              modal.fire({
+                icon: 'loading',
+                html: (
+                  <>
+                    <h3>업데이트 설치중</h3>
+                  </>
+                ),
+                showConfirmButton: false,
+                showCancelButton: false,
+                allowEscapeKey: false,
+                allowOutsideClick: false,
+                loading: true,
+                willOpen: () => {
+                  modal.showLoading();
+                }
+              });
+
+              await installUpdate();
+
+              if (platformName !== 'win32') {
+                await relaunch();
+              }
+            }
+          });
+      } else {
+        // XXX toast.promise
+        toast.dismiss('update-checking');
+        toast.success('최신 버전입니다.', {
+          id: 'update-latest'
+        });
+        console.log('No update available');
+      }
+    } catch (error) {
+      console.error(error);
+    }
+    setCurrentTrapPauseState({ settings: false });
+    setIsCheckingUpdate(false);
   };
 
   return (
@@ -196,12 +291,16 @@ const Modal = ({ install }) => {
               >
                 GitHub 리포지토리 방문
               </Button>
-              {/* <Button padding={"8px 16px"} styleType="accent">
+              <Button
+                padding={'8px 16px'}
+                styleType='accent'
+                onClick={async () => {
+                  if (isCheckingUpdate) return;
+                  await update();
+                }}
+              >
                 업데이트 확인
-              </Button> 
-              ^^^^^
-              업데이트 확인 기능을 구현할 이유가 없음. vite.config.js의 registerType 참고
-              */}
+              </Button>
             </WebsiteInfoContainer>
             {/* <PopupSection title="외관" gap="0" titleMargin="18px">
               <SettingOption
