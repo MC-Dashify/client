@@ -94,11 +94,17 @@ const ProfilesContainer = styled.div`
 
 const AddProfileButton = styled(Button)`
   gap: 2px;
-  background-color: #f4f4f4;
+  background-color: ${({ theme }) => theme.button.tertiary.bg};
+  color: ${({ theme }) => theme.button.tertiary.text};
   align-self: stretch;
 
-  &:hover {
-    background-color: rgba(10, 10, 10, 0.1);
+  &:hover,
+  &:focus-visible {
+    background-color: ${({ theme }) => theme.button.tertiary.hoverBg};
+  }
+
+  &:active {
+    background-color: ${({ theme }) => theme.button.tertiary.activeBg};
   }
 `;
 

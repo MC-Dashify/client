@@ -24,15 +24,45 @@ import {
 const primary = blue;
 
 const dark = {
-  background: common.black,
+  bg: common.black,
   text: grey[300],
 
-  sidebarBackground: '#212121',
-  profileBackground: '#424242',
+  textinput: {
+    bg: grey[900],
+    focusOutline: primary[500]
+  },
 
-  textBoxBackground: '#212121',
+  divider: {
+    primary: grey[900]
+  },
 
-  buttonPrimary: '#42a5f5'
+  button: {
+    unset: {
+      bg: 'transparent',
+      text: grey[300],
+      hoverBg: grey[900],
+      activeBg: grey[800]
+    },
+
+    primary: {
+      bg: primary[700],
+      text: grey[300]
+      // TODO hoverBg, activeBg
+    },
+
+    secondary: {
+      bg: grey[700],
+      text: grey[300]
+      // TODO hoverBg, activeBg
+    },
+
+    tertiary: {
+      bg: grey[900],
+      text: grey[300],
+      hoverBg: grey[800],
+      activeBg: grey[700]
+    }
+  }
 };
 
 const light = {

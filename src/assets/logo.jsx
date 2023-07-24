@@ -107,7 +107,13 @@ const FullLogo = ({
   color = 'currentColor',
   ...props
 }) => (
-  <svg xmlns='http://www.w3.org/2000/svg' fill='none' {...props}>
+  <svg
+    xmlns='http://www.w3.org/2000/svg'
+    width={200}
+    height={42}
+    fill='none'
+    {...props}
+  >
     <path
       fill={logoBackground}
       d='M0 8a8 8 0 0 1 8-8h24a8 8 0 0 1 8 8v24a8 8 0 0 1-8 8H8a8 8 0 0 1-8-8V8Z'

@@ -32,9 +32,9 @@ const Content = styled.div`
 const Separator = styled.div`
   width: 2px;
   align-self: stretch;
-  background-color: #000;
-  opacity: 0.1;
+  background-color: ${({ theme }) => theme.divider.primary};
   border-radius: 1px;
+
   ${({ $width }) =>
     $width &&
     css`
