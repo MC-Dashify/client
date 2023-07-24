@@ -4,7 +4,7 @@ const supportedThemes = {
   dark: 'dark',
   light: 'light',
   auto: 'auto'
-}
+};
 
 const Theme = {
   /**
@@ -32,8 +32,7 @@ const Theme = {
   update: (mode) => {
     if (Object.values(supportedThemes).includes(mode))
       AppData.set('theme', mode);
-    else
-      throw new Error(`Unsupported theme mode: ${mode}`);
+    else throw new Error(`Unsupported theme mode: ${mode}`);
   },
 
   /**

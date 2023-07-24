@@ -1,26 +1,23 @@
 import { useState } from 'react';
-import { AnimatePresence } from 'framer-motion';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Logo80, LogoText } from '../assets/logo';
-import { styled } from 'styled-components';
 import Select from 'react-select';
-import { open } from '@tauri-apps/api/shell';
+import { AnimatePresence } from 'framer-motion';
+import { styled } from 'styled-components';
+import { toast } from 'react-hot-toast';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
+import { useSetRecoilState } from 'recoil';
+import { platform } from '@tauri-apps/api/os';
+import { checkUpdate, installUpdate } from '@tauri-apps/api/updater';
+import { relaunch } from '@tauri-apps/api/process';
+import { open } from '@tauri-apps/api/shell';
 
 import Button from '../components/common/Button';
 import LayerPopup, { PopupSection } from '../components/common/LayerPopup';
 import AppData from '../storage/data';
-import { checkUpdate, installUpdate } from '@tauri-apps/api/updater';
-import { relaunch } from '@tauri-apps/api/process';
-import { toast } from 'react-hot-toast';
-import {
-  useRecoilBridgeAcrossReactRoots_UNSTABLE,
-  useRecoilState,
-  useSetRecoilState
-} from 'recoil';
-import { platform } from '@tauri-apps/api/os';
+import Theme from '../storage/theme';
 import { trapPauseState } from '../contexts/states';
+import { Logo80, LogoText } from '../assets/logo';
 
 const WebsiteInfoContainer = styled.div`
   display: flex;
@@ -82,8 +79,14 @@ const SettingDescription = styled.div`
 
 const modal = withReactContent(Swal);
 
-const SettingOption = ({ options, optionName, optionDescription }) => {
-  const [value, setValue] = useState(options[0]);
+const SettingOption = ({
+  options,
+  optionName,
+  optionDescription,
+  onSelect,
+  defaultValue
+}) => {
+  const [value, setValue] = useState(defaultValue || options[0]);
 
   return (
     <SettingOptionContainer>
@@ -95,6 +98,7 @@ const SettingOption = ({ options, optionName, optionDescription }) => {
           <></>
         )}
       </SettingInfo>
+
       <Select
         styles={{
           control: () => ({
@@ -107,7 +111,10 @@ const SettingOption = ({ options, optionName, optionDescription }) => {
           IndicatorSeparator: () => null
         }}
         value={value}
-        onChange={(newValue) => setValue(newValue)}
+        onChange={(newValue) => {
+          setValue(newValue);
+          onSelect(newValue);
+        }}
         options={options}
         isSearchable={false}
       />
@@ -163,6 +170,12 @@ const ClearData = () => {
   // toast.success("모든 데이터가 삭제되었습니다.");
 };
 
+const themeOptions = [
+  { value: 'auto', label: '시스템 설정과 연동' },
+  { value: 'dark', label: '다크' },
+  { value: 'light', label: '라이트' }
+];
+
 const Modal = ({ install }) => {
   // const [currentTrapPauseState, setCurrentTrapPauseState] =
   //   useRecoilState(trapPauseState);
@@ -170,6 +183,7 @@ const Modal = ({ install }) => {
   const setCurrentTrapPauseState = useSetRecoilState(trapPauseState);
   const [isModalOpen, setIsModalOpen] = useState(true);
   const [isCheckingUpdate, setIsCheckingUpdate] = useState(false);
+  const setThemeState = useSetRecoilState(trapPauseState);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -302,34 +316,24 @@ const Modal = ({ install }) => {
                 업데이트 확인
               </Button>
             </WebsiteInfoContainer>
-            {/* <PopupSection title="외관" gap="0" titleMargin="18px">
+
+            <PopupSection title='외관' gap='0' titleMargin='18px'>
               <SettingOption
-                optionName="표시 언어(Language)"
-                optionDescription="Dashify에 표시될 언어입니다."
-                options={[{ value: "korean", label: "한국어(Korean)" }]}
+                optionName='테마'
+                options={themeOptions}
+                onSelect={(newValue) => {
+                  Theme.update(newValue.value);
+                  setThemeState(newValue.value);
+                  window.location.reload();
+                  // XXX select 변경 시 테마도 실시간으로 변경되도록
+                }}
+                defaultValue={themeOptions.find(
+                  (option) => option.value === Theme.get()
+                )}
               />
-              <SettingOption
-                optionName="테마"
-                options={[
-                  { value: "system", label: "시스템 설정과 연동" },
-                  { value: "dark", label: "다크" },
-                  { value: "light", label: "라이트" },
-                ]}
-              />
-            </PopupSection> */}
+            </PopupSection>
+
             <PopupSection title='애플리케이션' gap='0' titleMargin='18px'>
-              {/* {install === undefined ? (
-                ''
-              ) : (
-                <SettingButton
-                  optionName='애플리케이션 설치'
-                  optionDescription='Dashify을 디바이스에 설치합니다.'
-                  styleType='filled'
-                  onClick={install}
-                >
-                  설치
-                </SettingButton>
-              )} */}
               <SettingButton
                 optionName='모든 데이터 삭제'
                 optionDescription='Dashify에 저장된 모든 로컬 데이터(프로필 등)을 삭제합니다.'

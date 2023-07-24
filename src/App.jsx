@@ -1,4 +1,13 @@
+import { useEffect } from 'react';
 import { Route, Routes, useLocation } from 'react-router-dom';
+import { ThemeProvider } from 'styled-components';
+import { useRecoilState } from 'recoil';
+
+import { themeState as _themeState } from './contexts/states';
+import { dark, light } from './styles/themes';
+import Theme from './storage/theme';
+import GlobalStyle from './components/common/globalstyles';
+
 import Root from './routes/Root';
 import ErrorPage from './routes/ErrorPage';
 import DashboardLayout from './routes/DashboardLayout';
@@ -11,33 +20,32 @@ import Console from './routes/Console';
 import Settings from './routes/Settings';
 import InstallPWA from './hooks/pwa';
 
-import { ThemeProvider } from 'styled-components';
-import { useRecoilState } from 'recoil';
-import { themeState as _themeState } from './contexts/states';
-import { dark, light } from './styles/themes';
-import Theme from './storage/theme'
-import { useEffect } from 'react';
-
 const App = () => {
   const location = useLocation();
   const background = location.state?.background;
   const install = InstallPWA();
 
-  
   const [themeState, setThemeState] = useRecoilState(_themeState);
+
   useEffect(() => {
     const theme = Theme.get();
-    if (theme === 'auto' && window.matchMedia) {
-      const isDark = window.matchMedia('prefers-color-scheme: dark').matches
-      setThemeState(isDark ? 'dark' : 'light')
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
 
-  console.log(themeState)
+    if (theme === 'auto' && window.matchMedia) {
+      const isDark = window.matchMedia('prefers-color-scheme: dark').matches;
+      setThemeState(isDark ? 'dark' : 'light');
+    } else {
+      setThemeState(theme);
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [themeState]);
+
+  console.log(themeState);
 
   return (
     <ThemeProvider theme={themeState === 'dark' ? dark : light}>
+      <GlobalStyle />
+
       <Routes location={background || location}>
         <Route path='/' element={<Root />} errorElement={<ErrorPage />} />
 
