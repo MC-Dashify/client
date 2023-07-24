@@ -24,12 +24,13 @@ import {
 const primary = blue;
 
 const dark = {
-  background: '#303030',
+  background: common.black,
+  text: grey[300],
+
   sidebarBackground: '#212121',
   profileBackground: '#424242',
 
   textBoxBackground: '#212121',
-  textColor: '#e0e0e0',
 
   buttonPrimary: '#42a5f5'
 };

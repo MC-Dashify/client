@@ -29,6 +29,7 @@ const GlobalStyle = styled.createGlobalStyle`
 
   body {
     background-color: ${({ theme }) => theme.background};
+    color: ${({ theme }) => theme.text};
   }
 
   a {

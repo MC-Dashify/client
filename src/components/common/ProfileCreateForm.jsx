@@ -319,7 +319,7 @@ const ProfileCreateForm = ({
 
   return (
     <Section $gap='32px'>
-      <FullLogo color='black' />
+      <FullLogo />
 
       <InputFieldContainer>
         <InputFieldBox label='프로필 이름'>
