@@ -29,11 +29,16 @@ const GlobalStyle = styled.createGlobalStyle`
 
   a {
     text-decoration: none;
+
+    &:visited {
+      color: inherit;
+    }
   }
 
   .swal2-html-container {
     margin: 0 !important;
     user-select: none;
+    overflow: hidden !important;
   }
 
   .swal2-modal {

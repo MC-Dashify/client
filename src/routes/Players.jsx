@@ -1,9 +1,16 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useOutletContext } from 'react-router-dom';
 import DashboardSummary from '../components/dashboard/DashboardSummary';
 import styled from 'styled-components';
 import Searchbar from '../components/common/Searchbar';
 import { BanIcon, KickIcon } from '../assets/24x-icons';
+import {
+  currentProfileState,
+  playersState
+} from '../contexts/states';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import Network from '../utils/net';
+import { toast } from 'react-hot-toast';
 
 const PlayersContainer = styled.div`
   display: flex;
@@ -17,18 +24,6 @@ const PlayersListContainer = styled.div`
 
   gap: 12px;
 `;
-
-const tempPlayerData = {
-  players: [{ uuid: '762dea11-9c45-4b18-95fc-a86aab3b39ee', name: 'aroxu' }]
-};
-
-const getPlayerData = async (uuid) => ({
-  ping: 0,
-  name: 'aroxu',
-  clientBrandName: 'vanilla',
-  avatar: 'https://crafatar.com/avatars/762dea11-9c45-4b18-95fc-a86aab3b39ee',
-  uuid: '762dea11-9c45-4b18-95fc-a86aab3b39ee'
-});
 
 const PlayerContainer = styled.div`
   display: flex;
@@ -134,19 +129,13 @@ const PlayerButton = styled.button`
 `;
 
 const PlayerInfoContainer = ({ uuid, name }) => {
-  const [player, setPlayer] = useState(undefined);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      const player = await getPlayerData(uuid);
-      setPlayer(player);
-    };
-    fetchData();
-  }, [uuid]);
+  const [players, setPlayers] = useRecoilState(playersState);
+  const player = players[uuid];
+  const profile = useRecoilValue(currentProfileState);
 
   return player ? (
     <PlayerContainer>
-      <HeadDisplay $src={player.avatar} />
+      <HeadDisplay $src={`${player.avatar}/46.png`} />
       <PlayerDataDisplay
         topText={uuid}
         bottomText={name}
@@ -163,10 +152,46 @@ const PlayerInfoContainer = ({ uuid, name }) => {
         extraStyle='width: 140px;'
       />
       <ButtonsContainer>
-        <PlayerButton>
+        <PlayerButton
+          onClick={async () => {
+            await Network.set(
+              profile.address,
+              profile.port,
+              profile.key,
+              profile.isSecureConnection,
+              `players/${uuid}/kick`,
+              { reason: '' }
+            );
+
+            setPlayers((details) => ({
+              ...details,
+              [uuid]: undefined
+            }));
+
+            toast.success(`${name}을(를) 추방했습니다!`);
+          }}
+        >
           <KickIcon />
         </PlayerButton>
-        <PlayerButton>
+        <PlayerButton
+          onClick={async () => {
+            await Network.set(
+              profile.address,
+              profile.port,
+              profile.key,
+              profile.isSecureConnection,
+              `players/${uuid}/ban`,
+              { reason: '' }
+            );
+
+            setPlayers((details) => ({
+              ...details,
+              [uuid]: undefined
+            }));
+
+            toast.success(`${name}을(를) 차단했습니다!`);
+          }}
+        >
           <BanIcon />
         </PlayerButton>
       </ButtonsContainer>
@@ -184,19 +209,19 @@ const Players = () => {
     label: '이름'
   });
   const [searchValue, setSearchValue] = useState('');
+  const playerDetails = useRecoilValue(playersState);
+  const players = useMemo(() => Object.values(playerDetails), [playerDetails])
 
   useEffect(() => {
     // 이 컴포넌트에서 DashboardLayout으로 정보 새로 고침 함수를 넘겨야 합니다
     // TODO 정보 새로 고침
+
     setRefreshFn(() => console.log('refreshed'));
   }, [setRefreshFn]);
 
   return (
     <PlayersContainer>
-      <DashboardSummary
-        label='플레이어 수'
-        value={tempPlayerData.players.length}
-      />
+      <DashboardSummary label='플레이어 수' value={players.length} />
       <PlayersListContainer>
         <Searchbar
           searchValue={searchValue}
@@ -208,12 +233,13 @@ const Players = () => {
             { value: 'uuid', label: 'UUID' }
           ]}
         />
-        {tempPlayerData.players
+        {players
           .filter((player) => {
             if (selectedValue.value === 'name')
-              return player.name.includes(searchValue);
+              return player.name.toLowerCase().includes(searchValue);
             if (selectedValue.value === 'uuid')
               return player.uuid
+                .toLowerCase()
                 .replace(/-/g, '')
                 .includes(searchValue.replace(/-/g, ''));
             return true;

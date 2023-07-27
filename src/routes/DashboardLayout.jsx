@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { Outlet, Link, useLocation } from 'react-router-dom';
+import { useEffect, useState, useCallback } from 'react';
+import { Outlet, Link, useLocation, BrowserRouter } from 'react-router-dom';
 import { css, styled } from 'styled-components';
 
 import { Logo, LogoText } from '../assets/logo';
@@ -14,11 +14,28 @@ import {
 } from '../assets/24x-icons';
 import { ArrowRightAndLeftIcon } from '../assets/16x-icons';
 import DashboardPageTitle from '../components/dashboard/DashboardPageTitle';
-import { RecoilRoot, useRecoilState } from 'recoil';
+import {
+  useRecoilBridgeAcrossReactRoots_UNSTABLE,
+  useRecoilState,
+  useRecoilValue,
+  useSetRecoilState
+} from 'recoil';
 import { useInterval } from '../hooks/interval';
-import { testState } from '../contexts/states';
-import Network from '../utils/net';
+import {
+  currentProfileState,
+  hideAddressState,
+  refreshRateState,
+  statsState,
+  worldsState,
+  playersState,
+  trafficState
+} from '../contexts/states';
 import AppData from '../storage/data';
+import Profile from '../storage/profile';
+import { showModal } from '../utils/modal';
+import ProfileList from '../components/common/ProfileList';
+import { Toaster, toast } from 'react-hot-toast';
+import { getPlayers, getStatus, getTraffic, getWorlds, ping } from '../utils/data';
 
 const Aside = styled.aside`
   display: flex;
@@ -198,11 +215,30 @@ const ProfileAddress = styled.div`
 `;
 
 const ProfileChanger = () => {
+  const currentProfile = useRecoilValue(currentProfileState);
+  const hideAddress = useRecoilValue(hideAddressState);
+  const RecoilBridge = useRecoilBridgeAcrossReactRoots_UNSTABLE();
+
   return (
-    <ProfileChangerBox>
+    <ProfileChangerBox
+      onClick={() => {
+        showModal(
+          <RecoilBridge>
+            <BrowserRouter>
+              <ProfileList />
+            </BrowserRouter>
+            <Toaster position='bottom-center' style={{ zIndex: '20' }} />
+          </RecoilBridge>,
+          484,
+          { showCloseButton: false }
+        );
+      }}
+    >
       <ProfileInfoContainer>
-        <ProfileTitle>하이픽셀하이픽셀하이픽셀하이픽셀</ProfileTitle>
-        <ProfileAddress>hypixel.nethypixel.nethypixel.net:25555</ProfileAddress>
+        <ProfileTitle>{currentProfile.name}</ProfileTitle>
+        {!hideAddress && (
+          <ProfileAddress>{`${currentProfile.address}:${currentProfile.port}`}</ProfileAddress>
+        )}
       </ProfileInfoContainer>
 
       <ArrowRightAndLeftIcon />
@@ -210,23 +246,8 @@ const ProfileChanger = () => {
   );
 };
 
-const Sidebar = () => {
+const Sidebar = ({ connected, setConnected, refreshFn }) => {
   const location = useLocation();
-
-  const [test, setTest] = useRecoilState(testState);
-
-  // 백그라운드에서 일정 시간마다 작업 실행
-  useInterval(async () => {
-    fetch(`${AppData.get('test.address')}/ping`, {
-      method: 'GET',
-      mode: 'no-cors'
-    }).then((res) => {
-      console.log(res);
-    });
-
-    console.log(test);
-    setTest(test + 1);
-  }, 1000);
 
   const menus = [
     { path: '/dashboard', label: '대시보드', icon: <ChartIcon /> },
@@ -291,19 +312,120 @@ const OutletContainer = styled.div`
   overflow: auto;
 `;
 
+const UnconnectedDisplay = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  font-size: 64px;
+  font-weight: 700;
+
+  padding-top: 64px;
+`;
+
 const DashboardLayout = () => {
   const [refreshFn, setRefreshFn] = useState(null);
+  const [connected, setConnected] = useState(false);
+  const [firstLoadComplete, setFirstLoadComplete] = useState(false);
   // Outlet -> DashboardLayout로 새로 고침 함수를 전달해야 합니다
+
+  const [refreshRate, setRefreshRate] = useRecoilState(refreshRateState);
+  const [currentProfile, setCurrentProfile] = useRecoilState(currentProfileState);
+  const setStats = useSetRecoilState(statsState);
+  const setWorlds = useSetRecoilState(worldsState);
+  const setPlayers = useSetRecoilState(playersState);
+  const setTraffic = useSetRecoilState(trafficState);
+
+  const location = useLocation();
+
+  const reloadTask = useCallback(
+    async (profile = currentProfile) => { 
+      try {
+        await ping(profile);
+
+        // TODO: 개선 필요
+        if (!firstLoadComplete || location.pathname === '/dashboard' || location.pathname === '/dashboard/stats') {
+          const statResults = await getStatus(profile);
+          setStats((stats) => [...stats.slice(-19), statResults]);
+        }
+
+        if (!firstLoadComplete || location.pathname === '/dashboard' || location.pathname === '/dashboard/world') {
+          const worlds = await getWorlds(profile);
+          setWorlds(worlds);
+        }
+        
+        if (!firstLoadComplete || location.pathname === '/dashboard/player') {
+          const players = await getPlayers(profile);
+          setPlayers(players);
+        }
+
+        if (location.pathname === '/dashboard/traffic') {
+          const trafficData = await getTraffic(profile);
+          setTraffic((traffic) => [...traffic.slice(-19), trafficData]);
+        }
+        
+        setConnected(true);
+
+        if (firstLoadComplete === false) {
+          setFirstLoadComplete(true);
+        }
+      } catch (e) {
+        setConnected(false);
+        return;
+      }
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [currentProfile, firstLoadComplete, location]
+  );
+
+  useEffect(() => {
+    if (firstLoadComplete === false) {
+      toast.loading('데이터 로드중...', { id: 'data-loading' });
+    } else if (firstLoadComplete === true) {
+      toast.dismiss('data-loading');
+    }
+  }, [firstLoadComplete]);
+
+  useEffect(() => {
+    if (currentProfile.uuid === undefined) {
+      const profile = Profile.get(AppData.get('etc.last_profile'));
+      setCurrentProfile(profile);
+    }
+    if (currentProfile && !connected) {
+      reloadTask(currentProfile);
+    }
+  }, [
+    currentProfile,
+    setCurrentProfile,
+    connected,
+    reloadTask,
+    firstLoadComplete
+  ]);
+
+  useEffect(() => {
+    setRefreshRate(AppData.get('settings.auto_refresh_rate'));
+  }, [setRefreshRate]);
+
+  // 백그라운드에서 일정 시간마다 작업 실행
+  useInterval(reloadTask, refreshRate);
 
   return (
     <PageContentContainer>
-      <RecoilRoot>
-        <Sidebar />
-        <OutletContainer>
-          <DashboardPageTitle refreshFn={refreshFn} />
+      <Sidebar
+        setConnected={setConnected}
+        connected={connected}
+        refreshFn={refreshFn}
+      />
+      <OutletContainer>
+        <DashboardPageTitle reloadTask={reloadTask} />
+        {connected ? (
           <Outlet context={[refreshFn, setRefreshFn]} />
-        </OutletContainer>{' '}
-      </RecoilRoot>
+        ) : (
+          <UnconnectedDisplay>
+            서버랑 연결이 되어 있지 않습니다
+          </UnconnectedDisplay>
+        )}
+      </OutletContainer>
     </PageContentContainer>
   );
 };

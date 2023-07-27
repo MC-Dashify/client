@@ -1,7 +1,11 @@
-import { useEffect, useState } from "react";
-import { useOutletContext } from "react-router-dom";
-import { styled } from "styled-components";
-import Button from "../components/common/Button";
+import { useEffect, useRef, useState } from 'react';
+import { useOutletContext } from 'react-router-dom';
+import { styled } from 'styled-components';
+import Button from '../components/common/Button';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { currentProfileState, lastSentCommandsState } from '../contexts/states';
+import Network from '../utils/net';
+import ansiToElements from '../utils/ansi';
 
 const ConsolePageContainer = styled.div`
   display: flex;
@@ -65,7 +69,7 @@ const CommandContainer = styled.div`
   align-self: stretch;
 
   div {
-    font-family: "JetBrains Mono";
+    font-family: 'JetBrains Mono';
     color: #cacaca;
   }
 `;
@@ -86,7 +90,7 @@ const CommandInputContainer = styled.div`
   overflow-y: auto;
 
   &::after {
-    content: attr(value) " ";
+    content: attr(value) ' ';
     white-space: pre-wrap;
     visibility: hidden;
     flex: 1 0 0;
@@ -96,7 +100,7 @@ const CommandInputContainer = styled.div`
   &::after {
     grid-area: 1 / 1 / 2 / 2;
 
-    font-family: "JetBrains Mono";
+    font-family: 'JetBrains Mono';
     font-size: 16px;
     font-weight: 400;
     word-break: break-all;
@@ -124,67 +128,174 @@ const CommandInput = styled.textarea`
 const LogLine = styled.div`
   display: flex;
   padding: 4px 6px;
-  gap: 10px;
   align-self: stretch;
 
-  color: #cacaca;
-  font-family: "JetBrains Mono";
-  font-size: 14px;
-  font-weight: 300;
-  line-height: 140%;
-  letter-spacing: -0.154px;
+  span {
+    color: #cacaca;
+    font-family: 'JetBrains Mono';
+    font-size: 14px;
+    font-weight: 300;
+    line-height: 140%;
+    letter-spacing: -0.154px;
+    word-break: break-all;
+    white-space: pre-wrap;
+  }
 `;
+
+const HiddenDownloadLink = styled.a`
+  display: none;
+`;
+
+const downloadLogs = async (profile, invisibleAnchor, size) => {
+  const logs = await Network.get(
+    profile.address,
+    profile.port,
+    profile.key,
+    profile.isSecureConnection,
+    'logs?lines=' + size
+  );
+
+  console.log(logs.data);
+
+  const blob = new Blob([logs.data.logs.join('\n')], {
+    type: 'text/plain'
+  });
+
+  const element = invisibleAnchor.current;
+  const url = URL.createObjectURL(blob);
+
+  element.href = url;
+  element.download = `logs-${size}.log`;
+
+  element.click();
+
+  URL.revokeObjectURL(url);
+};
 
 const Console = () => {
   // eslint-disable-next-line no-unused-vars
   const [refreshFn, setRefreshFn] = useOutletContext();
   const [logs, setLogs] = useState([]);
-  const [command, setCommand] = useState("");
+  const [command, setCommand] = useState('');
+  const [lastSentIndex, setLastSentIndex] = useState(0);
+  const [sendCommand, setSendCommand] = useState(() => {});
+  const currentProfile = useRecoilValue(currentProfileState);
+  const [lastSent, setLastSent] = useRecoilState(lastSentCommandsState);
+
+  const invisibleAnchor = useRef(undefined);
+  const commandInput = useRef(undefined);
 
   useEffect(() => {
     // 이 컴포넌트에서 DashboardLayout으로 정보 새로 고침 함수를 넘겨야 합니다
     // TODO 정보 새로 고침
-    setRefreshFn(() => console.log("refreshed"));
+    setRefreshFn(() => console.log('refreshed'));
   }, [setRefreshFn]);
 
   useEffect(() => {
-    setLogs(
-      new Array(20).fill(
-        "[23:39:52] [Server thread/INFO]: Entity Tracking Range: Pl 48 / An 48 / Mo 48 / Mi 32 / Other 64"
-      )
+    if (!currentProfile) return;
+
+    const client = new WebSocket(
+      `ws://${currentProfile.address}:${
+        currentProfile.port
+      }/console?auth_key=${encodeURIComponent(currentProfile.key)}`
     );
-  }, []);
+
+    client.addEventListener('open', async (event) => {
+      console.log('Socket opened!');
+
+      const loaded = await Network.get(
+        currentProfile.address,
+        currentProfile.port,
+        currentProfile.key,
+        currentProfile.isSecureConnection,
+        'logs?lines=1000'
+      );
+
+      setLogs(loaded.data.logs);
+    });
+
+    client.addEventListener('close', (event) => {
+      console.log('Socket closed!');
+    });
+
+    client.addEventListener('message', (event) => {
+      setLogs((before) => [...before.slice(-999), event.data]);
+    });
+
+    setSendCommand(() => (message) => {
+      message = message.replace(/\s+/g, ' ');
+      if (client.readyState === WebSocket.OPEN) client.send(message);
+      setLogs((before) => [...before.slice(-999), `> ${message}`]);
+      setLastSent((last) =>
+        last[last.length - 1] === message ? last : [...last, message]
+      );
+      setLastSentIndex(0);
+    });
+
+    return () => {
+      setSendCommand(() => {});
+      client.close();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentProfile]);
+
+  useEffect(() => {
+    commandInput.current?.focus();
+  }, [commandInput]);
 
   return (
     <ConsolePageContainer>
       <ButtonsContainer>
-        <Button styleType="outline">최근 로그 500줄 다운로드</Button>
-        <Button styleType="outline">최근 로그 1,000줄 다운로드</Button>
+        <HiddenDownloadLink ref={invisibleAnchor} />
+        <Button
+          styleType='outline'
+          onClick={() => downloadLogs(currentProfile, invisibleAnchor, 500)}
+        >
+          최근 로그 500줄 다운로드
+        </Button>
+        <Button
+          styleType='outline'
+          onClick={() => downloadLogs(currentProfile, invisibleAnchor, 1000)}
+        >
+          최근 로그 1,000줄 다운로드
+        </Button>
       </ButtonsContainer>
       <ConsoleContainer>
-        <LogsOuterContainer className="custom-scroll">
+        <LogsOuterContainer className='custom-scroll'>
           <LogsContainer>
             {logs.map((log, index) => (
-              <LogLine key={index}>{log}</LogLine>
+              <LogLine key={index}>{ansiToElements(log)}</LogLine>
             ))}
           </LogsContainer>
         </LogsOuterContainer>
         <LogsSeparator />
         <CommandContainer>
-          <CommandCaretContainer>{">"}</CommandCaretContainer>
-          <CommandInputContainer className="custom-scroll" value={command}>
+          <CommandCaretContainer>{'>'}</CommandCaretContainer>
+          <CommandInputContainer className='custom-scroll' value={command}>
             <CommandInput
+              ref={commandInput}
               spellCheck={false}
               onChange={(event) => {
                 setCommand(event.target.value);
               }}
               value={command}
               onKeyDown={(event) => {
-                if (event.key === "Enter") {
-                  if (!event.shiftKey) {
-                    event.preventDefault();
-                    setCommand("");
-                  }
+                if (event.key === 'Enter') {
+                  event.preventDefault();
+                  if (/[\S]/g.test(command)) sendCommand(command);
+                  setCommand('');
+                } else if (event.key === 'ArrowUp') {
+                  event.preventDefault();
+                  const index = lastSentIndex + 1;
+                  if (index > lastSent.length) return;
+                  setLastSentIndex(index);
+                  setCommand(lastSent[lastSent.length - index]);
+                } else if (event.key === 'ArrowDown') {
+                  event.preventDefault();
+                  const index = lastSentIndex - 1;
+                  if (index < 1) return;
+                  setLastSentIndex(index);
+                  setCommand(lastSent[lastSent.length - index]);
                 }
               }}
             />

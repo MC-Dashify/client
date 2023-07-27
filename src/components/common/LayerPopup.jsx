@@ -4,6 +4,8 @@ import { motion } from 'framer-motion';
 
 import { XIcon } from '../../assets/16x-icons';
 import FocusTrap from 'focus-trap-react';
+import { trapPauseState } from '../../contexts/states';
+import { useRecoilValue } from 'recoil';
 
 const Backrop = styled(motion.div)`
   position: fixed;
@@ -102,6 +104,8 @@ const Footer = styled.div`
 `;
 
 const LayerPopup = ({ title, children, footer, width, height, onClose }) => {
+  const isTrapPaused = useRecoilValue(trapPauseState);
+
   useEffect(() => {
     const handleKeydown = (e) => {
       if (e.key === 'Escape') {
@@ -117,7 +121,7 @@ const LayerPopup = ({ title, children, footer, width, height, onClose }) => {
   }, [onClose]);
 
   return (
-    <FocusTrap>
+    <FocusTrap paused={isTrapPaused['settings']}>
       <Backrop
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}

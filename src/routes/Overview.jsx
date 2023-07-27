@@ -1,9 +1,11 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useOutletContext } from 'react-router-dom';
 import styled, { css } from 'styled-components';
 import { Doughnut } from 'react-chartjs-2';
 import { stringToBytes } from '../utils/convert';
 import Chart from '../components/common/Chart';
+import { useRecoilValue } from 'recoil';
+import { statsState, worldsState } from '../contexts/states';
 
 const CardContainer = styled.div`
   display: flex;
@@ -175,6 +177,17 @@ const ChartValueUnit = styled.span`
   opacity: 0.6;
 `;
 
+const EmptyChartContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  flex: 1 0 0;
+
+  font-size: 128px;
+  color: #111;
+`;
+
 /**
  * @param {Object} props
  * @param {string} props.label
@@ -183,24 +196,30 @@ const ChartValueUnit = styled.span`
  * @param {number[]} props.chartData
  */
 const ChartSection = ({ label, valueUnit, chartLabels, chartData }) => {
+  const sum = useMemo(() => chartData.reduce((a, b) => a + b, 0), [chartData]);
+
   return (
     <ChartSectionBox>
       <ChartTextContainer>
         <ChartLabel>{label}</ChartLabel>
 
         <ChartValue>
-          {Math.round(chartData.reduce((a, b) => a + b, 0) * 10) / 10 + ' '}
+          {Math.round(sum * 10) / 10 + ' '}
           <ChartValueUnit>{valueUnit}</ChartValueUnit>
         </ChartValue>
       </ChartTextContainer>
 
-      <Chart
-        ChartComponent={Doughnut}
-        labels={chartLabels}
-        data={chartData}
-        width='100%'
-        flex='1 0 0'
-      />
+      {sum > 0 ? (
+        <Chart
+          ChartComponent={Doughnut}
+          labels={chartLabels}
+          data={chartData}
+          width='100%'
+          flex='1 0 0'
+        />
+      ) : (
+        <EmptyChartContainer>N/A</EmptyChartContainer>
+      )}
     </ChartSectionBox>
   );
 };
@@ -212,46 +231,16 @@ const VerticalDivider = styled.div`
   opacity: 0.2;
 `;
 
-const tempStatsData = {
-  jvm: {
-    usedMemory: '815 MB',
-    totalMemory: '2048 MB',
-    maxMemory: '2048 MB',
-    freeMemory: '1232 MB'
-  },
-  disk: {
-    freeSpace: '30763 MB',
-    totalSpace: '65517 MB'
-  },
-  mem: {
-    usedMem: '24750 MB',
-    totalMem: '32637 MB'
-  },
-  tps: [20.000113700646388, 17.999996940000468, 19.999989268894648],
-  cpu: {
-    cpuCores: 16,
-    cpuLoad: 98.23
-  }
-};
-
-const tempWorldDatas = [0, 0, 0].map(() => {
-  return {
-    difficulty: 'EASY',
-    gamerule: {},
-    size: '17.8 MB',
-    entities: 207,
-    name: 'world',
-    loadedChunks: 774,
-    player: 1
-  };
-});
-
 /**
- * @param {string} used
+ * @param {string | number} used
  * @param {string} total
  */
 const getUsedPercantage = (used, total) => {
-  return ((stringToBytes(used) / stringToBytes(total)) * 100).toFixed(1);
+  return (
+    ((typeof used === 'number' ? used : stringToBytes(used)) /
+      stringToBytes(total)) *
+    100
+  ).toFixed(1);
 };
 
 const colorType = (value, min = 0, max = 100, reverse = false) => {
@@ -268,28 +257,33 @@ const colorType = (value, min = 0, max = 100, reverse = false) => {
 const Overview = () => {
   // eslint-disable-next-line no-unused-vars
   const [refreshFn, setRefreshFn] = useOutletContext();
-  const [data, setData] = useState(tempStatsData);
+  const worldDetails = useRecoilValue(worldsState);
+  const worlds = useMemo(() => Object.values(worldDetails), [worldDetails]);
+  const statsData = useRecoilValue(statsState);
 
-  const { jvm, disk, mem, tps, cpu } = data;
+  // if (!statsData?.length) return <></>;
+  const { jvm, disk, mem, tps, cpu } = statsData[statsData.length - 1];
 
   const cpuValue = cpu.cpuLoad.toFixed(1);
   const ramValue = getUsedPercantage(mem.usedMem, mem.totalMem);
   const jvmValue = getUsedPercantage(jvm.usedMemory, jvm.totalMemory);
-  const diskValue = getUsedPercantage(disk.freeSpace, disk.totalSpace);
+  const diskValue = getUsedPercantage(disk.usedSpace, disk.totalSpace);
   const tpsValue = (tps.reduce((a, b) => a + b, 0) / tps.length).toFixed(1);
 
-  const worldNames = tempWorldDatas.map((worldData) => worldData.name);
+  const worldNames = worlds.map(({ name }) => name);
 
-  const countOfEntities = tempWorldDatas.map((worldData) => worldData.entities);
-  const countOfPlayers = tempWorldDatas.map((worldData) => worldData.player);
-  const countOfSize = tempWorldDatas.map(
-    (worldData) => stringToBytes(worldData.size) / 1024 ** 3
+  const countOfEntities = worlds.map((world) => world.entities);
+  const countOfPlayers = worlds.map((world) => world.player);
+  const countOfSize = worlds.map(
+    (world) => stringToBytes(world.size) / 1024 ** 3
   );
 
   useEffect(() => {
     // 이 컴포넌트에서 DashboardLayout으로 정보 새로 고침 함수를 넘겨야 합니다
     // TODO 정보 새로 고침
-    setRefreshFn(() => console.log('refreshed'));
+    setRefreshFn(() => {
+      console.log('refreshed');
+    });
   }, [setRefreshFn]);
 
   return (

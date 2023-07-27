@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useOutletContext } from 'react-router-dom';
 import {
   ComputerChipIcon,
@@ -11,6 +11,8 @@ import Chart from '../components/common/Chart';
 import { Line } from 'react-chartjs-2';
 import { stringToBytes } from '../utils/convert';
 import { floorDecimal } from '../utils/numbers';
+import { useRecoilValue } from 'recoil';
+import { statsState } from '../contexts/states';
 
 const StatContainer = styled.div`
   display: grid;
@@ -155,31 +157,9 @@ const CurrentValue = ({ additional, value, max }) => {
   );
 };
 
-const stringToMegabytes = (value) => stringToBytes(value) / 1024 ** 2;
-const stringToMegabytesWithCommas = (value) =>
-  stringToMegabytes(value).toLocaleString();
-
-const tempStatsData = {
-  jvm: {
-    usedMemory: '815 MB',
-    totalMemory: '2048 MB',
-    maxMemory: '2048 MB',
-    freeMemory: '1232 MB'
-  },
-  disk: {
-    freeSpace: '30763 MB',
-    totalSpace: '65517 MB'
-  },
-  mem: {
-    usedMem: '24750 MB',
-    totalMem: '32637 MB'
-  },
-  tps: [20.000113700646388, 17.999996940000468, 19.999989268894648],
-  cpu: {
-    cpuCores: 16,
-    cpuLoad: 98.23
-  }
-};
+const numberToMegabytes = (value) => value / 1024 ** 2;
+const stringToMegabytes = (value) => numberToMegabytes(stringToBytes(value));
+const withCommas = (value) => value.toLocaleString();
 
 const Stats = () => {
   /*
@@ -197,8 +177,9 @@ const Stats = () => {
     setRefreshFn(() => console.log('refreshed'));
   }, [setRefreshFn]);
 
-  const [data, setData] = useState(tempStatsData);
-  const { jvm, disk, mem, tps, cpu } = data;
+  const statsData = useRecoilValue(statsState);
+  const { jvm, disk, mem, tps, cpu } = statsData[statsData.length - 1];
+  const labels = statsData.map(({ timestamp }) => timestamp);
 
   return (
     <StatContainer>
@@ -206,8 +187,8 @@ const Stats = () => {
         id='cpu'
         label='CPU(%)'
         icon={<ComputerChipIcon />}
-        chartLabels={[1]}
-        chartData={[cpu.cpuLoad]}
+        chartLabels={labels}
+        chartData={statsData.map(({ cpu }) => cpu.cpuLoad)}
         currentValue={
           <CurrentValue
             additional={`${cpu.cpuCores} 코어`}
@@ -221,12 +202,12 @@ const Stats = () => {
         id='mem'
         label='메모리(MB)'
         icon={<MemoryChipIcon />}
-        chartLabels={[1]}
-        chartData={[stringToMegabytes(mem.usedMem)]}
+        chartLabels={labels}
+        chartData={statsData.map(({ mem }) => stringToMegabytes(mem.usedMem))}
         currentValue={
           <CurrentValue
-            value={stringToMegabytesWithCommas(mem.usedMem)}
-            max={stringToMegabytesWithCommas(mem.totalMem)}
+            value={withCommas(stringToMegabytes(mem.usedMem))}
+            max={withCommas(stringToMegabytes(mem.totalMem))}
           />
         }
         maxY={stringToMegabytes(mem.totalMem)}
@@ -236,12 +217,14 @@ const Stats = () => {
         id='jvm'
         label='JVM 메모리(MB)'
         icon={<MemoryChipIcon />}
-        chartLabels={[1]}
-        chartData={[stringToMegabytes(jvm.usedMemory)]}
+        chartLabels={labels}
+        chartData={statsData.map(({ jvm }) =>
+          stringToMegabytes(jvm.usedMemory)
+        )}
         currentValue={
           <CurrentValue
-            value={stringToMegabytesWithCommas(jvm.usedMemory)}
-            max={stringToMegabytesWithCommas(jvm.totalMemory)}
+            value={withCommas(stringToMegabytes(jvm.usedMemory))}
+            max={withCommas(stringToMegabytes(jvm.totalMemory))}
           />
         }
         maxY={stringToMegabytes(jvm.totalMemory)}
@@ -251,12 +234,14 @@ const Stats = () => {
         id='disk'
         label='디스크(MB)'
         icon={<HardDiskIcon />}
-        chartLabels={[1]}
-        chartData={[stringToMegabytes(disk.freeSpace)]}
+        chartLabels={labels}
+        chartData={statsData.map(({ disk }) =>
+          numberToMegabytes(disk.usedSpace)
+        )}
         currentValue={
           <CurrentValue
-            value={stringToMegabytesWithCommas(disk.freeSpace)}
-            max={stringToMegabytesWithCommas(disk.totalSpace)}
+            value={withCommas(numberToMegabytes(disk.usedSpace))}
+            max={withCommas(stringToMegabytes(disk.totalSpace))}
           />
         }
         maxY={stringToMegabytes(disk.totalSpace)}
@@ -266,11 +251,11 @@ const Stats = () => {
         id='tps'
         label='TPS'
         icon={<TimerIcon />}
-        chartLabels={[1]}
+        chartLabels={labels}
         chartDatasets={[
-          { data: [tps[0], tps[0], tps[0]], label: '1분' },
-          { data: [tps[1], tps[1], tps[1]], label: '5분' },
-          { data: [tps[2], tps[2], tps[2]], label: '15분' }
+          { data: statsData.map(({ tps }) => tps[0]), label: '1분' },
+          { data: statsData.map(({ tps }) => tps[1]), label: '5분' },
+          { data: statsData.map(({ tps }) => tps[2]), label: '15분' }
         ]}
         currentValue={
           <CurrentValue

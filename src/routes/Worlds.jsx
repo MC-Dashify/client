@@ -1,9 +1,15 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useOutletContext } from 'react-router-dom';
 import styled from 'styled-components';
 import { showModal } from '../utils/modal';
 import DashboardSummary from '../components/dashboard/DashboardSummary';
 import Searchbar from '../components/common/Searchbar';
+import { worldsState } from '../contexts/states';
+import {
+  useRecoilBridgeAcrossReactRoots_UNSTABLE,
+  useRecoilValue
+} from 'recoil';
+import { Toaster } from 'react-hot-toast';
 
 const WorldsContainer = styled.div`
   display: flex;
@@ -62,10 +68,18 @@ const NameDisplay = styled.div`
 `;
 
 const WorldInfoContainer = ({ uuid, name }) => {
+  const RecoilBridge = useRecoilBridgeAcrossReactRoots_UNSTABLE();
+
   return (
     <WorldContainer
       onClick={() => {
-        showModal(<WorldInfoModal uuid={uuid} name={name} />, '62.5rem');
+        showModal(
+          <RecoilBridge>
+            <WorldInfoModal uuid={uuid} name={name} />
+            <Toaster position='bottom-center' style={{ zIndex: '20' }} />
+          </RecoilBridge>,
+          '62.5rem'
+        );
       }}
     >
       <UIDDisplay>{uuid}</UIDDisplay>
@@ -148,27 +162,18 @@ const ModalGamerulesSeparator = styled.div`
 `;
 
 const WorldInfoModal = ({ uuid, name }) => {
-  const [world, setWorld] = useState(undefined);
   const [rightGamerules, setRightGamerules] = useState([]);
   const [leftGamerules, setLeftGamerules] = useState([]);
+  const worlds = useRecoilValue(worldsState)
+  const world = worlds[uuid];
 
   useEffect(() => {
-    const fetchData = async () => {
-      const world = await getWorldInfo(uuid);
-      setWorld(world);
+    const right = Object.keys(world.gamerule);
+    const left = right.splice(right.length / 2);
 
-      const left = Object.keys(world.gamerule);
-      const right = left.splice(left.length / 2);
-
-      setLeftGamerules(left);
-      setRightGamerules(right);
-
-      console.log(left);
-      console.log(right);
-    };
-    fetchData();
-  }, [uuid]);
-
+    setLeftGamerules(left);
+    setRightGamerules(right);
+  }, [world]);
   return (
     <ModalContainer>
       <ModalTopContainer>
@@ -307,6 +312,13 @@ const GameruleNameDisplay = styled.div`
   line-height: 100%;
   letter-spacing: -0.36px;
 
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+  overflow: hidden;
+
+  text-overflow: ellipsis;
+
   flex: 1 0 0;
   text-align: left;
 `;
@@ -336,45 +348,6 @@ const GameruleDisplay = ({ name, value }) => {
   );
 };
 
-const tempWorldsData = {
-  worlds: [
-    { uuid: 'c8e62c4f-0882-404f-ba25-abfd4a19e07f', name: 'world' },
-    { uuid: '045433dd-81d4-414c-af36-ae2b0fbea5ea', name: 'world_the_nether' },
-    { uuid: '00d593bb-62d9-46cc-9edd-c81f829e97a1', name: 'world_the_end' },
-    { uuid: 'a4037ad8-76b7-48a7-bfc1-24da5f773c3f', name: 'lobby' }
-  ]
-};
-
-const getWorldInfo = async (uuid) => ({
-  name: tempWorldsData.worlds.find((world) => world.uuid === uuid).name,
-  loadedChunks: 774,
-  entities: 207,
-  player: 1,
-  gamerule: {
-    doWardenSpawning: true,
-    tntExplosionDropDecay: false,
-    maxCommandChainLength: 65536,
-    fireDamage: true,
-    waterSourceConversion: true,
-    lavaSourceConversion: false,
-    drowningDamage: true,
-    forgiveDeadPlayers: true,
-    maxEntityCramming: true,
-
-    globalSoundEvents: true,
-    doFireTick: true,
-    doVinesSpread: true,
-    reducedDebugInfo: false,
-    disableElytraMovementCheck: false,
-    announceAdvancements: true,
-    commandBlockOutput: true,
-    doMobSpawning: true,
-    disableRaids: false
-  },
-  size: '20.3 MB',
-  difficulty: 'peaceful'
-});
-
 const Worlds = () => {
   // eslint-disable-next-line no-unused-vars
   const [refreshFn, setRefreshFn] = useOutletContext();
@@ -383,6 +356,8 @@ const Worlds = () => {
     label: '이름'
   });
   const [searchValue, setSearchValue] = useState('');
+  const worldDetails = useRecoilValue(worldsState);
+  const worlds = useMemo(() => Object.values(worldDetails), [worldDetails]);
 
   useEffect(() => {
     // 이 컴포넌트에서 DashboardLayout으로 정보 새로 고침 함수를 넘겨야 합니다
@@ -393,10 +368,7 @@ const Worlds = () => {
   return (
     <WorldsContainer>
       <OverviewContainer>
-        <DashboardSummary
-          label='세계 개수'
-          value={tempWorldsData.worlds.length}
-        />
+        <DashboardSummary label='세계 개수' value={worlds.length} />
       </OverviewContainer>
       <WorldsListContainer>
         <Searchbar
@@ -409,12 +381,13 @@ const Worlds = () => {
             { value: 'uuid', label: 'UUID' }
           ]}
         />
-        {tempWorldsData.worlds
+        {worlds
           .filter((world) => {
             if (selectedFilter.value === 'name')
-              return world.name.includes(searchValue);
+              return world.name.toLowerCase().includes(searchValue);
             if (selectedFilter.value === 'uuid')
               return world.uuid
+                .toLowerCase()
                 .replace(/-/g, '')
                 .includes(searchValue.replace(/-/g, ''));
             return true;
