@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import Select from 'react-select';
 
@@ -6,6 +6,12 @@ import { EyeIcon, SlashedEyeIcon } from '../../assets/32x-icons';
 import Button from '../common/Button';
 
 import AppData from '../../storage/data';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
+import {
+  currentProfileState,
+  hideAddressState,
+  refreshRateState
+} from '../../contexts/states';
 
 const Section = styled.section`
   display: flex;
@@ -76,17 +82,18 @@ const AutoRefreshLabel = styled.span`
   opacity: 0.6;
 `;
 
-const DashboardPageTitle = ({ refreshFn }) => {
+const DashboardPageTitle = ({ reloadTask }) => {
   const autoRefreshOptions = [
-    { label: '1초', value: 1 },
-    { label: '3초', value: 3 },
-    { label: '5초', value: 5 },
-    { label: '10초', value: 10 },
-    { label: '15초', value: 15 },
-    { label: '30초', value: 30 },
-    { label: '1분', value: 60 }
+    { label: '1초', value: 1000 },
+    { label: '3초', value: 3000 },
+    { label: '5초', value: 5000 },
+    { label: '10초', value: 10000 },
+    { label: '15초', value: 15000 },
+    { label: '30초', value: 30000 },
+    { label: '1분', value: 60000 }
   ];
 
+  const setHideAddressFromProfileChanger = useSetRecoilState(hideAddressState);
   const [hideAddress, setHideAddress] = useState(
     AppData.get('settings.hide_address')
   );
@@ -94,14 +101,29 @@ const DashboardPageTitle = ({ refreshFn }) => {
   const toggleHideAddress = () => {
     AppData.set('settings.hide_address', !hideAddress);
     setHideAddress(!hideAddress);
+    setHideAddressFromProfileChanger(!hideAddress);
   };
+
+  const [refreshRate, setRefreshRate] = useState(
+    AppData.get('settings.auto_refresh_rate')
+  );
+
+  useEffect(() => {
+    setHideAddressFromProfileChanger(hideAddress);
+  }, [hideAddress, setHideAddressFromProfileChanger]);
+
+  const setGlobalRefreshRate = useSetRecoilState(refreshRateState);
+  const currentProfile = useRecoilValue(currentProfileState);
+  const currentRefreshRateOption =
+    autoRefreshOptions.find((option) => option.value === refreshRate) ??
+    autoRefreshOptions[4];
 
   return (
     <Section>
       <TitleContainer>
         <TitleTextContainer>
-          <Title>하이픽셀</Title>
-          {hideAddress ? null : <Address>(hypixel.net)</Address>}
+          <Title>{currentProfile.name}</Title>
+          {hideAddress ? null : <Address>({currentProfile.address})</Address>}
         </TitleTextContainer>
 
         <AddressHideIconButton
@@ -121,13 +143,22 @@ const DashboardPageTitle = ({ refreshFn }) => {
         <Select
           isSearchable={false}
           options={autoRefreshOptions}
-          defaultValue={autoRefreshOptions[4]}
+          defaultValue={currentRefreshRateOption}
           placeholder='주기 설정'
+          onChange={(option) => {
+            setRefreshRate(option.value);
+            setGlobalRefreshRate(option.value);
+            AppData.set('settings.auto_refresh_rate', option.value);
+          }}
         />
         {/* TODO 이벤트 받아서 주기 설정(페이지별로 다르게) */}
       </AutoRefreshContainer>
 
-      <Button styleType='outline' padding='8px 18px' onClick={refreshFn}>
+      <Button
+        styleType='outline'
+        padding='8px 18px'
+        onClick={() => reloadTask()}
+      >
         지금 새로 고침하기
       </Button>
     </Section>

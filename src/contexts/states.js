@@ -1,13 +1,64 @@
-import { atom } from "recoil";
-
-const testState = atom({
-  key: "test", // unique ID (with respect to other atoms/selectors)
-  default: 0, // default value (aka initial value)
-});
+import { atom } from 'recoil';
 
 const statsState = atom({
-  key: "stats",
+  key: 'stats',
   default: []
-})
+});
 
-export { testState, statsState };
+const worldsState = atom({
+  key: 'worlds',
+  default: {}
+});
+
+const playersState = atom({
+  key: 'players',
+  default: {}
+});
+
+const profilesState = atom({
+  key: 'profiles',
+  default: []
+});
+
+const currentProfileState = atom({
+  key: 'currentProfile',
+  default: {}
+});
+
+const lastSentCommandsState = atom({
+  key: 'lastSent',
+  default: []
+});
+
+const refreshRateState = atom({
+  key: 'refreshRate',
+  default: 15000
+});
+
+const hideAddressState = atom({
+  key: 'hideAddress',
+  default: false
+});
+
+const trafficState = atom({
+  key: 'traffic',
+  default: []
+});
+
+const trapPauseState = atom({
+  key: 'trapPause',
+  default: {}
+});
+
+export {
+  statsState,
+  profilesState,
+  currentProfileState,
+  refreshRateState,
+  hideAddressState,
+  worldsState,
+  playersState,
+  lastSentCommandsState,
+  trafficState,
+  trapPauseState
+};
