@@ -171,7 +171,7 @@ const ModalGamerulesSeparator = styled.div`
 const WorldInfoModal = ({ uuid, name, theme }) => {
   const [rightGamerules, setRightGamerules] = useState([]);
   const [leftGamerules, setLeftGamerules] = useState([]);
-  const worlds = useRecoilValue(worldsState)
+  const worlds = useRecoilValue(worldsState);
   const world = worlds[uuid];
 
   useEffect(() => {

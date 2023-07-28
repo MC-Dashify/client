@@ -35,7 +35,13 @@ import Profile from '../storage/profile';
 import { showModal } from '../utils/modal';
 import ProfileList from '../components/common/ProfileList';
 import { Toaster, toast } from 'react-hot-toast';
-import { getPlayers, getStatus, getTraffic, getWorlds, ping } from '../utils/data';
+import {
+  getPlayers,
+  getStatus,
+  getTraffic,
+  getWorlds,
+  ping
+} from '../utils/data';
 
 const Aside = styled.aside`
   display: flex;
@@ -342,21 +348,29 @@ const DashboardLayout = () => {
   const location = useLocation();
 
   const reloadTask = useCallback(
-    async (profile = currentProfile) => { 
+    async (profile = currentProfile) => {
       try {
         await ping(profile);
 
         // TODO: 개선 필요
-        if (!firstLoadComplete || location.pathname === '/dashboard' || location.pathname === '/dashboard/stats') {
+        if (
+          !firstLoadComplete ||
+          location.pathname === '/dashboard' ||
+          location.pathname === '/dashboard/stats'
+        ) {
           const statResults = await getStatus(profile);
           setStats((stats) => [...stats.slice(-19), statResults]);
         }
 
-        if (!firstLoadComplete || location.pathname === '/dashboard' || location.pathname === '/dashboard/world') {
+        if (
+          !firstLoadComplete ||
+          location.pathname === '/dashboard' ||
+          location.pathname === '/dashboard/world'
+        ) {
           const worlds = await getWorlds(profile);
           setWorlds(worlds);
         }
-        
+
         if (!firstLoadComplete || location.pathname === '/dashboard/player') {
           const players = await getPlayers(profile);
           setPlayers(players);
@@ -366,13 +380,14 @@ const DashboardLayout = () => {
           const trafficData = await getTraffic(profile);
           setTraffic((traffic) => [...traffic.slice(-19), trafficData]);
         }
-        
+
         setConnected(true);
 
         if (firstLoadComplete === false) {
           setFirstLoadComplete(true);
         }
       } catch (e) {
+        console.error(e);
         setConnected(false);
         return;
       }

@@ -45,16 +45,6 @@ const trafficState = atom({
   default: []
 });
 
-const trapPauseState = atom({
-  key: 'trapPause',
-  default: {}
-});
-
-const themeState = atom({
-  key: 'theme',
-  default: 'dark'
-});
-
 export {
   statsState,
   profilesState,
@@ -64,7 +54,5 @@ export {
   worldsState,
   playersState,
   lastSentCommandsState,
-  trafficState,
-  trapPauseState,
-  themeState
+  trafficState
 };
