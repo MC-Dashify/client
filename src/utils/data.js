@@ -1,15 +1,15 @@
 import { stringToBytes } from './convert';
 import Network from './net';
-import * as dayjs from 'dayjs';
+import dayjs from 'dayjs';
 
-const ping = async (profile) => { 
+const ping = async (profile) => {
   return await Network.ping(
     profile.address,
     profile.port,
     profile.key,
     profile.isSecureConnection
   );
-}
+};
 
 const getStatus = async (profile) => {
   const statResults = (
@@ -30,7 +30,7 @@ const getStatus = async (profile) => {
   statResults.timestamp = date;
 
   return statResults;
-}
+};
 
 const getWorlds = async (profile) => {
   const worldResults = (
@@ -45,7 +45,7 @@ const getWorlds = async (profile) => {
 
   const worlds = [];
   const _worlds = await Promise.all(
-    worldResults.map(({ uuid }) => 
+    worldResults.map(({ uuid }) =>
       Network.get(
         profile.address,
         profile.port,
@@ -54,14 +54,14 @@ const getWorlds = async (profile) => {
         `worlds/${uuid}`
       )
     )
-  )
-    
+  );
+
   for (const { data } of _worlds) {
-    worlds[data.uuid] = data
+    worlds[data.uuid] = data;
   }
 
   return worlds;
-}
+};
 
 const getPlayers = async (profile) => {
   const playerResults = (
@@ -74,7 +74,7 @@ const getPlayers = async (profile) => {
     )
   ).data.players;
 
-  const players = []
+  const players = [];
   const _players = await Promise.all(
     playerResults.map(({ uuid }) =>
       Network.get(
@@ -88,11 +88,11 @@ const getPlayers = async (profile) => {
   );
 
   for (const { data } of _players) {
-    players[data.uuid] = data
+    players[data.uuid] = data;
   }
 
   return players;
-}
+};
 
 const getTraffic = async (profile) => {
   const trafficData = (
@@ -109,12 +109,6 @@ const getTraffic = async (profile) => {
   trafficData.timestamp = date;
 
   return trafficData;
-}
+};
 
-export {
-  ping,
-  getStatus,
-  getWorlds,
-  getPlayers,
-  getTraffic
-}
+export { ping, getStatus, getWorlds, getPlayers, getTraffic };
