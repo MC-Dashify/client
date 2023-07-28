@@ -1,4 +1,4 @@
-import { styled } from 'styled-components';
+import { ThemeProvider, styled } from 'styled-components';
 import { Toaster, toast } from 'react-hot-toast';
 
 import Profile from '../../storage/profile';
@@ -9,7 +9,6 @@ import { CogIcon } from '../../assets/24x-icons';
 import {
   useRecoilBridgeAcrossReactRoots_UNSTABLE,
   useRecoilState,
-  useSetRecoilState
 } from 'recoil';
 import SyntaxHighlighter from 'react-syntax-highlighter';
 import { docco } from 'react-syntax-highlighter/dist/esm/styles/hljs';
@@ -17,9 +16,6 @@ import { docco } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 import {
   profilesState,
   currentProfileState,
-  statsState,
-  worldsState,
-  playersState
 } from '../../contexts/states';
 import { showModal } from '../../utils/modal';
 import ProfileCreateForm from './ProfileCreateForm';
@@ -331,7 +327,7 @@ const ProfileItem = ({
   );
 };
 
-const ProfileList = () => {
+const ProfileList = ({ theme }) => {
   const RecoilBridge = useRecoilBridgeAcrossReactRoots_UNSTABLE();
 
   const [profiles, setProfiles] = useRecoilState(profilesState);
@@ -342,51 +338,53 @@ const ProfileList = () => {
   }, [setProfiles]);
 
   return (
-    <Section>
-      <ProfileDataContainer>
-        <ProfileDataLabel>프로필로 연결</ProfileDataLabel>
-        <EditProfilesButton
-          tabIndex={0}
-          onClick={() => {
-            setIsEditing(!isEditing);
-          }}
-        >
-          <CogIcon transform='scale(0.666666667)' />
-          관리
-        </EditProfilesButton>
-      </ProfileDataContainer>
-      <ProfilesContainer>
-        {profiles.map(({ uuid, name, address }, index) => (
-          <ProfileItem
-            key={index}
-            uuid={uuid}
-            name={name}
-            address={address}
-            showBorder={index > 0}
-            isEditing={isEditing}
-            updateProfile={() => {
-              setProfiles(Profile.getAll());
+    <ThemeProvider theme={theme}>
+      <Section>
+        <ProfileDataContainer>
+          <ProfileDataLabel>프로필로 연결</ProfileDataLabel>
+          <EditProfilesButton
+            tabIndex={0}
+            onClick={() => {
+              setIsEditing(!isEditing);
             }}
-          />
-        ))}
-      </ProfilesContainer>
+          >
+            <CogIcon transform='scale(0.666666667)' />
+            관리
+          </EditProfilesButton>
+        </ProfileDataContainer>
+        <ProfilesContainer>
+          {profiles.map(({ uuid, name, address }, index) => (
+            <ProfileItem
+              key={index}
+              uuid={uuid}
+              name={name}
+              address={address}
+              showBorder={index > 0}
+              isEditing={isEditing}
+              updateProfile={() => {
+                setProfiles(Profile.getAll());
+              }}
+            />
+          ))}
+        </ProfilesContainer>
 
-      <AddProfileButton
-        onClick={() => {
-          showModal(
-            <RecoilBridge>
-              <ProfileCreateForm />
-              <Toaster position='bottom-center' style={{ zIndex: '20' }} />
-            </RecoilBridge>,
-            484,
-            { showCloseButton: false }
-          );
-        }}
-        icon={<PlusIcon />}
-      >
-        프로필 추가
-      </AddProfileButton>
-    </Section>
+        <AddProfileButton
+          onClick={() => {
+            showModal(
+              <RecoilBridge>
+                <ProfileCreateForm />
+                <Toaster position='bottom-center' style={{ zIndex: '20' }} />
+              </RecoilBridge>,
+              484,
+              { showCloseButton: false }
+            );
+          }}
+          icon={<PlusIcon />}
+        >
+          프로필 추가
+        </AddProfileButton>
+      </Section>
+    </ThemeProvider>
   );
 };
 

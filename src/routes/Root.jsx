@@ -10,7 +10,6 @@ import { platform } from '@tauri-apps/api/os';
 
 import ProfileCreateForm from '../components/common/ProfileCreateForm';
 import ProfileList from '../components/common/ProfileList';
-import { useEffect } from 'react';
 import { currentProfileState } from '../contexts/states';
 
 const modal = withReactContent(Swal);

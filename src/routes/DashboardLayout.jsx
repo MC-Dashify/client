@@ -227,18 +227,24 @@ const ProfileChanger = () => {
   const hideAddress = useRecoilValue(hideAddressState);
   const RecoilBridge = useRecoilBridgeAcrossReactRoots_UNSTABLE();
 
+  const theme = useContext(ThemeContext);
+
   return (
     <ProfileChangerBox
       onClick={() => {
         showModal(
           <RecoilBridge>
             <BrowserRouter>
-              <ProfileList />
+              <ProfileList theme={theme} />
             </BrowserRouter>
             <Toaster position='bottom-center' style={{ zIndex: '20' }} />
           </RecoilBridge>,
           484,
-          { showCloseButton: false }
+          {
+            showCloseButton: false,
+            background: theme.modal.bg,
+            color: theme.modal.text
+          }
         );
       }}
     >
