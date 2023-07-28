@@ -1,6 +1,6 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useContext, useEffect, useMemo, useState } from 'react';
 import { useOutletContext } from 'react-router-dom';
-import styled from 'styled-components';
+import styled, { ThemeContext, ThemeProvider } from 'styled-components';
 import { showModal } from '../utils/modal';
 import DashboardSummary from '../components/dashboard/DashboardSummary';
 import Searchbar from '../components/common/Searchbar';
@@ -46,12 +46,13 @@ const WorldContainer = styled.button`
   cursor: pointer;
 
   &:hover {
-    background-color: rgba(0, 0, 0, 0.05);
+    background-color: rgba(0, 0, 0, 0.05); // TODO: theme
   }
 `;
 
-const UIDDisplay = styled.div`
-  color: #000;
+const 
+UIDDisplay = styled.div`
+  color: ${({ theme }) => theme.text};
   font-size: 14px;
   font-family: 'JetBrains Mono';
   line-height: 100%;
@@ -60,7 +61,7 @@ const UIDDisplay = styled.div`
 `;
 
 const NameDisplay = styled.div`
-  color: #000;
+  color: ${({ theme }) => theme.text};
   font-size: 24px;
   font-weight: 700;
   line-height: 100%;
@@ -69,16 +70,20 @@ const NameDisplay = styled.div`
 
 const WorldInfoContainer = ({ uuid, name }) => {
   const RecoilBridge = useRecoilBridgeAcrossReactRoots_UNSTABLE();
+  const theme = useContext(ThemeContext)
 
   return (
     <WorldContainer
       onClick={() => {
         showModal(
           <RecoilBridge>
-            <WorldInfoModal uuid={uuid} name={name} />
+            <WorldInfoModal uuid={uuid} name={name} theme={theme}/>
             <Toaster position='bottom-center' style={{ zIndex: '20' }} />
           </RecoilBridge>,
-          '62.5rem'
+          '62.5rem',
+          {
+            background: theme.modal.bg,
+          }
         );
       }}
     >
@@ -89,6 +94,8 @@ const WorldInfoContainer = ({ uuid, name }) => {
 };
 
 const ModalContainer = styled.div`
+  background-color: ${({ theme }) => theme.modal.bg};
+  color: ${({ theme }) => theme.modal.text};
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -101,12 +108,11 @@ const ModalTopContainer = styled.div`
   padding: 0px 0px 10px 0px;
   align-items: center;
   align-self: stretch;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+  border-bottom: ${({ theme }) => `1px solid ${theme.modal.separator}`};
   height: 34px;
 `;
 
 const WorldNameDisplay = styled.div`
-  color: #000;
   font-size: 32px;
   font-weight: 500;
   line-height: 100%;
@@ -132,8 +138,9 @@ const ModalStatsContainer = styled.div`
   align-self: stretch;
 
   border-radius: 24px;
-  background: #fdfdfd;
   box-shadow: 0px 0px 24px 0px rgba(0, 0, 0, 0.05) inset;
+
+  background-color: ${({ theme }) => theme.modal.container.bg};
 
   width: 100%;
 `;
@@ -158,10 +165,10 @@ const ModalGamerulesSeparator = styled.div`
   width: 1px;
   height: 18px;
   opacity: 0.2;
-  background-color: #000;
+  background-color: ${({ theme }) => theme.modal.separator};
 `;
 
-const WorldInfoModal = ({ uuid, name }) => {
+const WorldInfoModal = ({ uuid, name, theme }) => {
   const [rightGamerules, setRightGamerules] = useState([]);
   const [leftGamerules, setLeftGamerules] = useState([]);
   const worlds = useRecoilValue(worldsState)
@@ -175,60 +182,62 @@ const WorldInfoModal = ({ uuid, name }) => {
     setRightGamerules(right);
   }, [world]);
   return (
-    <ModalContainer>
-      <ModalTopContainer>
-        <UIDDisplay style={{ opacity: 0.4, lineHeight: '14px' }}>
-          {uuid}
-        </UIDDisplay>
-      </ModalTopContainer>
-      <WorldNameDisplay>{name}</WorldNameDisplay>
-      {world ? (
-        <ModalBodyContainer>
-          <ModalHeading>상태</ModalHeading>
-          <ModalStatsContainer>
-            <ModalStatsDisplay name='크기' value={world.size} />
-            <ModalStatsDisplay name='엔티티 개수' value={world.entities} />
-            <ModalStatsDisplay name='플레이어 수' value={world.player} />
-            <ModalStatsDisplay
-              name='불러운 청크 수'
-              value={world.loadedChunks}
-            />
-          </ModalStatsContainer>
-          <ModalHeading>설정</ModalHeading>
-          <ModalStatsContainer>
-            <ModalStatsDisplay name='난이도' value={world.difficulty} />
-          </ModalStatsContainer>
-          <ModalHeading>게임규칙</ModalHeading>
-          <ModalGamerulesContainer>
-            <ModalGamerulesInnerContainer>
-              {leftGamerules.map((gamerule, index) => (
-                <GameruleDisplay
-                  key={index}
-                  name={gamerule}
-                  value={world.gamerule[gamerule]}
-                />
-              ))}
-            </ModalGamerulesInnerContainer>
-            <ModalGamerulesInnerContainer $noFlex>
-              {leftGamerules.map((_, index) => (
-                <ModalGamerulesSeparator key={index} />
-              ))}
-            </ModalGamerulesInnerContainer>
-            <ModalGamerulesInnerContainer>
-              {rightGamerules.map((gamerule, index) => (
-                <GameruleDisplay
-                  key={index}
-                  name={gamerule}
-                  value={world.gamerule[gamerule]}
-                />
-              ))}
-            </ModalGamerulesInnerContainer>
-          </ModalGamerulesContainer>
-        </ModalBodyContainer>
-      ) : (
-        <WorldNameDisplay>월드 정보를 불러오지 못했습니다</WorldNameDisplay>
-      )}
-    </ModalContainer>
+    <ThemeProvider theme={theme}>
+      <ModalContainer>
+        <ModalTopContainer>
+          <UIDDisplay style={{ opacity: 0.4, lineHeight: '14px' }}>
+            {uuid}
+          </UIDDisplay>
+        </ModalTopContainer>
+        <WorldNameDisplay>{name}</WorldNameDisplay>
+        {world ? (
+          <ModalBodyContainer>
+            <ModalHeading>상태</ModalHeading>
+            <ModalStatsContainer>
+              <ModalStatsDisplay name='크기' value={world.size} />
+              <ModalStatsDisplay name='엔티티 개수' value={world.entities} />
+              <ModalStatsDisplay name='플레이어 수' value={world.player} />
+              <ModalStatsDisplay
+                name='불러운 청크 수'
+                value={world.loadedChunks}
+              />
+            </ModalStatsContainer>
+            <ModalHeading>설정</ModalHeading>
+            <ModalStatsContainer>
+              <ModalStatsDisplay name='난이도' value={world.difficulty} />
+            </ModalStatsContainer>
+            <ModalHeading>게임규칙</ModalHeading>
+            <ModalGamerulesContainer>
+              <ModalGamerulesInnerContainer>
+                {leftGamerules.map((gamerule, index) => (
+                  <GameruleDisplay
+                    key={index}
+                    name={gamerule}
+                    value={world.gamerule[gamerule]}
+                  />
+                ))}
+              </ModalGamerulesInnerContainer>
+              <ModalGamerulesInnerContainer $noFlex>
+                {leftGamerules.map((_, index) => (
+                  <ModalGamerulesSeparator key={index} />
+                ))}
+              </ModalGamerulesInnerContainer>
+              <ModalGamerulesInnerContainer>
+                {rightGamerules.map((gamerule, index) => (
+                  <GameruleDisplay
+                    key={index}
+                    name={gamerule}
+                    value={world.gamerule[gamerule]}
+                  />
+                ))}
+              </ModalGamerulesInnerContainer>
+            </ModalGamerulesContainer>
+          </ModalBodyContainer>
+        ) : (
+          <WorldNameDisplay>월드 정보를 불러오지 못했습니다</WorldNameDisplay>
+        )}
+      </ModalContainer>
+    </ThemeProvider>
   );
 };
 
@@ -240,7 +249,6 @@ const ModalHeadingContainer = styled.div`
 `;
 
 const ModalHeadingTitle = styled.div`
-  color: #000;
   font-size: 16px;
   font-weight: 700;
   line-height: 100%;
@@ -251,7 +259,7 @@ const ModalHeadingSeparator = styled.div`
   flex: 1 0;
   height: 1px;
   opacity: 0.2;
-  background: #000;
+  background: ${({ theme }) => theme.modal.separator};
 `;
 
 const ModalHeading = ({ children }) => {
@@ -272,7 +280,6 @@ const ModalStatsDisplayContainer = styled.div`
 `;
 
 const ModalStatsNameDisplay = styled.div`
-  color: #000;
   font-size: 16px;
   font-style: normal;
   font-weight: 500;
@@ -281,7 +288,6 @@ const ModalStatsNameDisplay = styled.div`
 `;
 
 const ModalStatsValueDisplay = styled.div`
-  color: #000;
   font-size: 28px;
   font-style: normal;
   font-weight: 700;
@@ -304,7 +310,6 @@ const GameruleDisplayContainer = styled.div`
 `;
 
 const GameruleNameDisplay = styled.div`
-  color: #000;
   font-size: 18px;
   font-family: JetBrains Mono;
   font-style: normal;
@@ -336,12 +341,14 @@ const GameruleValueDisplay = styled.div`
 `;
 
 const GameruleDisplay = ({ name, value }) => {
+  const theme = useContext(ThemeContext);
+
   return (
     <GameruleDisplayContainer>
       <GameruleNameDisplay>{name}</GameruleNameDisplay>
       <GameruleValueDisplay
         $color={
-          typeof value === 'boolean' ? (value ? '#338EE2' : '#D04038') : '#000'
+          typeof value === 'boolean' ? (value ? '#338EE2' : '#D04038') : theme.modal.text
         }
       >{`${value}`}</GameruleValueDisplay>
     </GameruleDisplayContainer>

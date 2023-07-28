@@ -1,8 +1,8 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import Select from 'react-select';
 import { AnimatePresence } from 'framer-motion';
-import { styled } from 'styled-components';
+import { ThemeContext, ThemeProvider, styled } from 'styled-components';
 import { toast } from 'react-hot-toast';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
@@ -180,6 +180,8 @@ const Modal = ({ install }) => {
   // const [currentTrapPauseState, setCurrentTrapPauseState] =
   //   useRecoilState(trapPauseState);
 
+  const theme = useContext(ThemeContext);
+
   const setCurrentTrapPauseState = useSetRecoilState(trapPauseState);
   const [isModalOpen, setIsModalOpen] = useState(true);
   const [isCheckingUpdate, setIsCheckingUpdate] = useState(false);
@@ -228,7 +230,8 @@ const Modal = ({ install }) => {
             allowEscapeKey: true,
             allowOutsideClick: false,
             confirmButtonText: '지금 업데이트',
-            cancelButtonText: '나중에 업데이트'
+            cancelButtonText: '나중에 업데이트',
+            background: theme.modal.bg
           })
           .then(async (result) => {
             toast.dismiss('update-checking');
@@ -278,7 +281,7 @@ const Modal = ({ install }) => {
   };
 
   return (
-    <div>
+    <ThemeProvider theme={theme}>
       <AnimatePresence mode='' onExitComplete={goBackward}>
         {isModalOpen && (
           <LayerPopup
@@ -288,7 +291,7 @@ const Modal = ({ install }) => {
             footer={<div> © 2023 "Dashify" Development Team</div>}
           >
             <WebsiteInfoContainer>
-              <Logo80 background='black' foreground='white' />
+              <Logo80 background={theme.aside.logo.bg} foreground={theme.aside.logo.fg} />
               <WebsiteInfo>
                 <LogoText />
                 <WebsiteVersion>v{AppData.get('etc.version')}</WebsiteVersion>
@@ -346,7 +349,7 @@ const Modal = ({ install }) => {
           </LayerPopup>
         )}
       </AnimatePresence>
-    </div>
+    </ThemeProvider>
   );
 };
 

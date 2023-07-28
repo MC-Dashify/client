@@ -1,5 +1,5 @@
-import { useEffect } from 'react';
-import { styled, css } from 'styled-components';
+import { useContext, useEffect } from 'react';
+import { styled, css, ThemeContext } from 'styled-components';
 import { useSetRecoilState } from 'recoil';
 import { useNavigate } from 'react-router-dom';
 import withReactContent from 'sweetalert2-react-content';
@@ -45,6 +45,7 @@ const Separator = styled.div`
 const Root = () => {
   const navigate = useNavigate();
   const setCurrentProfile = useSetRecoilState(currentProfileState);
+  const theme = useContext(ThemeContext);
 
   useEffect(() => {
     setCurrentProfile({});
@@ -75,7 +76,9 @@ const Root = () => {
               allowEscapeKey: true,
               allowOutsideClick: false,
               confirmButtonText: '지금 업데이트',
-              cancelButtonText: '나중에 업데이트'
+              cancelButtonText: '나중에 업데이트',
+              background: theme.modal.bg,
+              color: theme.modal.text,
             })
             .then(async (result) => {
               console.log(result);

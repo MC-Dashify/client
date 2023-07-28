@@ -113,7 +113,7 @@ const ProfileItemBox = styled.div`
   padding: 18px 16px;
   align-items: center;
   align-self: stretch;
-  background: #fff;
+  background: ${({ theme }) => theme.bg};
 
   ${({ $showBorder }) =>
     $showBorder && 'border-top: 1px solid rgba(0, 0, 0, 0.10);'}
@@ -200,9 +200,6 @@ const ProfileItem = ({
 }) => {
   const [currentProfile, setCurrentProfile] =
     useRecoilState(currentProfileState);
-  const setStats = useSetRecoilState(statsState);
-  const setWorlds = useSetRecoilState(worldsState);
-  const setPlayers = useSetRecoilState(playersState);
 
   const profile = Profile.get(uuid);
 

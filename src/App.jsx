@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Route, Routes, useLocation } from 'react-router-dom';
 import { ThemeProvider } from 'styled-components';
 import { useRecoilState } from 'recoil';
@@ -29,9 +29,8 @@ const App = () => {
 
   useEffect(() => {
     const theme = Theme.get();
-
     if (theme === 'auto' && window.matchMedia) {
-      const isDark = window.matchMedia('prefers-color-scheme: dark').matches;
+      const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
       setThemeState(isDark ? 'dark' : 'light');
     } else {
       setThemeState(theme);
@@ -40,7 +39,7 @@ const App = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [themeState]);
 
-  console.log(themeState);
+  console.log(themeState)
 
   return (
     <ThemeProvider theme={themeState === 'dark' ? dark : light}>
