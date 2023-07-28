@@ -132,7 +132,7 @@ const Root = () => {
 
         <Separator $width='2px' />
 
-        <ProfileList />
+        <ProfileList theme={theme} />
       </Content>
     </RootContainer>
   );
