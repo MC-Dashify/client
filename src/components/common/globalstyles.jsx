@@ -27,6 +27,11 @@ const GlobalStyle = styled.createGlobalStyle`
     padding: 0;
   }
 
+  body {
+    background-color: ${({ theme }) => theme.bg};
+    color: ${({ theme }) => theme.text};
+  }
+
   a {
     text-decoration: none;
 
