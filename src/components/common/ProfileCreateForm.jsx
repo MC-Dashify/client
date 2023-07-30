@@ -22,9 +22,10 @@ const modal = withReactContent(Swal);
 const Separator = styled.div`
   width: 2px;
   align-self: stretch;
-  background-color: #000;
+  background-color: ${({ theme }) => theme.text};
   opacity: 0.1;
   border-radius: 1px;
+
   ${({ $width }) =>
     $width &&
     css`
@@ -65,12 +66,9 @@ const InputLabelPair = styled.div`
 `;
 
 const Label = styled.div`
-  color: #000;
   text-shadow: 0px 0px 16px rgba(0, 0, 0, 0.15);
   font-size: 14px;
   font-weight: 700;
-  line-height: 100%;
-  letter-spacing: -0.154px;
   opacity: 0.6;
 `;
 
@@ -81,7 +79,7 @@ const InputFieldWrapper = styled.div`
   justify-content: center;
   gap: 14px;
   border-radius: 12px;
-  background-color: #f7f7f7;
+  background-color: ${({ theme }) => theme.textinput.bg};
   height: 40px;
   transition: all 0.2s ease-in-out;
   outline: 0 solid transparent;
@@ -89,8 +87,8 @@ const InputFieldWrapper = styled.div`
   transition-property: background-color, outline, box-shadow;
 
   &:has(:focus) {
-    outline: 1px solid #6299ed;
-    background-color: #fff;
+    outline: 1px solid ${({ theme }) => theme.textinput.focusOutline};
+    background-color: rgba(0, 0, 0, 0.01);
     box-shadow: 0px 0px 16px 0px rgba(98, 153, 237, 0.2),
       0px 0px 8px 0px rgba(98, 153, 237, 0.2) inset;
   }
@@ -113,9 +111,9 @@ const InputField = styled.input`
   &:focus {
     outline: none;
   }
+
   &::placeholder {
     opacity: 0.4;
-    color: #000;
   }
 
   &[type='number']::-webkit-inner-spin-button,
@@ -319,7 +317,7 @@ const ProfileCreateForm = ({
 
   return (
     <Section $gap='32px'>
-      <FullLogo color='black' />
+      <FullLogo />
 
       <InputFieldContainer>
         <InputFieldBox label='프로필 이름'>
