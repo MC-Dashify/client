@@ -28,7 +28,6 @@ import { window as tauriWindow } from '@tauri-apps/api';
 import { TauriEvent } from '@tauri-apps/api/event';
 import { Store } from 'tauri-plugin-store-api';
 import { onUpdaterEvent } from '@tauri-apps/api/updater';
-import { getVersion } from '@tauri-apps/api/app';
 
 const store = new Store('dashify.dat');
 
@@ -96,8 +95,6 @@ if (!(hostname === 'localhost' && port === '5173')) {
 }
 
 (async () => {
-  const VERSION = await getVersion();
-  AppData.set('etc.version', VERSION);
   await onUpdaterEvent(({ error, status }) => {
     // This will log all updater events, including status updates and errors.
     console.log('Updater event:', error === null ? status : error);

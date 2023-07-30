@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { AnimatePresence } from 'framer-motion';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Logo80, LogoText } from '../assets/logo';
@@ -20,6 +20,7 @@ import {
   useSetRecoilState
 } from 'recoil';
 import { platform } from '@tauri-apps/api/os';
+import { getVersion } from '@tauri-apps/api/app';
 import { trapPauseState } from '../contexts/states';
 
 const WebsiteInfoContainer = styled.div`
@@ -173,6 +174,16 @@ const Modal = ({ install }) => {
   const navigate = useNavigate();
   const location = useLocation();
 
+  const [appVersion, setAppVersion] = useState('Failed to get app version');
+
+  useEffect(() => {
+    const getAppVersion = async () => {
+      const version = await getVersion();
+      setAppVersion(`${version}`);
+    };
+    getAppVersion();
+  }, []);
+
   const goBackward = () => {
     if (location.key !== 'default') {
       // 이 페이지로 직접 접속하면 key가 default로 설정됩니다.
@@ -277,7 +288,7 @@ const Modal = ({ install }) => {
               <Logo80 background='black' foreground='white' />
               <WebsiteInfo>
                 <LogoText />
-                <WebsiteVersion>v{AppData.get('etc.version')}</WebsiteVersion>
+                <WebsiteVersion>v{appVersion}</WebsiteVersion>
               </WebsiteInfo>
               <Button
                 padding={'8px 16px'}
