@@ -1,23 +1,27 @@
-import { useContext, useState } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
-import Select from 'react-select';
+import { useState, useEffect } from 'react';
 import { AnimatePresence } from 'framer-motion';
-import { ThemeContext, ThemeProvider, styled } from 'styled-components';
-import { toast } from 'react-hot-toast';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { Logo80, LogoText } from '../assets/logo';
+import { styled } from 'styled-components';
+import Select from 'react-select';
+import { open } from '@tauri-apps/api/shell';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
-import { useSetRecoilState } from 'recoil';
-import { platform } from '@tauri-apps/api/os';
-import { checkUpdate, installUpdate } from '@tauri-apps/api/updater';
-import { relaunch } from '@tauri-apps/api/process';
-import { open } from '@tauri-apps/api/shell';
 
 import Button from '../components/common/Button';
 import LayerPopup, { PopupSection } from '../components/common/LayerPopup';
 import AppData from '../storage/data';
-import Theme from '../storage/theme';
+import { checkUpdate, installUpdate } from '@tauri-apps/api/updater';
+import { relaunch } from '@tauri-apps/api/process';
+import { toast } from 'react-hot-toast';
+import {
+  useRecoilBridgeAcrossReactRoots_UNSTABLE,
+  useRecoilState,
+  useSetRecoilState
+} from 'recoil';
+import { platform } from '@tauri-apps/api/os';
+import { getVersion } from '@tauri-apps/api/app';
 import { trapPauseState } from '../contexts/states';
-import { Logo80, LogoText } from '../assets/logo';
 
 const WebsiteInfoContainer = styled.div`
   display: flex;
@@ -189,6 +193,16 @@ const Modal = ({ install }) => {
   const navigate = useNavigate();
   const location = useLocation();
 
+  const [appVersion, setAppVersion] = useState('Failed to get app version');
+
+  useEffect(() => {
+    const getAppVersion = async () => {
+      const version = await getVersion();
+      setAppVersion(`${version}`);
+    };
+    getAppVersion();
+  }, []);
+
   const goBackward = () => {
     if (location.key !== 'default') {
       // 이 페이지로 직접 접속하면 key가 default로 설정됩니다.
@@ -294,7 +308,7 @@ const Modal = ({ install }) => {
               <Logo80 background={theme.aside.logo.bg} foreground={theme.aside.logo.fg} />
               <WebsiteInfo>
                 <LogoText />
-                <WebsiteVersion>v{AppData.get('etc.version')}</WebsiteVersion>
+                <WebsiteVersion>v{appVersion}</WebsiteVersion>
               </WebsiteInfo>
               <Button
                 padding={'8px 16px'}

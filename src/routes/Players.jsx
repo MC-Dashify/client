@@ -4,10 +4,7 @@ import DashboardSummary from '../components/dashboard/DashboardSummary';
 import styled from 'styled-components';
 import Searchbar from '../components/common/Searchbar';
 import { BanIcon, KickIcon } from '../assets/24x-icons';
-import {
-  currentProfileState,
-  playersState
-} from '../contexts/states';
+import { currentProfileState, playersState } from '../contexts/states';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import Network from '../utils/net';
 import { toast } from 'react-hot-toast';
@@ -210,7 +207,7 @@ const Players = () => {
   });
   const [searchValue, setSearchValue] = useState('');
   const playerDetails = useRecoilValue(playersState);
-  const players = useMemo(() => Object.values(playerDetails), [playerDetails])
+  const players = useMemo(() => Object.values(playerDetails), [playerDetails]);
 
   useEffect(() => {
     // 이 컴포넌트에서 DashboardLayout으로 정보 새로 고침 함수를 넘겨야 합니다
@@ -235,6 +232,7 @@ const Players = () => {
         />
         {players
           .filter((player) => {
+            if (!player?.name) return false;
             if (selectedValue.value === 'name')
               return player.name.toLowerCase().includes(searchValue);
             if (selectedValue.value === 'uuid')

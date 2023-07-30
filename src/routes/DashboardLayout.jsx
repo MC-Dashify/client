@@ -345,7 +345,8 @@ const DashboardLayout = () => {
   // Outlet -> DashboardLayout로 새로 고침 함수를 전달해야 합니다
 
   const [refreshRate, setRefreshRate] = useRecoilState(refreshRateState);
-  const [currentProfile, setCurrentProfile] = useRecoilState(currentProfileState);
+  const [currentProfile, setCurrentProfile] =
+    useRecoilState(currentProfileState);
   const setStats = useSetRecoilState(statsState);
   const setWorlds = useSetRecoilState(worldsState);
   const setPlayers = useSetRecoilState(playersState);

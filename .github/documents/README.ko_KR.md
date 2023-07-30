@@ -5,9 +5,13 @@
 <h3 align="center">Minecraft 서버 모니터링을 쉽고 빠르게</h3>
 <p align="center">별도의 설치 없이 실행되는 Standalone 모니터링 시스템</p>
 <p align="center">
-  <a href="https://github.com/MC-Dashify/web/actions/workflows/main.yml">
-    <img src="https://github.com/MC-Dashify/web/actions/workflows/main.yml/badge.svg" alt="Deploy" />
+  <a href="https://github.com/MC-Dashify/web/actions/workflows/codeql.yml">
+    <img src="https://github.com/MC-Dashify/web/actions/workflows/codeql.yml/badge.svg" alt="CodeQL" />
   </a>
+  <a href="https://github.com/MC-Dashify/client/actions/workflows/release.yml">
+    <img src="https://github.com/MC-Dashify/client/actions/workflows/release.yml/badge.svg" alt="Release" />
+  </a>
+  <a href="https://app.codacy.com/gh/MC-Dashify/web/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade"><img src="https://app.codacy.com/project/badge/Grade/159634450373484cb23b5f45ff96271d" alt="code quality"/></a>
 </p>
 
 <p align="center"><a href="https://github.com/MC-Dashify/web/blob/main/README.md">English</a> · <a href="https://github.com/MC-Dashify/web/blob/main/.github/documents/README.ko_KR.md">한국어</a></p>
