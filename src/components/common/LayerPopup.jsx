@@ -105,7 +105,14 @@ const Footer = styled.div`
   opacity: 0.6;
 `;
 
-const LayerPopup = ({ title, children, footer, width, height, onClose }) => {
+const LayerPopup = ({
+  title,
+  children,
+  footer,
+  width,
+  height,
+  onClose,
+}) => {
   const isTrapPaused = useRecoilValue(trapPauseState);
 
   useEffect(() => {
@@ -148,9 +155,12 @@ const LayerPopup = ({ title, children, footer, width, height, onClose }) => {
           <Header>
             <HeaderTitle>{title}</HeaderTitle>
 
-            <CloseIconButton onClick={onClose}>
-              <XIcon />
-            </CloseIconButton>
+            {
+              onClose &&
+              <CloseIconButton onClick={onClose}>
+                <XIcon />
+              </CloseIconButton>
+            }
           </Header>
 
           <Content>{children}</Content>

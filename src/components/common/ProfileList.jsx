@@ -1,4 +1,4 @@
-import { ThemeProvider, styled } from 'styled-components';
+import { styled } from 'styled-components';
 import { Toaster, toast } from 'react-hot-toast';
 
 import Profile from '../../storage/profile';
@@ -6,10 +6,7 @@ import { PlusIcon } from '../../assets/16x-icons';
 import { XIcon } from '../../assets/16x-icons';
 import Button from './Button';
 import { CogIcon } from '../../assets/24x-icons';
-import {
-  useRecoilBridgeAcrossReactRoots_UNSTABLE,
-  useRecoilState,
-} from 'recoil';
+import { useRecoilState } from 'recoil';
 import SyntaxHighlighter from 'react-syntax-highlighter';
 import { docco } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 
@@ -17,7 +14,6 @@ import {
   profilesState,
   currentProfileState,
 } from '../../contexts/states';
-import { showModal } from '../../utils/modal';
 import ProfileCreateForm from './ProfileCreateForm';
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
@@ -327,18 +323,17 @@ const ProfileItem = ({
   );
 };
 
-const ProfileList = ({ theme }) => {
-  const RecoilBridge = useRecoilBridgeAcrossReactRoots_UNSTABLE();
-
+const ProfileList = () => {
   const [profiles, setProfiles] = useRecoilState(profilesState);
   const [isEditing, setIsEditing] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     setProfiles(Profile.getAll());
   }, [setProfiles]);
 
   return (
-    <ThemeProvider theme={theme}>
+    <>
       <Section>
         <ProfileDataContainer>
           <ProfileDataLabel>프로필로 연결</ProfileDataLabel>
@@ -369,22 +364,16 @@ const ProfileList = ({ theme }) => {
         </ProfilesContainer>
 
         <AddProfileButton
-          onClick={() => {
-            showModal(
-              <RecoilBridge>
-                <ProfileCreateForm />
-                <Toaster position='bottom-center' style={{ zIndex: '20' }} />
-              </RecoilBridge>,
-              484,
-              { showCloseButton: false }
-            );
-          }}
+          onClick={() => setIsModalOpen(!isModalOpen)}
           icon={<PlusIcon />}
         >
           프로필 추가
         </AddProfileButton>
       </Section>
-    </ThemeProvider>
+
+      <ProfileCreateForm isOpen={isModalOpen} setIsOpen={setIsModalOpen}/>
+      <Toaster position='bottom-center' style={{ zIndex: '20' }} />
+    </>
   );
 };
 

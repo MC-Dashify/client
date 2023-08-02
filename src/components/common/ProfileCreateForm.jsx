@@ -17,6 +17,9 @@ import { useSetRecoilState } from 'recoil';
 import { currentProfileState, profilesState } from '../../contexts/states';
 import AppData from '../../storage/data';
 
+import { AnimatePresence } from 'framer-motion';
+import LayerPopup from './LayerPopup';
+
 const modal = withReactContent(Swal);
 
 const Separator = styled.div`
@@ -188,7 +191,9 @@ const Checkbox = ({ label, checked, setChecked }) => {
 const ProfileCreateForm = ({
   hasSettingButton,
   submitButtonText,
-  onAfterSubmit
+  onAfterSubmit,
+  isOpen,
+  setIsOpen
 }) => {
   const setProfiles = useSetRecoilState(profilesState);
   const setCurrentProfiles = useSetRecoilState(currentProfileState);
@@ -315,10 +320,8 @@ const ProfileCreateForm = ({
       });
   };
 
-  return (
-    <Section $gap='32px'>
-      <FullLogo />
-
+  const form = (
+    <>
       <InputFieldContainer>
         <InputFieldBox label='프로필 이름'>
           <InputField
@@ -374,7 +377,29 @@ const ProfileCreateForm = ({
           {submitButtonText || '생성'}
         </Button>
       </ButtonContainer>
-    </Section>
+    </>
+  );
+
+  return (
+    setIsOpen ?
+    (
+      <AnimatePresence mode=''>
+        {isOpen &&
+          <LayerPopup
+            title='프로필 생성'
+            onClose={() => setIsOpen(false)}
+          >
+            {form}
+          </LayerPopup>
+        }
+      </AnimatePresence>
+    ):
+    (
+      <Section $gap='32px'>
+        <FullLogo />
+        {form}
+      </Section>
+    )
   );
 };
 
