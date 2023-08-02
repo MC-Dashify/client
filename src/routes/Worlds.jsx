@@ -7,7 +7,6 @@ import DashboardSummary from '../components/dashboard/DashboardSummary';
 import Searchbar from '../components/common/Searchbar';
 import { worldsState } from '../contexts/states';
 import { useRecoilValue } from 'recoil';
-import { Toaster } from 'react-hot-toast';
 
 const WorldsContainer = styled.div`
   display: flex;
@@ -65,17 +64,11 @@ const NameDisplay = styled.div`
   letter-spacing: -0.48px;
 `;
 
-const WorldInfoContainer = ({ uuid, name }) => {
-  const theme = useContext(ThemeContext)
-  const [isOpen, setIsOpen] = useState(false)
-
+const WorldInfoContainer = ({ uuid, name, onClick }) => {
   return (
     <>
-      <WorldInfoModal uuid={uuid} name={name} theme={theme} isOpen={isOpen} setIsOpen={setIsOpen}/>
-      <Toaster position='bottom-center' style={{ zIndex: '20' }} />
-
       <WorldContainer
-        onClick={() => setIsOpen(!isOpen)}
+        onClick={onClick}
       >
         <UIDDisplay>{uuid}</UIDDisplay>
         <NameDisplay>{name}</NameDisplay>
@@ -123,13 +116,14 @@ const ModalGamerulesSeparator = styled.div`
   background-color: ${({ theme }) => theme.modal.separator};
 `;
 
-const WorldInfoModal = ({ uuid, name, theme, isOpen, setIsOpen }) => {
+const WorldInfoModal = ({ uuid, isOpen, setIsOpen }) => {
   const [rightGamerules, setRightGamerules] = useState([]);
   const [leftGamerules, setLeftGamerules] = useState([]);
   const worlds = useRecoilValue(worldsState);
   const world = worlds[uuid];
 
   useEffect(() => {
+    if (!world) return
     const right = Object.keys(world.gamerule);
     const left = right.splice(right.length / 2);
 
@@ -141,8 +135,7 @@ const WorldInfoModal = ({ uuid, name, theme, isOpen, setIsOpen }) => {
     <AnimatePresence mode=''>
       {isOpen &&
         <LayerPopup
-          width={'80rem'}
-          title={name}
+          title={world.name}
           onClose={() => setIsOpen(false)}
           footer={<div>{uuid}</div>}
         >
@@ -293,6 +286,9 @@ const Worlds = () => {
   const worldDetails = useRecoilValue(worldsState);
   const worlds = useMemo(() => Object.values(worldDetails), [worldDetails]);
 
+  const [isOpen, setIsOpen] = useState(false);
+  const [uuid, setUuid] = useState(null);
+
   useEffect(() => {
     // 이 컴포넌트에서 DashboardLayout으로 정보 새로 고침 함수를 넘겨야 합니다
     // TODO 정보 새로 고침
@@ -305,6 +301,7 @@ const Worlds = () => {
         <DashboardSummary label='세계 개수' value={worlds.length} />
       </OverviewContainer>
       <WorldsListContainer>
+        <WorldInfoModal uuid={uuid} isOpen={isOpen} setIsOpen={setIsOpen}/>
         <Searchbar
           selectedValue={selectedFilter}
           setSelectedValue={setSelectedFilter}
@@ -327,7 +324,15 @@ const Worlds = () => {
             return true;
           })
           .map(({ uuid, name }, index) => (
-            <WorldInfoContainer key={index} uuid={uuid} name={name} />
+            <WorldInfoContainer
+              key={index}
+              uuid={uuid}
+              name={name}
+              onClick={() => {
+                setUuid(uuid)
+                setIsOpen(true)
+              }}
+            />
           ))}
       </WorldsListContainer>
     </WorldsContainer>
