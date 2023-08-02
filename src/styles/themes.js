@@ -37,9 +37,7 @@ const dark = {
       text: 'white'
     },
 
-    link: css`
-      background: linear-gradient(135deg, rgba(0, 0, 0, 0.20) 0%, rgba(0, 0, 0, 0.00) 100%), #1976D2;
-    `,
+    link: blue[700],
 
     profile: {
       bg: grey[800],
@@ -58,9 +56,10 @@ const dark = {
     }
   },
 
-  textinput: {
+  input: {
     bg: grey[900],
     focusOutline: primary[500]
+    // TODO: focusBg, hoverBg
   },
 
   divider: {
@@ -77,14 +76,16 @@ const dark = {
 
     primary: {
       bg: primary[700],
-      text: grey[300]
-      // TODO hoverBg, activeBg
+      text: common.white,
+      hoverBg: primary[800],
+      activeBg: primary[900]
     },
 
     secondary: {
       bg: grey[700],
-      text: grey[300]
-      // TODO hoverBg, activeBg
+      text: grey[300],
+      hoverBg: grey[800],
+      activeBg: grey[900]
     },
 
     tertiary: {
@@ -92,7 +93,36 @@ const dark = {
       text: grey[300],
       hoverBg: grey[800],
       activeBg: grey[700]
+    },
+
+    disabled: {
+      bg: grey[800],
+      text: common.white
+    },
+
+    danger: {
+      bg: red[900],
+      text: red[50],
+      hoverBg: red[700],
+      activeBg: red[600]
     }
+  },
+
+  overview: {
+    red: red[300],
+    yellow: orange[300],
+    green: green[500],
+    blue: blue[600],
+    gray: grey[800]
+  },
+
+  chart: {
+    bg: grey[900]
+  },
+
+  warning: {
+    bg: common.black,
+    top: red[300]
   }
 };
 
@@ -109,9 +139,7 @@ const light = {
       text: 'black'
     },
 
-    link: css`
-      background: linear-gradient(135deg, rgba(0, 0, 0, 0.20) 0%, rgba(0, 0, 0, 0.00) 100%), #64B5F6;
-    `,
+    link: blue[300],
 
     profile: {
       bg: primary[50],
@@ -130,9 +158,10 @@ const light = {
     }
   },
 
-  textinput: {
+  input: {
     bg: grey[100],
     focusOutline: primary[500]
+    // TODO: focusBg, hoverBg
   },
 
   divider: {
@@ -149,22 +178,53 @@ const light = {
 
     primary: {
       bg: primary[400],
-      text: common.white
-      // TODO: hoverBg, activeBg
+      text: common.white,
+      hoverBg: primary[500],
+      activeBg: primary[600]
     },
 
     secondary: {
-      bg: grey[700],
-      text: common.white
-      // TODO: hoverBg, activeBg
+      bg: blue[50],
+      text: blue[900],
+      hoverBg: blue[100],
+      activeBg: blue[200]
     },
 
     tertiary: {
       bg: grey[100],
       text: common.black,
-      hoverBg: grey[400], // TODO: hoverBg, activeBg
-      activeBg: grey[700]
+      hoverBg: grey[200], // TODO: hoverBg, activeBg
+      activeBg: grey[300]
+    },
+
+    disabled: {
+      bg: grey[400],
+      text: common.white
+    },
+
+    danger: {
+      bg: red[50],
+      text: red[900],
+      hoverBg: red[100],
+      activeBg: red[200]
     }
+  },
+
+  overview: {
+    red: red[300],
+    yellow: orange[300],
+    green: green[400],
+    blue: blue[500],
+    gray: grey[500]
+  },
+
+  chart: {
+    bg: common.white
+  },
+
+  warning: {
+    bg: red[50],
+    top: red[900]
   }
 };
 

@@ -60,11 +60,11 @@ const styles = {
 
     &:hover,
     &:focus-visible {
-      background-color: rgba(225, 237, 255, 0.5);
+      background: ${({ theme }) => theme.button.secondary.hoverBg};
     }
 
     &:active {
-      background-color: rgba(225, 237, 255, 0.55);
+      background: ${({ theme }) => theme.button.secondary.activeBg};
     }
   `,
 
@@ -75,11 +75,11 @@ const styles = {
 
     &:hover,
     &:focus-visible {
-      background-color: rgb(98, 153, 237, 0.7);
+      background: ${({ theme }) => theme.button.primary.hoverBg};
     }
 
     &:active {
-      background-color: rgb(98, 153, 237, 0.6);
+      background: ${({ theme }) => theme.button.primary.activeBg};
     }
   `,
 

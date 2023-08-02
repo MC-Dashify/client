@@ -1,8 +1,8 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { AnimatePresence } from 'framer-motion';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Logo80, LogoText } from '../assets/logo';
-import { styled } from 'styled-components';
+import { ThemeContext, ThemeProvider, styled } from 'styled-components';
 import Select from 'react-select';
 import { open } from '@tauri-apps/api/shell';
 import Swal from 'sweetalert2';
@@ -15,13 +15,13 @@ import { checkUpdate, installUpdate } from '@tauri-apps/api/updater';
 import { relaunch } from '@tauri-apps/api/process';
 import { toast } from 'react-hot-toast';
 import {
-  useRecoilBridgeAcrossReactRoots_UNSTABLE,
-  useRecoilState,
   useSetRecoilState
 } from 'recoil';
 import { platform } from '@tauri-apps/api/os';
 import { getVersion } from '@tauri-apps/api/app';
 import { trapPauseState } from '../contexts/states';
+
+import Theme from '../storage/theme';
 
 const WebsiteInfoContainer = styled.div`
   display: flex;

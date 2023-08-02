@@ -1,5 +1,6 @@
-import styled from 'styled-components';
+import styled, { ThemeContext } from 'styled-components';
 import Select from 'react-select';
+import { useContext } from 'react';
 
 const SearchbarContainer = styled.div`
   display: flex;
@@ -8,7 +9,7 @@ const SearchbarContainer = styled.div`
   gap: 14px;
   align-self: stretch;
   border-radius: 12px;
-  background: #f7f7f7;
+  background: ${({ theme }) => theme.input.bg};
 
   height: 44px;
   box-sizing: border-box;
@@ -25,8 +26,7 @@ const Separator = styled.div`
 
 const Searchbox = styled.input`
   width: 100%;
-
-  color: #000;
+  color: ${({ theme }) => theme.text};
   text-shadow: 0px 0px 16px 0px rgba(0, 0, 0, 0.15);
   font-size: 16px;
   font-weight: 500;
@@ -50,6 +50,8 @@ const Searchbar = ({
   placeholder = '검색',
   options = []
 }) => {
+  const theme = useContext(ThemeContext);
+
   return (
     <SearchbarContainer $hasOptions={options.length > 0}>
       {options.length > 0 && <>
@@ -64,8 +66,7 @@ const Searchbar = ({
               width: '98px',
               boxSizing: 'content-box',
               paddingLeft: '10px',
-
-              color: '#000',
+              color: theme.text,
               textShadow: '0px 0px 16px 0px rgba(0, 0, 0, 0.15)',
               fontSize: '16px',
               fontWeight: 500,
@@ -74,15 +75,15 @@ const Searchbar = ({
             }),
             option: (styles, { data, isFocused }) => ({
               ...styles,
-              color: 'black',
-              backgroundColor: isFocused ? '#e7e7e7' : '#f7f7f7',
+              color: theme.text,
+              backgroundColor: isFocused ? theme.input.focusBg : theme.input.bg,
               '&:hover, &:active': {
-                backgroundColor: '#e7e7e7'
+                backgroundColor: theme.input.hoverBg
               }
             }),
             menu: (styles) => ({
               ...styles,
-              backgroundColor: '#f7f7f7'
+              backgroundColor: theme.input.bg
             })
           }}
           options={options}

@@ -116,7 +116,7 @@ const AsideMenuLink = styled(Link)`
     width: 100%;
     height: 100%;
     z-index: -1;
-    ${({ theme }) => theme.aside.link}
+    background: linear-gradient(135deg, rgba(0, 0, 0, 0.20) 0%, rgba(0, 0, 0, 0.00) 100%), ${({ theme }) => theme.aside.link};
     background-blend-mode: overlay, normal;
     opacity: 0;
     transition: opacity 0.4s var(--transition-timing-function);
@@ -357,6 +357,7 @@ const DashboardLayout = () => {
   const reloadTask = useCallback(
     async (profile = currentProfile) => {
       try {
+        if (!profile?.address) return
         await ping(profile);
 
         // TODO: 개선 필요

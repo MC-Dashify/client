@@ -24,17 +24,19 @@ const StatCardContainer = styled.div`
 `;
 
 const StatCardBox = styled.div`
-  @property --topLeftColor {
+  @property --근원컬러 { // 참신하게 한글코딩을 하라고 지시하셔서...
     syntax: '<color>';
     initial-value: white;
     inherits: false;
   }
 
-  @property --bottomRightColor {
-    syntax: '<color>';
-    initial-value: white;
-    inherits: false;
-  }
+  ${({ $colorType, theme }) => css`--근원컬러: ${theme.overview[$colorType]};`}
+
+  transition: --근원컬러 1s ease-in-out;
+  background: var(--근원컬러);
+  background: linear-gradient(316deg, rgba(0, 0, 0, 0.30) 0%, rgba(0, 0, 0, 0.00) 100%),  var(--근원컬러);
+  background-blend-mode: overlay, normal;
+  background-origin: border-box;
 
   display: flex;
   padding: 32px;
@@ -49,49 +51,7 @@ const StatCardBox = styled.div`
   line-height: 100%;
   border-radius: 22px;
   border: 2px solid rgba(0, 0, 0, 0.15);
-  transition: --topLeftColor 1s ease-in-out, --bottomRightColor 1s ease-in-out;
-  background: var(--topLeftColor);
-  background: linear-gradient(
-    135deg,
-    var(--topLeftColor) 0%,
-    var(--bottomRightColor) 100%
-  );
   background-origin: border-box;
-
-  ${({ $colorType }) => {
-    switch ($colorType) {
-      case 'red':
-        return css`
-          --topLeftColor: #dd717c;
-          --bottomRightColor: #bd3333;
-        `;
-
-      case 'yellow':
-        return css`
-          --topLeftColor: #f1d152;
-          --bottomRightColor: #da873b;
-        `;
-
-      case 'green':
-        return css`
-          --topLeftColor: #55a981;
-          --bottomRightColor: #357a59;
-        `;
-
-      case 'blue':
-        return css`
-          --topLeftColor: #428dbc;
-          --bottomRightColor: #0f6093;
-        `;
-
-      case 'gray':
-      default:
-        return css`
-          --topLeftColor: #cacaca;
-          --bottomRightColor: #8d8d8d;
-        `;
-    }
-  }}
 `;
 
 const StatCardLabel = styled.div`
@@ -135,9 +95,10 @@ const ChartCard = styled.div`
   padding: 48px 56px;
   gap: 32px;
   border-radius: 22px;
-  background: linear-gradient(135deg, #fff 0%, #f0f0f0 100%);
   border: 2px solid rgba(0, 0, 0, 0.15);
   background-origin: border-box;
+
+  background: ${({ theme }) => theme.chart.bg};
 `;
 
 const ChartSectionBox = styled.div`
@@ -185,7 +146,6 @@ const EmptyChartContainer = styled.div`
   flex: 1 0 0;
 
   font-size: 128px;
-  color: #111;
 `;
 
 /**
