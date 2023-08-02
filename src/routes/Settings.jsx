@@ -2,7 +2,7 @@ import { useState, useEffect, useContext } from 'react';
 import { AnimatePresence } from 'framer-motion';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Logo80, LogoText } from '../assets/logo';
-import { ThemeContext, ThemeProvider, styled } from 'styled-components';
+import { ThemeContext, styled } from 'styled-components';
 import Select from 'react-select';
 import { open } from '@tauri-apps/api/shell';
 import Swal from 'sweetalert2';
@@ -86,6 +86,7 @@ const SettingOption = ({
   defaultValue
 }) => {
   const [value, setValue] = useState(defaultValue || options[0]);
+  const theme = useContext(ThemeContext);
 
   return (
     <SettingOptionContainer>
@@ -101,9 +102,27 @@ const SettingOption = ({
       <Select
         styles={{
           control: () => ({
+            color: theme.text,
             display: 'flex',
             border: 'none',
             width: '175px'
+          }),
+          option: (styles) => ({
+            ...styles,
+            '&:hover, &:focus-visible': {
+              background: theme.input.hoverBg
+            },
+            '&:active': {
+              background: theme.input.activeBg
+            }
+          }),
+          menu: (styles) => ({
+            ...styles,
+            background: theme.input.bg
+          }),
+          singleValue: (styles) => ({
+            ...styles,
+            color: theme.input.text
           })
         }}
         components={{

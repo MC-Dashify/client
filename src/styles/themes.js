@@ -58,8 +58,9 @@ const dark = {
 
   input: {
     bg: grey[900],
-    focusOutline: primary[500]
-    // TODO: focusBg, hoverBg
+    focusOutline: primary[500],
+    selectBg: blue[700],
+    hoverBg: grey[800]
   },
 
   divider: {
@@ -93,6 +94,14 @@ const dark = {
       text: grey[300],
       hoverBg: grey[800],
       activeBg: grey[700]
+    },
+
+    outline: {
+      bg: common.black,
+      text: grey[300],
+      border: grey[300],
+      hoverBg: common.black,
+      activeBg: grey[900]
     },
 
     disabled: {
@@ -160,8 +169,9 @@ const light = {
 
   input: {
     bg: grey[100],
-    focusOutline: primary[500]
-    // TODO: focusBg, hoverBg
+    focusOutline: primary[500],
+    selectBg: blue[500],
+    hoverBg: grey[300]
   },
 
   divider: {
@@ -200,6 +210,14 @@ const light = {
     disabled: {
       bg: grey[400],
       text: common.white
+    },
+
+    outline: {
+      bg: common.white,
+      text: common.black,
+      border: common.black,
+      hoverBg: common.white,
+      activeBg: grey[50]
     },
 
     danger: {

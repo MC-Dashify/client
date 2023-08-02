@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react';
-import styled from 'styled-components';
+import { useContext, useEffect, useState } from 'react';
+import styled, { ThemeContext } from 'styled-components';
 import Select from 'react-select';
 
 import { EyeIcon, SlashedEyeIcon } from '../../assets/32x-icons';
@@ -118,6 +118,8 @@ const DashboardPageTitle = ({ reloadTask }) => {
     autoRefreshOptions.find((option) => option.value === refreshRate) ??
     autoRefreshOptions[4];
 
+  const theme = useContext(ThemeContext)
+
   return (
     <Section>
       <TitleContainer>
@@ -149,6 +151,31 @@ const DashboardPageTitle = ({ reloadTask }) => {
             setRefreshRate(option.value);
             setGlobalRefreshRate(option.value);
             AppData.set('settings.auto_refresh_rate', option.value);
+          }}
+          styles={{
+            control: (style) => ({
+              ...style,
+              background: 'transparent',
+              border: 'none',
+              height: '24px'
+            }),
+            menu: (style) => ({
+              ...style,
+              background: theme.input.bg
+            }),
+            option: (styles, { isFocused, isSelected }) => ({
+              ...styles,
+              color: theme.text,
+              backgroundColor: isSelected ? theme.input.selectBg : theme.input.bg,
+              '&:hover, &:active': { backgroundColor: theme.input.hoverBg }
+            }),
+            indicatorSeparator: () => ({
+              display: 'none'
+            }),
+            singleValue: (style) => ({
+              ...style,
+              color: theme.input.text
+            })
           }}
         />
         {/* TODO 이벤트 받아서 주기 설정(페이지별로 다르게) */}

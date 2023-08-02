@@ -57,7 +57,7 @@ const Searchbar = ({
       {options.length > 0 && <>
         <Select
           styles={{
-            control: (baseStyles, state) => ({
+            control: (baseStyles) => ({
               ...baseStyles,
               backgroundColor: 'transparent',
               border: 'none',
@@ -73,17 +73,19 @@ const Searchbar = ({
               lineHeight: '100%',
               letterSpacing: '-0.176px'
             }),
-            option: (styles, { data, isFocused }) => ({
-              ...styles,
-              color: theme.text,
-              backgroundColor: isFocused ? theme.input.focusBg : theme.input.bg,
-              '&:hover, &:active': {
-                backgroundColor: theme.input.hoverBg
-              }
+            option: (styles, { isFocused, isSelected }) => ({
+                ...styles,
+                color: theme.text,
+                backgroundColor: isSelected ? theme.input.selectBg : theme.input.bg,
+                '&:hover, &:active': { backgroundColor: theme.input.hoverBg }
             }),
             menu: (styles) => ({
               ...styles,
               backgroundColor: theme.input.bg
+            }),
+            singleValue: (styles) => ({
+              ...styles,
+              color: theme.input.text
             })
           }}
           options={options}
