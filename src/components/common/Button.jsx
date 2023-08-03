@@ -1,9 +1,11 @@
-import styled, { css } from "styled-components";
+import styled, { css } from 'styled-components';
 
 const ButtonBox = styled.button`
   display: flex;
   border-radius: 8px;
   border: none;
+  background: ${({ theme }) => theme.button.unset.bg};
+  color: ${({ theme }) => theme.button.unset.text};
   gap: 8px;
   justify-content: center;
   align-items: center;
@@ -22,19 +24,21 @@ const ButtonBox = styled.button`
     css`
       &:hover,
       &:focus-visible {
-        background-color: rgba(0, 0, 0, 0.05);
+        background-color: ${({ theme }) => theme.button.unset.hoverBg};
       }
 
       &:active {
-        background-color: rgba(0, 0, 0, 0.1);
+        background-color: ${({ theme }) => theme.button.unset.activeBg};
       }
     `}
 `;
 
 const styles = {
   outline: css`
-    border: 2px solid #000;
-    box-shadow: 0px 0px 8px 0px rgba(0, 0, 0, 0.1), 0px 0px 8px 0px rgba(0, 0, 0, 0.15) inset;
+    background: ${({ theme }) => theme.button.outline.bg};
+    border: 2px solid ${({ theme }) => theme.button.outline.border};
+    box-shadow: 0px 0px 8px 0px rgba(0, 0, 0, 0.1),
+      0px 0px 8px 0px rgba(0, 0, 0, 0.15) inset;
     transition-property: box-shadow, background-color, transform;
 
     &:hover,
@@ -43,37 +47,41 @@ const styles = {
     }
 
     &:active {
+      background: ${({ theme }) => theme.button.outline.activeBg};
       box-shadow: 0px 0px 6px 0px rgba(0, 0, 0, 0.4);
       transform: scale(0.98);
     }
   `,
 
   filled: css`
-    background: #e1edff;
-    color: #2255a1;
+    /* background: #e1edff;
+    color: #2255a1; */
+
+    background: ${({ theme }) => theme.button.secondary.bg};
+    color: ${({ theme }) => theme.button.secondary.text};
 
     &:hover,
     &:focus-visible {
-      background-color: rgba(225, 237, 255, 0.5);
+      background: ${({ theme }) => theme.button.secondary.hoverBg};
     }
 
     &:active {
-      background-color: rgba(225, 237, 255, 0.55);
+      background: ${({ theme }) => theme.button.secondary.activeBg};
     }
   `,
 
   accent: css`
-    background: #6299ed;
-    color: #ffffff;
+    background: ${({ theme }) => theme.button.primary.bg};
+    color: ${({ theme }) => theme.button.primary.text};
     box-shadow: 0px 0px 14px 0px rgba(98, 153, 237, 0.25);
 
     &:hover,
     &:focus-visible {
-      background-color: rgb(98, 153, 237, 0.7);
+      background: ${({ theme }) => theme.button.primary.hoverBg};
     }
 
     &:active {
-      background-color: rgb(98, 153, 237, 0.6);
+      background: ${({ theme }) => theme.button.primary.activeBg};
     }
   `,
 
@@ -90,11 +98,32 @@ const styles = {
       background-color: rgb(255, 225, 232, 0.6);
     }
   `,
+
+  hidden: css`
+    width: 0px;
+    height: 0px;
+    
+    min-width: 0px;
+    min-height: 0px;
+
+    padding: 0;
+    margin: 0;
+  `
 };
 
-const Button = ({ styleType, padding = "16px 36px", children, icon, ...props }) => {
+const Button = ({
+  styleType,
+  padding = '16px 36px',
+  children,
+  icon,
+  ...props
+}) => {
   return (
-    <ButtonBox $additionalStyle={styles[styleType]} $padding={padding} {...props}>
+    <ButtonBox
+      $additionalStyle={styles[styleType]}
+      $padding={padding}
+      {...props}
+    >
       {icon}
       {children}
     </ButtonBox>

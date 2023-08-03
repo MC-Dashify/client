@@ -25,7 +25,7 @@ const LayerPopupBox = styled(motion.div)`
   z-index: 1100;
   padding: 42px;
   border-radius: 16px;
-  background: #fff;
+  background: ${({ theme }) => theme.modal.bg};
   box-shadow: 0px 0px 14px 0px rgba(0, 0, 0, 0.2);
   max-height: 90vh;
   max-width: 90vw;
@@ -41,7 +41,6 @@ const Header = styled.div`
   justify-content: space-between;
   gap: 10px;
   padding-bottom: 10px;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.2);
 `;
 
 const HeaderTitle = styled.h3`
@@ -58,6 +57,8 @@ const CloseIconButton = styled.button`
   cursor: pointer;
   border-radius: 50%;
   transition: background-color 0.2s ease-in;
+
+  color: ${({ theme }) => theme.text};
 
   svg {
     opacity: 0.4;
@@ -79,6 +80,7 @@ const Content = styled.div`
   flex-direction: column;
   gap: 32px;
   overflow-y: auto;
+  overflow-x: hidden;
   padding: 4px;
 
   &::-webkit-scrollbar {
@@ -103,7 +105,14 @@ const Footer = styled.div`
   opacity: 0.6;
 `;
 
-const LayerPopup = ({ title, children, footer, width, height, onClose }) => {
+const LayerPopup = ({
+  title,
+  children,
+  footer,
+  width,
+  height,
+  onClose,
+}) => {
   const isTrapPaused = useRecoilValue(trapPauseState);
 
   useEffect(() => {
@@ -146,9 +155,12 @@ const LayerPopup = ({ title, children, footer, width, height, onClose }) => {
           <Header>
             <HeaderTitle>{title}</HeaderTitle>
 
-            <CloseIconButton onClick={onClose}>
-              <XIcon />
-            </CloseIconButton>
+            {
+              onClose &&
+              <CloseIconButton onClick={onClose}>
+                <XIcon />
+              </CloseIconButton>
+            }
           </Header>
 
           <Content>{children}</Content>
@@ -176,8 +188,8 @@ const SectionTitleWrapper = styled.div`
 
 const SectionTitleDecoration = styled.div`
   flex: 1;
-  height: 1px;
-  background-color: rgba(0, 0, 0, 0.2);
+  height: 1px; // TODO: 창의 세로 길이를 조절하면 상대적으로 굵어 보이거나 얇아 보이는 현상이 일어남.
+  background-color: ${({ theme }) => theme.modal.separator};
 `;
 
 const PopupSection = ({ title, gap = '18px', titleMargin = '0', children }) => {

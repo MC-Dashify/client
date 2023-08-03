@@ -1,6 +1,6 @@
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useContext } from 'react';
 import { Outlet, Link, useLocation, BrowserRouter } from 'react-router-dom';
-import { css, styled } from 'styled-components';
+import { css, styled, ThemeContext } from 'styled-components';
 
 import { Logo, LogoText } from '../assets/logo';
 import {
@@ -52,7 +52,7 @@ const Aside = styled.aside`
   gap: 4px;
   height: 100%;
   width: 260px;
-  background: #f9f9f9;
+  background: ${({ theme }) => theme.aside.bg};
   border-right: 1px solid rgba(0, 0, 0, 0.1);
   user-select: none;
 `;
@@ -88,9 +88,9 @@ const AsideMenuLink = styled(Link)`
   padding: 10px 16px;
   gap: 10px;
   text-decoration: none;
-  color: #000;
   font-weight: 500;
   font-size: 18px;
+  color: ${({ theme }) => theme.text};
   line-height: 100%;
   border-radius: 14px;
   transition: all var(--transition-duration) var(--transition-timing-function);
@@ -116,7 +116,8 @@ const AsideMenuLink = styled(Link)`
     width: 100%;
     height: 100%;
     z-index: -1;
-    background: linear-gradient(92.51deg, #3b86f8 0%, #87b7ff 100%);
+    background: linear-gradient(135deg, rgba(0, 0, 0, 0.20) 0%, rgba(0, 0, 0, 0.00) 100%), ${({ theme }) => theme.aside.link};
+    background-blend-mode: overlay, normal;
     opacity: 0;
     transition: opacity 0.4s var(--transition-timing-function);
   }
@@ -172,7 +173,8 @@ const ProfileChangerBox = styled.button`
   padding: 10px 16px;
   gap: 10px;
   width: 100%;
-  background: #e1edff;
+  color: ${({ theme }) => theme.aside.profile.text};
+  background: ${({ theme }) => theme.aside.profile.bg};
   border-radius: 14px;
   line-height: 100%;
   border: none;
@@ -180,18 +182,18 @@ const ProfileChangerBox = styled.button`
   transition: background-color 0.4s cubic-bezier(0, 0.2, 0.3, 0.95);
 
   svg {
-    color: #2255a1;
+    color: ${({ theme }) => theme.aside.profile.icon};
     width: 16px;
     height: 16px;
   }
 
   &:hover,
   &:focus-visible {
-    background-color: #d9e4f5;
+    background-color: rgba(0, 0, 0, 0.02); // TODO: theme
   }
 
   &:active {
-    background-color: #c9d7eb;
+    background-color: rgba(255, 255, 255, 0.05); // TODO: theme
   }
 `;
 
@@ -216,7 +218,7 @@ const ProfileAddress = styled.div`
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;
-  color: #6594cb;
+  color: ${({ theme }) => theme.aside.profile.address};
   font-size: 12px;
 `;
 
@@ -225,18 +227,23 @@ const ProfileChanger = () => {
   const hideAddress = useRecoilValue(hideAddressState);
   const RecoilBridge = useRecoilBridgeAcrossReactRoots_UNSTABLE();
 
+  const theme = useContext(ThemeContext);
+
   return (
     <ProfileChangerBox
       onClick={() => {
         showModal(
           <RecoilBridge>
             <BrowserRouter>
-              <ProfileList />
+              <ProfileList theme={theme} />
             </BrowserRouter>
-            <Toaster position='bottom-center' style={{ zIndex: '20' }} />
           </RecoilBridge>,
           484,
-          { showCloseButton: false }
+          {
+            showCloseButton: false,
+            background: theme.modal.bg,
+            color: theme.modal.text
+          }
         );
       }}
     >
@@ -252,7 +259,8 @@ const ProfileChanger = () => {
   );
 };
 
-const Sidebar = ({ connected, setConnected, refreshFn }) => {
+const Sidebar = (props) => {
+  const theme = useContext(ThemeContext);
   const location = useLocation();
 
   const menus = [
@@ -273,8 +281,8 @@ const Sidebar = ({ connected, setConnected, refreshFn }) => {
       <AsideTopContainer>
         <Link to='/'>
           <AsideLogoContainer>
-            <Logo background='black' foreground='white' />
-            <LogoText color='black' />
+            <Logo background={theme.aside.logo.bg} foreground={theme.aside.logo.fg} />
+            <LogoText color={theme.aside.logo.text} />
           </AsideLogoContainer>
         </Link>
         <AsideMenuContainer>
@@ -348,6 +356,7 @@ const DashboardLayout = () => {
   const reloadTask = useCallback(
     async (profile = currentProfile) => {
       try {
+        if (!profile?.address) return
         await ping(profile);
 
         // TODO: 개선 필요

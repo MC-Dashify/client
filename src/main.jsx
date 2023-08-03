@@ -14,20 +14,16 @@ import {
   Legend,
   defaults as chartDefaults
 } from 'chart.js';
-// import { registerSW } from 'virtual:pwa-register';
-
-import App from './App';
-
-import AppData from './storage/data';
-import GlobalStyle, {
-  defaultFontFamily
-} from './components/common/globalstyles';
-import './styles/font-settings.css';
 import { RecoilRoot } from 'recoil';
 import { window as tauriWindow } from '@tauri-apps/api';
 import { TauriEvent } from '@tauri-apps/api/event';
 import { Store } from 'tauri-plugin-store-api';
 import { onUpdaterEvent } from '@tauri-apps/api/updater';
+
+import App from './App';
+
+import { defaultFontFamily } from './components/common/globalstyles';
+import './styles/font-settings.css';
 
 const store = new Store('dashify.dat');
 
@@ -51,13 +47,12 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 
 const components = (
   <React.StrictMode>
-    <GlobalStyle />
-
     <RecoilRoot>
       <BrowserRouter>
         <App />
       </BrowserRouter>
     </RecoilRoot>
+
     <ReactTooltip id='dashify__tooltip' place='bottom' />
     <Toaster position='bottom-center' style={{ zIndex: '20' }} />
   </React.StrictMode>

@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@mui/material": "^5.14.1",
     "@tauri-apps/api": "^1.4.0",
     "@vitejs/plugin-react": "^4.0.1",
     "anser": "^2.1.1",

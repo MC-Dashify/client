@@ -1,6 +1,6 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useContext, useEffect, useMemo, useState } from 'react';
 import { useOutletContext } from 'react-router-dom';
-import styled from 'styled-components';
+import styled, { ThemeContext } from 'styled-components';
 import DashboardSummary from '../components/dashboard/DashboardSummary';
 import {
   BanIcon,
@@ -44,9 +44,9 @@ const ErrorContainer = styled.div`
   flex: 1 0 0;
   border-radius: 0.5rem;
   border: 2px solid rgba(183, 44, 37, 0.2);
-  background: #ffe5e5;
-  box-shadow: 0px 0px 12px 0px rgba(183, 44, 37, 0.1) inset,
-    0px 0px 14px 0px rgba(183, 44, 37, 0.1);
+  background: ${({ theme }) => theme.warning.bg};
+  box-shadow: 0px 0px 12px 0px rgba(183, 28, 28, 0.1) inset,
+    0px 0px 14px 0px rgba(183, 28, 28, 0.1);
 `;
 
 const ErrorContainerTop = styled.div`
@@ -55,7 +55,7 @@ const ErrorContainerTop = styled.div`
   gap: 0.25rem;
 
   div {
-    color: #b72c25;
+    color: ${({ theme }) => theme.warning.top};
     text-shadow: 0px 0px 16px 0px rgba(0, 0, 0, 0.15);
     font-size: 0.875rem;
     font-weight: 700;
@@ -91,7 +91,7 @@ const ChartContainer = styled.div`
   flex: 1 0 0;
   align-self: stretch;
   border-radius: 12px;
-  background: #fbfbfb;
+  background: ${({ theme }) => theme.chart.bg};
 `;
 
 const ChartTopContainer = styled.div`
@@ -172,7 +172,6 @@ const TrafficInfo = ({ address, received, sent }) => {
               received={received}
               sent={sent}
             />{' '}
-            <Toaster position='bottom-center' style={{ zIndex: '20' }} />
           </RecoilBridge>,
           '62.5rem'
         );
@@ -315,6 +314,7 @@ const TrafficInfoModal = ({ address }) => {
 };
 
 const Traffic = () => {
+  const theme = useContext(ThemeContext);
   // eslint-disable-next-line no-unused-vars
   const [refreshFn, setRefreshFn] = useOutletContext();
   const trafficInfo = useRecoilValue(trafficState);
@@ -342,8 +342,6 @@ const Traffic = () => {
     return [send, receive, data.timestamp];
   });
 
-  console.log('Traffic', totalSendReceives, trafficInfo, entries);
-
   useEffect(() => {
     // 이 컴포넌트에서 DashboardLayout으로 정보 새로 고침 함수를 넘겨야 합니다
     // TODO 정보 새로 고침
@@ -356,7 +354,7 @@ const Traffic = () => {
         <DashboardSummary label='커넥션 수' value={entries.length} />
         <ErrorContainer>
           <ErrorContainerTop>
-            <BanIcon color='#B72C25' transform='scale(0.666666666666667)' />
+            <BanIcon color={theme.warning.top} transform='scale(0.666666666666667)' />
             <div>경고</div>
           </ErrorContainerTop>
           <ErrorContainerBottom>
