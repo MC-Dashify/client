@@ -88,7 +88,6 @@ const AsideMenuLink = styled(Link)`
   padding: 10px 16px;
   gap: 10px;
   text-decoration: none;
-  color: #000;
   font-weight: 500;
   font-size: 18px;
   line-height: 100%;

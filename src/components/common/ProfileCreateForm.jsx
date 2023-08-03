@@ -101,6 +101,7 @@ const InputField = styled.input`
   background-color: transparent;
   border: none;
   padding: 12px 0;
+  color: ${({ theme }) => theme.text};
 
   ${({ $width }) =>
     $width

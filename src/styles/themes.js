@@ -182,8 +182,8 @@ const light = {
     unset: {
       bg: 'transparent',
       text: common.black,
-      hoverBg: grey[900], // TODO: hoverBg, activeBg
-      activeBg: grey[800]
+      hoverBg: grey[200], // TODO: hoverBg, activeBg
+      activeBg: grey[300]
     },
 
     primary: {
