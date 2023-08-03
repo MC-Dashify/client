@@ -2,16 +2,11 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import uuid4 from 'uuid4';
 import { styled, css } from 'styled-components';
-import SyntaxHighlighter from 'react-syntax-highlighter';
-import { docco } from 'react-syntax-highlighter/dist/esm/styles/hljs';
-import withReactContent from 'sweetalert2-react-content';
-import Swal from 'sweetalert2';
 import { toast } from 'react-hot-toast';
 
 import Profile from '../../storage/profile';
 import Button from './Button';
 import { FullLogo } from '../../assets/logo';
-import Network from '../../utils/net';
 import { CogIcon } from '../../assets/24x-icons';
 import { useSetRecoilState } from 'recoil';
 import { currentProfileState, profilesState } from '../../contexts/states';
@@ -19,8 +14,7 @@ import AppData from '../../storage/data';
 
 import { AnimatePresence } from 'framer-motion';
 import LayerPopup from './LayerPopup';
-
-const modal = withReactContent(Swal);
+import Connection from '../../routes/Connection';
 
 const Separator = styled.div`
   width: 2px;
@@ -220,112 +214,24 @@ const ProfileCreateForm = ({
     setServerPort(number);
   };
 
-  const handleSubmitButtonClick = () => {
-    if (!/[\S]/g.test(profileName)) {
-      toast.error('프로필 이름을 작성해야 합니다.');
-      return;
+  const createProfile = (profile) => {
+    Profile.add(profile);
+    AppData.set('etc.last_profile', profile.uuid);
+    setProfiles(Profile.getAll());
+    if (hasSettingButton) {
+      setCurrentProfiles(profile);
     }
 
-    toast.loading('서버에 연결 중입니다...', { id: 'profile-adding' });
-
-    Network.ping(
-      serverAddress === '' ? 'localhost' : serverAddress,
-      serverPort === '' ? 8080 : serverPort,
-      securityKey,
-      secureConnection
-    )
-      .then((res) => {
-        if (res.status === 200) {
-          toast.dismiss();
-          const profile = {
-            uuid: uuid4(),
-            name: profileName,
-            address: serverAddress || 'localhost',
-            port: Number.parseInt(serverPort) || 8080,
-            key: securityKey,
-            isSecureConnection: secureConnection
-          };
-
-          Profile.add(profile);
-          AppData.set('etc.last_profile', profile.uuid);
-          setProfiles(Profile.getAll());
-          if (hasSettingButton) {
-            setCurrentProfiles(profile);
-          }
-
-          Swal.close();
-          toast.success('프로필이 추가되었습니다.', { id: 'profile-added' });
-
-          onAfterSubmit && onAfterSubmit();
-        }
-      })
-      .catch((err) => {
-        toast.dismiss();
-        const errorText = `${err.stack}`.replace(/\\n/g, '\n');
-        const copyToClipboard = async () => {
-          const { clipboard } = navigator;
-
-          if (typeof clipboard == 'undefined') {
-            toast.error(
-              '복사에 실패했습니다. 브라우저가 복사 기능을 지원하지 않거나, 애플리케이션이 HTTPS로 연결되지 않았습니다.',
-              { id: 'clipboard' }
-            );
-            return;
-          }
-
-          try {
-            await clipboard.writeText(errorText);
-            toast.success('복사되었습니다.', { id: 'clipboard' });
-          } catch (e) {
-            toast.error('복사에 실패했습니다.', { id: 'clipboard' });
-          }
-        };
-
-        modal.fire({
-          icon: 'error',
-          html: (
-            <div
-              style={{
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'center',
-                alignItems: 'center'
-              }}
-            >
-              <h3>연결 실패</h3>
-              {errorText.includes('418') ? (
-                <>
-                  <p>서버가 Dashify를 비활성화 하였습니다.</p>
-                </>
-              ) : (
-                <>
-                  <p>다음과 같은 오류가 발생하였습니다</p>
-                  <hr />
-                  <SyntaxHighlighter language='js' style={docco}>
-                    {errorText}
-                  </SyntaxHighlighter>
-                  <Button onClick={copyToClipboard}>
-                    <div>클립보드에 복사하기</div>
-                  </Button>
-                </>
-              )}
-            </div>
-          ),
-          width: errorText.includes('418') ? '' : '75%',
-          showConfirmButton: true,
-          showCancelButton: false,
-          timerProgressBar: true,
-          allowEscapeKey: false,
-          allowOutsideClick: false
-        });
-      });
-  };
+    toast.success('프로필이 추가되었습니다.', { id: 'profile-added' });
+    onAfterSubmit && onAfterSubmit();
+  }
 
   const form = (
     <>
       <InputFieldContainer>
         <InputFieldBox label='프로필 이름'>
           <InputField
+            placeholder='로컬호스트'
             value={profileName}
             onChange={(e) => setProfileName(e.target.value)}
           />
@@ -374,9 +280,21 @@ const ProfileCreateForm = ({
           </Link>
         )}
 
-        <Button styleType='accent' onClick={handleSubmitButtonClick}>
-          {submitButtonText || '생성'}
-        </Button>
+        <Connection
+          profile={{
+            uuid: uuid4(),
+            name: profileName,
+            address: serverAddress || 'localhost',
+            port: Number.parseInt(serverPort) || 8080,
+            key: securityKey,
+            isSecureConnection: secureConnection
+          }}
+          child={({ onClick }) =>
+            <Button styleType='accent' onClick={() => onClick(createProfile)}>
+              {submitButtonText || '생성'}
+            </Button>
+          }
+        />
       </ButtonContainer>
     </>
   );
