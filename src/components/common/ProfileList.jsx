@@ -273,7 +273,6 @@ const ProfileList = () => {
       </Section>
 
       <ProfileCreateForm isOpen={isModalOpen} setIsOpen={setIsModalOpen}/>
-      <Toaster position='bottom-center' style={{ zIndex: '20' }} />
     </>
   );
 };

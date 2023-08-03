@@ -172,7 +172,6 @@ const TrafficInfo = ({ address, received, sent }) => {
               received={received}
               sent={sent}
             />{' '}
-            <Toaster position='bottom-center' style={{ zIndex: '20' }} />
           </RecoilBridge>,
           '62.5rem'
         );

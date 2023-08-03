@@ -119,7 +119,6 @@ const Connection = ({ profile, child: Child }) => {
           dialogType === 2 ? <DashifyDisabledError /> : <></>
         )}
       </AnimatePresence>
-      <Toaster position='bottom-center' style={{ zIndex: '20' }} />
     </>
   );
 };

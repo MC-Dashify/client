@@ -236,7 +236,6 @@ const ProfileChanger = () => {
             <BrowserRouter>
               <ProfileList theme={theme} />
             </BrowserRouter>
-            <Toaster position='bottom-center' style={{ zIndex: '20' }} />
           </RecoilBridge>,
           484,
           {
