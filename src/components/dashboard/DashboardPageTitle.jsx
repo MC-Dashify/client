@@ -61,6 +61,8 @@ const AddressHideIconButton = styled.button`
   border-radius: 6px;
   transition: background-color 0.4s ease;
 
+  color: ${({ theme }) => theme.text};
+
   &:hover,
   &:focus-visible {
     background-color: rgba(0, 0, 0, 0.05);
