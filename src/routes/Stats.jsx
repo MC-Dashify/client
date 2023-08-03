@@ -35,7 +35,7 @@ const StatChartBox = styled.div`
   flex-direction: column;
   gap: 18px;
   border-radius: 12px;
-  background: #fbfbfb;
+  background: ${({ theme }) => theme.chart.bg};
 
   grid-area: ${(props) => props.$gridArea};
 `;

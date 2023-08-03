@@ -19,6 +19,7 @@ import Traffic from './routes/Traffic';
 import Console from './routes/Console';
 import Settings from './routes/Settings';
 import InstallPWA from './hooks/pwa';
+import Update from './routes/Update';
 
 const App = () => {
   const location = useLocation();
@@ -67,6 +68,8 @@ const App = () => {
           <Route path='/settings' element={<Settings install={install} />} />
         </Routes>
       )}
+
+      <Update silent={true} />
     </ThemeProvider>
   );
 };

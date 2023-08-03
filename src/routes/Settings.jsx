@@ -1,8 +1,8 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { AnimatePresence } from 'framer-motion';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Logo80, LogoText } from '../assets/logo';
-import { styled } from 'styled-components';
+import { ThemeContext, styled } from 'styled-components';
 import Select from 'react-select';
 import { open } from '@tauri-apps/api/shell';
 import Swal from 'sweetalert2';
@@ -11,17 +11,12 @@ import withReactContent from 'sweetalert2-react-content';
 import Button from '../components/common/Button';
 import LayerPopup, { PopupSection } from '../components/common/LayerPopup';
 import AppData from '../storage/data';
-import { checkUpdate, installUpdate } from '@tauri-apps/api/updater';
-import { relaunch } from '@tauri-apps/api/process';
-import { toast } from 'react-hot-toast';
-import {
-  useRecoilBridgeAcrossReactRoots_UNSTABLE,
-  useRecoilState,
-  useSetRecoilState
-} from 'recoil';
-import { platform } from '@tauri-apps/api/os';
+import { useSetRecoilState } from 'recoil';
 import { getVersion } from '@tauri-apps/api/app';
 import { trapPauseState } from '../contexts/states';
+
+import Theme from '../storage/theme';
+import Update from './Update';
 
 const WebsiteInfoContainer = styled.div`
   display: flex;
@@ -91,6 +86,7 @@ const SettingOption = ({
   defaultValue
 }) => {
   const [value, setValue] = useState(defaultValue || options[0]);
+  const theme = useContext(ThemeContext);
 
   return (
     <SettingOptionContainer>
@@ -106,9 +102,27 @@ const SettingOption = ({
       <Select
         styles={{
           control: () => ({
+            color: theme.text,
             display: 'flex',
             border: 'none',
             width: '175px'
+          }),
+          option: (styles) => ({
+            ...styles,
+            '&:hover, &:focus-visible': {
+              background: theme.input.hoverBg
+            },
+            '&:active': {
+              background: theme.input.activeBg
+            }
+          }),
+          menu: (styles) => ({
+            ...styles,
+            background: theme.input.bg
+          }),
+          singleValue: (styles) => ({
+            ...styles,
+            color: theme.input.text
           })
         }}
         components={{
@@ -181,14 +195,9 @@ const themeOptions = [
 ];
 
 const Modal = ({ install }) => {
-  // const [currentTrapPauseState, setCurrentTrapPauseState] =
-  //   useRecoilState(trapPauseState);
-
   const theme = useContext(ThemeContext);
 
-  const setCurrentTrapPauseState = useSetRecoilState(trapPauseState);
   const [isModalOpen, setIsModalOpen] = useState(true);
-  const [isCheckingUpdate, setIsCheckingUpdate] = useState(false);
   const setThemeState = useSetRecoilState(trapPauseState);
   const navigate = useNavigate();
   const location = useLocation();
@@ -213,157 +222,65 @@ const Modal = ({ install }) => {
     }
   };
 
-  const update = async () => {
-    try {
-      setIsCheckingUpdate(true);
-      toast.dismiss('update-latest');
-      toast.loading('업데이트 확인중...', {
-        id: 'update-checking'
-      });
-
-      const { shouldUpdate, manifest } = await checkUpdate();
-
-      if (shouldUpdate) {
-        setCurrentTrapPauseState({ settings: true });
-        // You could show a dialog asking the user if they want to install the update here.
-        console.log(
-          `Latest Update Info: ${manifest?.version}, ${manifest?.date}, ${manifest?.body}`
-        );
-
-        modal
-          .fire({
-            icon: 'info',
-            html: (
-              <>
-                <h3>업데이트 발견</h3>
-                <p>업데이트를 설치할까요?</p>
-              </>
-            ),
-            showConfirmButton: true,
-            showCancelButton: true,
-            allowEscapeKey: true,
-            allowOutsideClick: false,
-            confirmButtonText: '지금 업데이트',
-            cancelButtonText: '나중에 업데이트',
-            background: theme.modal.bg
-          })
-          .then(async (result) => {
-            toast.dismiss('update-checking');
-
-            console.log(result);
-            /* Read more about isConfirmed, isDenied below */
-            if (result.isConfirmed) {
-              const platformName = await platform();
-
-              modal.fire({
-                icon: 'loading',
-                html: (
-                  <>
-                    <h3>업데이트 설치중</h3>
-                  </>
-                ),
-                showConfirmButton: false,
-                showCancelButton: false,
-                allowEscapeKey: false,
-                allowOutsideClick: false,
-                loading: true,
-                willOpen: () => {
-                  modal.showLoading();
-                }
-              });
-
-              await installUpdate();
-
-              if (platformName !== 'win32') {
-                await relaunch();
-              }
-            }
-          });
-      } else {
-        // XXX toast.promise
-        toast.dismiss('update-checking');
-        toast.success('최신 버전입니다.', {
-          id: 'update-latest'
-        });
-        console.log('No update available');
-      }
-    } catch (error) {
-      console.error(error);
-    }
-    setCurrentTrapPauseState({ settings: false });
-    setIsCheckingUpdate(false);
-  };
-
   return (
-    <ThemeProvider theme={theme}>
-      <AnimatePresence mode='' onExitComplete={goBackward}>
-        {isModalOpen && (
-          <LayerPopup
-            width={'50rem'}
-            title='설정'
-            onClose={() => setIsModalOpen(false)}
-            footer={<div> © 2023 "Dashify" Development Team</div>}
-          >
-            <WebsiteInfoContainer>
-              <Logo80 background={theme.aside.logo.bg} foreground={theme.aside.logo.fg} />
-              <WebsiteInfo>
-                <LogoText />
-                <WebsiteVersion>v{appVersion}</WebsiteVersion>
-              </WebsiteInfo>
-              <Button
-                padding={'8px 16px'}
-                styleType='filled'
-                onClick={() => {
-                  const { hostname, port } = window.location;
-                  !(hostname === 'localhost' && port === '5173')
-                    ? open('https://github.com/MC-Dashify')
-                    : window.open('https://github.com/MC-Dashify', '_blank');
-                }}
-              >
-                GitHub 리포지토리 방문
-              </Button>
-              <Button
-                padding={'8px 16px'}
-                styleType='accent'
-                onClick={async () => {
-                  if (isCheckingUpdate) return;
-                  await update();
-                }}
-              >
-                업데이트 확인
-              </Button>
-            </WebsiteInfoContainer>
+    <AnimatePresence mode='' onExitComplete={goBackward}>
+      {isModalOpen && (
+        <LayerPopup
+          width={'50rem'}
+          title='설정'
+          onClose={() => setIsModalOpen(false)}
+          footer={<div> © 2023 "Dashify" Development Team</div>}
+        >
+          <WebsiteInfoContainer>
+            <Logo80 background={theme.aside.logo.bg} foreground={theme.aside.logo.fg} />
+            <WebsiteInfo>
+              <LogoText />
+              <WebsiteVersion>v{appVersion}</WebsiteVersion>
+            </WebsiteInfo>
+            <Button
+              padding={'8px 16px'}
+              styleType='filled'
+              onClick={() => {
+                const { hostname, port } = window.location;
+                !(hostname === 'localhost' && port === '5173')
+                  ? open('https://github.com/MC-Dashify')
+                  : window.open('https://github.com/MC-Dashify', '_blank');
+              }}
+            >
+              GitHub 리포지토리 방문
+            </Button>
+            <Update />
+          </WebsiteInfoContainer>
 
-            <PopupSection title='외관' gap='0' titleMargin='18px'>
-              <SettingOption
-                optionName='테마'
-                options={themeOptions}
-                onSelect={(newValue) => {
-                  Theme.update(newValue.value);
-                  setThemeState(newValue.value);
-                  window.location.reload();
-                  // XXX select 변경 시 테마도 실시간으로 변경되도록
-                }}
-                defaultValue={themeOptions.find(
-                  (option) => option.value === Theme.get()
-                )}
-              />
-            </PopupSection>
+          <PopupSection title='외관' gap='0' titleMargin='18px'>
+            <SettingOption
+              optionName='테마'
+              options={themeOptions}
+              onSelect={(newValue) => {
+                Theme.update(newValue.value);
+                setThemeState(newValue.value);
+                window.location.reload();
+                // XXX select 변경 시 테마도 실시간으로 변경되도록
+              }}
+              defaultValue={themeOptions.find(
+                (option) => option.value === Theme.get()
+              )}
+            />
+          </PopupSection>
 
-            <PopupSection title='애플리케이션' gap='0' titleMargin='18px'>
-              <SettingButton
-                optionName='모든 데이터 삭제'
-                optionDescription='Dashify에 저장된 모든 로컬 데이터(프로필 등)을 삭제합니다.'
-                styleType='warning'
-                onClick={ClearData}
-              >
-                데이터 삭제
-              </SettingButton>
-            </PopupSection>
-          </LayerPopup>
-        )}
-      </AnimatePresence>
-    </ThemeProvider>
+          <PopupSection title='애플리케이션' gap='0' titleMargin='18px'>
+            <SettingButton
+              optionName='모든 데이터 삭제'
+              optionDescription='Dashify에 저장된 모든 로컬 데이터(프로필 등)을 삭제합니다.'
+              styleType='warning'
+              onClick={ClearData}
+            >
+              데이터 삭제
+            </SettingButton>
+          </PopupSection>
+        </LayerPopup>
+      )}
+    </AnimatePresence>
   );
 };
 

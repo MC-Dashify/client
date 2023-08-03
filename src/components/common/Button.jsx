@@ -35,7 +35,8 @@ const ButtonBox = styled.button`
 
 const styles = {
   outline: css`
-    border: 2px solid #000;
+    background: ${({ theme }) => theme.button.outline.bg};
+    border: 2px solid ${({ theme }) => theme.button.outline.border};
     box-shadow: 0px 0px 8px 0px rgba(0, 0, 0, 0.1),
       0px 0px 8px 0px rgba(0, 0, 0, 0.15) inset;
     transition-property: box-shadow, background-color, transform;
@@ -46,6 +47,7 @@ const styles = {
     }
 
     &:active {
+      background: ${({ theme }) => theme.button.outline.activeBg};
       box-shadow: 0px 0px 6px 0px rgba(0, 0, 0, 0.4);
       transform: scale(0.98);
     }
@@ -60,11 +62,11 @@ const styles = {
 
     &:hover,
     &:focus-visible {
-      background-color: rgba(225, 237, 255, 0.5);
+      background: ${({ theme }) => theme.button.secondary.hoverBg};
     }
 
     &:active {
-      background-color: rgba(225, 237, 255, 0.55);
+      background: ${({ theme }) => theme.button.secondary.activeBg};
     }
   `,
 
@@ -75,11 +77,11 @@ const styles = {
 
     &:hover,
     &:focus-visible {
-      background-color: rgb(98, 153, 237, 0.7);
+      background: ${({ theme }) => theme.button.primary.hoverBg};
     }
 
     &:active {
-      background-color: rgb(98, 153, 237, 0.6);
+      background: ${({ theme }) => theme.button.primary.activeBg};
     }
   `,
 
@@ -95,6 +97,17 @@ const styles = {
     &:active {
       background-color: rgb(255, 225, 232, 0.6);
     }
+  `,
+
+  hidden: css`
+    width: 0px;
+    height: 0px;
+    
+    min-width: 0px;
+    min-height: 0px;
+
+    padding: 0;
+    margin: 0;
   `
 };
 

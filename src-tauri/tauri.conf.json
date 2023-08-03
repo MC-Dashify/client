@@ -8,7 +8,7 @@
   },
   "package": {
     "productName": "Dashify",
-    "version": "1.0.3"
+    "version": "1.0.4"
   },
   "tauri": {
     "allowlist": {
@@ -46,7 +46,7 @@
       "targets": [
         "deb",
         "appimage",
-        "nsis",
+        "msi",
         "app",
         "dmg",
         "updater"

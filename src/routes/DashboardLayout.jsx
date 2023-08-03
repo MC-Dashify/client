@@ -88,9 +88,9 @@ const AsideMenuLink = styled(Link)`
   padding: 10px 16px;
   gap: 10px;
   text-decoration: none;
-  color: #000;
   font-weight: 500;
   font-size: 18px;
+  color: ${({ theme }) => theme.text};
   line-height: 100%;
   border-radius: 14px;
   transition: all var(--transition-duration) var(--transition-timing-function);
@@ -116,7 +116,7 @@ const AsideMenuLink = styled(Link)`
     width: 100%;
     height: 100%;
     z-index: -1;
-    ${({ theme }) => theme.aside.link}
+    background: linear-gradient(135deg, rgba(0, 0, 0, 0.20) 0%, rgba(0, 0, 0, 0.00) 100%), ${({ theme }) => theme.aside.link};
     background-blend-mode: overlay, normal;
     opacity: 0;
     transition: opacity 0.4s var(--transition-timing-function);
@@ -237,7 +237,6 @@ const ProfileChanger = () => {
             <BrowserRouter>
               <ProfileList theme={theme} />
             </BrowserRouter>
-            <Toaster position='bottom-center' style={{ zIndex: '20' }} />
           </RecoilBridge>,
           484,
           {
@@ -357,6 +356,7 @@ const DashboardLayout = () => {
   const reloadTask = useCallback(
     async (profile = currentProfile) => {
       try {
+        if (!profile?.address) return
         await ping(profile);
 
         // TODO: 개선 필요

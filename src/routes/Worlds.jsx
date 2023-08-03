@@ -1,15 +1,12 @@
 import { useContext, useEffect, useMemo, useState } from 'react';
 import { useOutletContext } from 'react-router-dom';
-import styled, { ThemeContext, ThemeProvider } from 'styled-components';
-import { showModal } from '../utils/modal';
+import styled, { ThemeContext } from 'styled-components';
+import { AnimatePresence } from 'framer-motion';
+import LayerPopup, { PopupSection } from '../components/common/LayerPopup';
 import DashboardSummary from '../components/dashboard/DashboardSummary';
 import Searchbar from '../components/common/Searchbar';
 import { worldsState } from '../contexts/states';
-import {
-  useRecoilBridgeAcrossReactRoots_UNSTABLE,
-  useRecoilValue
-} from 'recoil';
-import { Toaster } from 'react-hot-toast';
+import { useRecoilValue } from 'recoil';
 
 const WorldsContainer = styled.div`
   display: flex;
@@ -50,8 +47,7 @@ const WorldContainer = styled.button`
   }
 `;
 
-const 
-UIDDisplay = styled.div`
+const UIDDisplay = styled.div`
   color: ${({ theme }) => theme.text};
   font-size: 14px;
   font-family: 'JetBrains Mono';
@@ -68,67 +64,19 @@ const NameDisplay = styled.div`
   letter-spacing: -0.48px;
 `;
 
-const WorldInfoContainer = ({ uuid, name }) => {
-  const RecoilBridge = useRecoilBridgeAcrossReactRoots_UNSTABLE();
-  const theme = useContext(ThemeContext)
-
+const WorldInfoContainer = ({ uuid, name, onClick }) => {
   return (
-    <WorldContainer
-      onClick={() => {
-        showModal(
-          <RecoilBridge>
-            <WorldInfoModal uuid={uuid} name={name} theme={theme}/>
-            <Toaster position='bottom-center' style={{ zIndex: '20' }} />
-          </RecoilBridge>,
-          '62.5rem',
-          {
-            background: theme.modal.bg,
-          }
-        );
-      }}
-    >
-      <UIDDisplay>{uuid}</UIDDisplay>
-      <NameDisplay>{name}</NameDisplay>
-    </WorldContainer>
+    <>
+      <WorldContainer
+        onClick={onClick}
+      >
+        <UIDDisplay>{uuid}</UIDDisplay>
+        <NameDisplay>{name}</NameDisplay>
+        
+      </WorldContainer>
+    </>
   );
 };
-
-const ModalContainer = styled.div`
-  background-color: ${({ theme }) => theme.modal.bg};
-  color: ${({ theme }) => theme.modal.text};
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: 24px;
-  overflow: hidden;
-`;
-
-const ModalTopContainer = styled.div`
-  display: flex;
-  padding: 0px 0px 10px 0px;
-  align-items: center;
-  align-self: stretch;
-  border-bottom: ${({ theme }) => `1px solid ${theme.modal.separator}`};
-  height: 34px;
-`;
-
-const WorldNameDisplay = styled.div`
-  font-size: 32px;
-  font-weight: 500;
-  line-height: 100%;
-  letter-spacing: -0.64px;
-  width: 100%;
-  text-align: left;
-`;
-
-const ModalBodyContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 42px;
-  flex: 1 0 0;
-  align-self: stretch;
-`;
 
 const ModalStatsContainer = styled.div`
   display: flex;
@@ -168,31 +116,30 @@ const ModalGamerulesSeparator = styled.div`
   background-color: ${({ theme }) => theme.modal.separator};
 `;
 
-const WorldInfoModal = ({ uuid, name, theme }) => {
+const WorldInfoModal = ({ uuid, isOpen, setIsOpen }) => {
   const [rightGamerules, setRightGamerules] = useState([]);
   const [leftGamerules, setLeftGamerules] = useState([]);
   const worlds = useRecoilValue(worldsState);
   const world = worlds[uuid];
 
   useEffect(() => {
+    if (!world) return
     const right = Object.keys(world.gamerule);
     const left = right.splice(right.length / 2);
 
     setLeftGamerules(left);
     setRightGamerules(right);
   }, [world]);
+
   return (
-    <ThemeProvider theme={theme}>
-      <ModalContainer>
-        <ModalTopContainer>
-          <UIDDisplay style={{ opacity: 0.4, lineHeight: '14px' }}>
-            {uuid}
-          </UIDDisplay>
-        </ModalTopContainer>
-        <WorldNameDisplay>{name}</WorldNameDisplay>
-        {world ? (
-          <ModalBodyContainer>
-            <ModalHeading>상태</ModalHeading>
+    <AnimatePresence mode=''>
+      {isOpen &&
+        <LayerPopup
+          title={world.name}
+          onClose={() => setIsOpen(false)}
+          footer={<div>{uuid}</div>}
+        >
+          <PopupSection title='상태' gap='0' titleMargin='18px'>
             <ModalStatsContainer>
               <ModalStatsDisplay name='크기' value={world.size} />
               <ModalStatsDisplay name='엔티티 개수' value={world.entities} />
@@ -202,11 +149,15 @@ const WorldInfoModal = ({ uuid, name, theme }) => {
                 value={world.loadedChunks}
               />
             </ModalStatsContainer>
-            <ModalHeading>설정</ModalHeading>
+          </PopupSection>
+
+          <PopupSection title='설정' gap='0' titleMargin='18px'>
             <ModalStatsContainer>
               <ModalStatsDisplay name='난이도' value={world.difficulty} />
             </ModalStatsContainer>
-            <ModalHeading>게임규칙</ModalHeading>
+          </PopupSection>
+
+          <PopupSection title='게임 규칙' gap='0' titleMargin='18px'>
             <ModalGamerulesContainer>
               <ModalGamerulesInnerContainer>
                 {leftGamerules.map((gamerule, index) => (
@@ -232,42 +183,11 @@ const WorldInfoModal = ({ uuid, name, theme }) => {
                 ))}
               </ModalGamerulesInnerContainer>
             </ModalGamerulesContainer>
-          </ModalBodyContainer>
-        ) : (
-          <WorldNameDisplay>월드 정보를 불러오지 못했습니다</WorldNameDisplay>
-        )}
-      </ModalContainer>
-    </ThemeProvider>
-  );
-};
+          </PopupSection>
 
-const ModalHeadingContainer = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  align-self: stretch;
-`;
-
-const ModalHeadingTitle = styled.div`
-  font-size: 16px;
-  font-weight: 700;
-  line-height: 100%;
-  letter-spacing: -0.32px;
-`;
-
-const ModalHeadingSeparator = styled.div`
-  flex: 1 0;
-  height: 1px;
-  opacity: 0.2;
-  background: ${({ theme }) => theme.modal.separator};
-`;
-
-const ModalHeading = ({ children }) => {
-  return (
-    <ModalHeadingContainer>
-      <ModalHeadingTitle>{children}</ModalHeadingTitle>
-      <ModalHeadingSeparator />
-    </ModalHeadingContainer>
+        </LayerPopup>
+      }
+    </AnimatePresence>
   );
 };
 
@@ -366,6 +286,9 @@ const Worlds = () => {
   const worldDetails = useRecoilValue(worldsState);
   const worlds = useMemo(() => Object.values(worldDetails), [worldDetails]);
 
+  const [isOpen, setIsOpen] = useState(false);
+  const [uuid, setUuid] = useState(null);
+
   useEffect(() => {
     // 이 컴포넌트에서 DashboardLayout으로 정보 새로 고침 함수를 넘겨야 합니다
     // TODO 정보 새로 고침
@@ -378,6 +301,7 @@ const Worlds = () => {
         <DashboardSummary label='세계 개수' value={worlds.length} />
       </OverviewContainer>
       <WorldsListContainer>
+        <WorldInfoModal uuid={uuid} isOpen={isOpen} setIsOpen={setIsOpen}/>
         <Searchbar
           selectedValue={selectedFilter}
           setSelectedValue={setSelectedFilter}
@@ -400,7 +324,15 @@ const Worlds = () => {
             return true;
           })
           .map(({ uuid, name }, index) => (
-            <WorldInfoContainer key={index} uuid={uuid} name={name} />
+            <WorldInfoContainer
+              key={index}
+              uuid={uuid}
+              name={name}
+              onClick={() => {
+                setUuid(uuid)
+                setIsOpen(true)
+              }}
+            />
           ))}
       </WorldsListContainer>
     </WorldsContainer>
