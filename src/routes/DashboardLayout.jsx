@@ -90,6 +90,7 @@ const AsideMenuLink = styled(Link)`
   text-decoration: none;
   font-weight: 500;
   font-size: 18px;
+  color: ${({ theme }) => theme.text};
   line-height: 100%;
   border-radius: 14px;
   transition: all var(--transition-duration) var(--transition-timing-function);
