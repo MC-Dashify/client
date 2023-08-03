@@ -22,7 +22,6 @@ import { onUpdaterEvent } from '@tauri-apps/api/updater';
 
 import App from './App';
 
-import AppData from './storage/data';
 import { defaultFontFamily } from './components/common/globalstyles';
 import './styles/font-settings.css';
 
