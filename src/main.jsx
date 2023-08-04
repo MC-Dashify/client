@@ -21,6 +21,7 @@ import { Store } from 'tauri-plugin-store-api';
 import { onUpdaterEvent } from '@tauri-apps/api/updater';
 
 import App from './App';
+import AppData from './storage/data';
 
 import { defaultFontFamily } from './components/common/globalstyles';
 import './styles/font-settings.css';
@@ -90,6 +91,10 @@ if (!(hostname === 'localhost' && port === '5173')) {
 }
 
 (async () => {
+  const refreshRate = AppData.get("settings.auto_refresh_rate")
+  if (refreshRate === null) {
+    AppData.set("settings.auto_refresh_rate", 15000)
+  }
   await onUpdaterEvent(({ error, status }) => {
     // This will log all updater events, including status updates and errors.
     console.log('Updater event:', error === null ? status : error);
