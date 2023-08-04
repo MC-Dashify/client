@@ -219,13 +219,13 @@ const Console = () => {
     });
 
     client.addEventListener('message', (event) => {
-      setLogs((before) => [...before.slice(-999), event.data]);
+      setLogs((before) => [...before, event.data]);
     });
 
     setSendCommand(() => (message) => {
       message = message.replace(/\s+/g, ' ');
       if (client.readyState === WebSocket.OPEN) client.send(message);
-      setLogs((before) => [...before.slice(-999), `> ${message}`]);
+      setLogs((before) => [...before, `> ${message}`]);
       setLastSent((last) =>
         last[last.length - 1] === message ? last : [...last, message]
       );
