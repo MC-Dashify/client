@@ -229,6 +229,7 @@ const TrafficInfoModal = ({ address, setAddress }) => {
   
   if (!address) return (<></>);
   const dataset = trafficInfo.map(({ traffic, timestamp }) => {
+    if (!traffic[address]) return [0, 0, timestamp];
     const send = Math.floor((traffic[address].SentBytes * 8) / 1000 * 100) / 100;
     const receive = Math.floor((traffic[address].ReceivedBytes * 8) / 1000 * 100) / 100;
 
