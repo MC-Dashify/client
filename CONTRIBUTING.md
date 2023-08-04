@@ -1,6 +1,6 @@
 # Contributing
 
-<p align="center"><a href="https://github.com/MC-Dashify/launcher/blob/main/CONTRIBUTING.md">English</a> · <a href="https://github.com/MC-Dashify/launcher/blob/main/.github/documents/CONTRIBUTING.ko_KR.md">한국어</a></p>
+<p align="center"><a href="https://github.com/MC-Dashify/client/blob/main/CONTRIBUTING.md">English</a> · <a href="https://github.com/MC-Dashify/client/blob/main/.github/documents/CONTRIBUTING.ko_KR.md">한국어</a></p>
 
 ## Contribution Guidelines
 
@@ -30,13 +30,13 @@ yarn install
 Start the development server
 
 ```shell
-yarn dev
+yarn tauri dev
 ```
 
 Building
 
 ```shell
-yarn build
+yarn tauri build
 ```
 
 ## Code Formatting

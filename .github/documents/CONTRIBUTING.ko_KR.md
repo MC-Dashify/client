@@ -1,6 +1,6 @@
 # Contributing
 
-<p align="center"><a href="https://github.com/MC-Dashify/launcher/blob/main/CONTRIBUTING.md">English</a> · <a href="https://github.com/MC-Dashify/launcher/blob/main/.github/documents/CONTRIBUTING.ko_KR.md">한국어</a></p>
+<p align="center"><a href="https://github.com/MC-Dashify/client/blob/main/CONTRIBUTING.md">English</a> · <a href="https://github.com/MC-Dashify/client/blob/main/.github/documents/CONTRIBUTING.ko_KR.md">한국어</a></p>
 
 ## 기여 가이드라인
 
@@ -30,13 +30,13 @@ yarn install
 개발 서버 시작
 
 ```shell
-yarn dev
+yarn tauri dev
 ```
 
 빌드
 
 ```shell
-yarn build
+yarn tauri build
 ```
 
 ## 코드 포매팅

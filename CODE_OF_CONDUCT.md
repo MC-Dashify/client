@@ -1,6 +1,6 @@
 # Code of Conduct
 
-<p align="center"><a href="https://github.com/MC-Dashify/web/blob/main/CODE_OF_CONDUCT.md">English</a> · <a href="https://github.com/MC-Dashify/web/blob/main/.github/documents/CODE_OF_CONDUCT.ko_KR.md">한국어</a></p>
+<p align="center"><a href="https://github.com/MC-Dashify/client/blob/main/CODE_OF_CONDUCT.md">English</a> · <a href="https://github.com/MC-Dashify/client/blob/main/.github/documents/CODE_OF_CONDUCT.ko_KR.md">한국어</a></p>
 
 We are a group based on openness and friendly, didactic, discussions.
 
