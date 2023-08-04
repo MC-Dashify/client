@@ -1,4 +1,4 @@
-import { styled } from 'styled-components';
+import { ThemeProvider, styled } from 'styled-components';
 import { Toaster, toast } from 'react-hot-toast';
 
 import Profile from '../../storage/profile';
@@ -98,7 +98,6 @@ const ProfileItemBox = styled.div`
   padding: 18px 16px;
   align-items: center;
   align-self: stretch;
-  background: ${({ theme }) => theme.bg};
 
   ${({ $showBorder }) =>
     $showBorder && 'border-top: 1px solid rgba(0, 0, 0, 0.10);'}
@@ -224,7 +223,7 @@ const ProfileItem = ({
   );
 };
 
-const ProfileList = () => {
+const ProfileList = ({ theme }) => {
   const [profiles, setProfiles] = useRecoilState(profilesState);
   const [isEditing, setIsEditing] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -234,7 +233,7 @@ const ProfileList = () => {
   }, [setProfiles]);
 
   return (
-    <>
+    <ThemeProvider theme={theme}>
       <Section>
         <ProfileDataContainer>
           <ProfileDataLabel>프로필로 연결</ProfileDataLabel>
@@ -273,7 +272,7 @@ const ProfileList = () => {
       </Section>
 
       <ProfileCreateForm isOpen={isModalOpen} setIsOpen={setIsModalOpen}/>
-    </>
+    </ThemeProvider>
   );
 };
 
