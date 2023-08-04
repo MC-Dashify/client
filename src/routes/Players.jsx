@@ -57,7 +57,6 @@ const PlayerDataDisplayContainer = styled.div`
 `;
 
 const PlayerDataTopDisplay = styled.div`
-  color: #000;
   font-size: 14px;
   line-height: 100%;
   letter-spacing: -0.28px;
@@ -67,7 +66,6 @@ const PlayerDataTopDisplay = styled.div`
 `;
 
 const PlayerDataBottomDisplay = styled.div`
-  color: #000;
   font-size: 24px;
   font-weight: 700;
   line-height: 100%;

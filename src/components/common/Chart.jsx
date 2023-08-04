@@ -1,5 +1,5 @@
-import { useRef } from 'react';
-import styled from 'styled-components';
+import { useContext, useRef } from 'react';
+import styled, { ThemeContext } from 'styled-components';
 
 // https://github.com/jtblin/angular-chart.js/issues/614#issuecomment-509649618
 // 차트가 Flex 또는 Grid 안에 있을 경우 사이즈 계산이 제대로 되지 않는 문제가 있습니다.
@@ -45,6 +45,7 @@ const Chart = ({
   tooltipCallbacks
 }) => {
   const chartRef = useRef(null);
+  const theme = useContext(ThemeContext);
 
   const legendOptions = useLegend && {
     position: 'bottom',
@@ -61,6 +62,9 @@ const Chart = ({
       }
     }
   };
+
+  if (scales.x) scales.x.grid = { color: theme.chart.grid }
+  if (scales.y) scales.y.grid = { color: theme.chart.grid }
 
   return (
     <ChartWrapper $width={width} $height={height} $flex={flex}>
