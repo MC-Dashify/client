@@ -1,4 +1,4 @@
-import { useContext, useEffect, useMemo, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useOutletContext } from 'react-router-dom';
 import styled, { ThemeContext } from 'styled-components';
 import DashboardSummary from '../components/dashboard/DashboardSummary';
@@ -11,13 +11,10 @@ import {
 import Chart from '../components/common/Chart';
 import { Line } from 'react-chartjs-2';
 import Searchbar from '../components/common/Searchbar';
-import { showModal } from '../utils/modal';
-import {
-  useRecoilBridgeAcrossReactRoots_UNSTABLE,
-  useRecoilValue
-} from 'recoil';
-import { Toaster } from 'react-hot-toast';
+import { useRecoilValue } from 'recoil';
 import { trafficState } from '../contexts/states';
+import LayerPopup from '../components/common/LayerPopup';
+import { AnimatePresence } from 'framer-motion';
 
 const TrafficContainer = styled.div`
   display: flex;
@@ -122,10 +119,6 @@ const IPListContainer = styled.div`
   gap: 0.75rem;
   flex: 1 0 0;
   overflow-y: auto;
-
-  div {
-    min-height: 44px;
-  }
 `;
 
 const TrafficInfoContainer = styled.div`
@@ -134,19 +127,20 @@ const TrafficInfoContainer = styled.div`
   align-items: center;
   gap: 3rem;
   align-self: stretch;
+  flex-basis: auto;
   cursor: pointer;
   border-radius: 6px;
   background-color: transparent;
   transition: background-color 0.2s ease-in;
 
   &:hover {
-    background-color: rgba(0, 0, 0, 0.05);
+    background-color: ${({ theme }) => theme.traffic.hoverBg};
   }
 `;
 
 const TrafficAddress = styled.div`
   display: -webkit-box;
-  min-width: 12.5rem;
+  min-width: 10rem;
   flex: 1 0 0;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 1;
@@ -159,23 +153,10 @@ const TrafficAddress = styled.div`
   letter-spacing: -0.36px;
 `;
 
-const TrafficInfo = ({ address, received, sent }) => {
-  const RecoilBridge = useRecoilBridgeAcrossReactRoots_UNSTABLE();
-
+const TrafficInfo = ({ address, received, sent, onClick }) => {
   return (
     <TrafficInfoContainer
-      onClick={() => {
-        showModal(
-          <RecoilBridge>
-            <TrafficInfoModal
-              address={address}
-              received={received}
-              sent={sent}
-            />{' '}
-          </RecoilBridge>,
-          '62.5rem'
-        );
-      }}
+      onClick={onClick}
     >
       <TrafficAddress>{address}</TrafficAddress>
       <ByteInfo icon={<SendIcon />} value={sent} />
@@ -186,6 +167,7 @@ const TrafficInfo = ({ address, received, sent }) => {
 
 const ByteInfoContainer = styled.div`
   display: flex;
+  flex-basis: auto;
   align-items: center;
   gap: 0.375rem;
 `;
@@ -201,8 +183,6 @@ const ByteInfoValue = styled.div`
   font-weight: 700;
   line-height: 100%;
   letter-spacing: -0.36px;
-
-  color: #000;
 `;
 
 const ByteInfo = ({ icon, value }) => (
@@ -212,16 +192,7 @@ const ByteInfo = ({ icon, value }) => (
   </ByteInfoContainer>
 );
 
-const ModalContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: 1.5rem;
-  overflow: hidden;
-`;
-
 const AddressDisplay = styled.div`
-  color: #000;
   opacity: 1;
   font-family: 'JetBrains Mono';
   font-size: 2rem;
@@ -237,6 +208,8 @@ const ModalBodyContainer = styled.div`
   align-items: flex-start;
   gap: 1.5rem;
   flex: 1 0 0;
+  width: 800px;
+  height: 800px;
   align-self: stretch;
 `;
 
@@ -251,9 +224,12 @@ const ModalChartContainer = styled.div`
   border-radius: 26px;
 `;
 
-const TrafficInfoModal = ({ address }) => {
+const TrafficInfoModal = ({ address, setAddress }) => {
   const trafficInfo = useRecoilValue(trafficState);
+  
+  if (!address) return (<></>);
   const dataset = trafficInfo.map(({ traffic, timestamp }) => {
+    if (!traffic[address]) return [0, 0, timestamp];
     const send = Math.floor((traffic[address].SentBytes * 8) / 1000 * 100) / 100;
     const receive = Math.floor((traffic[address].ReceivedBytes * 8) / 1000 * 100) / 100;
 
@@ -263,53 +239,57 @@ const TrafficInfoModal = ({ address }) => {
   const lastTraffic = dataset[dataset.length - 1];
 
   return (
-    <ModalContainer>
-      <AddressDisplay>{address}</AddressDisplay>
-      {trafficInfo ? (
-        <ModalBodyContainer>
-          <ModalSummaryContainer>
-            <ByteInfo icon={<SendIcon />} value={lastTraffic[0]} />
-            <ByteInfo icon={<ReceiveIcon />} value={lastTraffic[1]} />
-          </ModalSummaryContainer>
-          <ModalChartContainer>
-            <Chart
-              ChartComponent={Line}
-              labels={dataset.map((traffic) => traffic[2])}
-              datasets={[
-                {
-                  data: dataset.map((traffic) => traffic[0]),
-                  label: '송신'
-                },
-                {
-                  data: dataset.map((traffic) => traffic[1]),
-                  label: '수신'
-                }
-              ]}
-              width='100%'
-              height='100%'
-              flex='1 0 0'
-              useLegend={false}
-              scales={{
-                y: {
-                  min: 0,
-                  ticks: {
-                    font: { size: 12 }
+    <AnimatePresence mode=''>
+      <LayerPopup
+        title={address}
+        onClose={() => setAddress(null)}
+      >
+        {trafficInfo ? (
+          <ModalBodyContainer>
+            <ModalSummaryContainer>
+              <ByteInfo icon={<SendIcon />} value={lastTraffic[0]} />
+              <ByteInfo icon={<ReceiveIcon />} value={lastTraffic[1]} />
+            </ModalSummaryContainer>
+            <ModalChartContainer>
+              <Chart
+                ChartComponent={Line}
+                labels={dataset.map((traffic) => traffic[2])}
+                datasets={[
+                  {
+                    data: dataset.map((traffic) => traffic[0]),
+                    label: '송신'
+                  },
+                  {
+                    data: dataset.map((traffic) => traffic[1]),
+                    label: '수신'
                   }
-                },
-                x: {
-                  ticks: {
-                    font: { size: 12 }
+                ]}
+                width='100%'
+                height='100%'
+                flex='1 0 0'
+                useLegend={false}
+                scales={{
+                  y: {
+                    min: 0,
+                    ticks: {
+                      font: { size: 12 }
+                    }
+                  },
+                  x: {
+                    ticks: {
+                      font: { size: 12 }
+                    }
                   }
-                }
-              }}
-              tension={0.1}
-            />
-          </ModalChartContainer>
-        </ModalBodyContainer>
-      ) : (
-        <AddressDisplay>월드 정보를 불러오지 못했습니다</AddressDisplay>
-      )}
-    </ModalContainer>
+                }}
+                tension={0.1}
+              />
+            </ModalChartContainer>
+          </ModalBodyContainer>
+        ) : (
+          <AddressDisplay>월드 정보를 불러오지 못했습니다</AddressDisplay>
+        )}
+      </LayerPopup>
+    </AnimatePresence>
   );
 };
 
@@ -347,6 +327,8 @@ const Traffic = () => {
     // TODO 정보 새로 고침
     setRefreshFn(() => console.log('refreshed'));
   }, [setRefreshFn]);
+
+  const [address, setAddress] = useState(null); // null이 아니면 트래픽 정보 모달이 나온다.
 
   return (
     <TrafficContainer>
@@ -419,11 +401,13 @@ const Traffic = () => {
                 address={address}
                 received={received}
                 sent={sent}
+                onClick={() => setAddress(address)}
               />
             )
           )}
         </IPListContainer>
       </ContentContainer>
+      <TrafficInfoModal address={address} setAddress={setAddress} />
     </TrafficContainer>
   );
 };

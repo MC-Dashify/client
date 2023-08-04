@@ -126,12 +126,17 @@ const dark = {
   },
 
   chart: {
-    bg: grey[900]
+    bg: grey[900],
+    grid: grey[800]
   },
 
   warning: {
     bg: common.black,
     top: red[300]
+  },
+
+  traffic: {
+    hoverBg: grey[900]
   }
 };
 
@@ -237,12 +242,17 @@ const light = {
   },
 
   chart: {
-    bg: common.white
+    bg: common.white,
+    grid: grey[200]
   },
 
   warning: {
     bg: red[50],
     top: red[900]
+  },
+
+  traffic: {
+    hoverBg: grey[100]
   }
 };
 
