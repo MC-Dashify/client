@@ -64,12 +64,10 @@ const AppData = {
    */
   clear: () => {
     Object.keys(localStorage).forEach(async (key) => {
-      if (key !== 'etc.version') {
-        await localStorage.removeItem(key);
-        const { hostname, port } = window.location;
-        if (!(hostname === 'localhost' && port === '5173')) {
-          await store.delete(key);
-        }
+      await localStorage.removeItem(key);
+      const { hostname, port } = window.location;
+      if (!(hostname === 'localhost' && port === '5173')) {
+        await store.delete(key);
       }
     });
   }
