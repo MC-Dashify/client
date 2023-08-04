@@ -1,5 +1,5 @@
-import { useContext, useEffect } from 'react';
-import { styled, css, ThemeContext } from 'styled-components';
+import { useEffect } from 'react';
+import { styled, css } from 'styled-components';
 import { useSetRecoilState } from 'recoil';
 import { useNavigate } from 'react-router-dom';
 
@@ -38,7 +38,6 @@ const Separator = styled.div`
 const Root = () => {
   const navigate = useNavigate();
   const setCurrentProfile = useSetRecoilState(currentProfileState);
-  const theme = useContext(ThemeContext);
 
   useEffect(() => {
     setCurrentProfile({});
@@ -55,7 +54,7 @@ const Root = () => {
 
         <Separator $width='2px' />
 
-        <ProfileList theme={theme} />
+        <ProfileList />
       </Content>
     </RootContainer>
   );
