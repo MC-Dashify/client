@@ -1,6 +1,6 @@
 [package]
 name = "Dashify"
-version = "1.0.4"
+version = "1.0.5"
 description = "Easily and quickly monitor Minecraft servers."
 authors = ["aroxu", "ppapman", "dytroc", "underc"]
 license = ""
