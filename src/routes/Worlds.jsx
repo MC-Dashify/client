@@ -50,7 +50,7 @@ const WorldContainer = styled.button`
 const UIDDisplay = styled.div`
   color: ${({ theme }) => theme.text};
   font-size: 14px;
-  font-family: ${({theme}) => theme.font.mono};
+  font-family: ${({ theme }) => theme.font.mono};
   line-height: 100%;
   letter-spacing: -0.28px;
   opacity: 0.6;
@@ -67,12 +67,9 @@ const NameDisplay = styled.div`
 const WorldInfoContainer = ({ uuid, name, onClick }) => {
   return (
     <>
-      <WorldContainer
-        onClick={onClick}
-      >
+      <WorldContainer onClick={onClick}>
         <UIDDisplay>{uuid}</UIDDisplay>
         <NameDisplay>{name}</NameDisplay>
-        
       </WorldContainer>
     </>
   );
@@ -123,7 +120,7 @@ const WorldInfoModal = ({ uuid, isOpen, setIsOpen }) => {
   const world = worlds[uuid];
 
   useEffect(() => {
-    if (!world) return
+    if (!world) return;
     const right = Object.keys(world.gamerule);
     const left = right.splice(right.length / 2);
 
@@ -133,7 +130,7 @@ const WorldInfoModal = ({ uuid, isOpen, setIsOpen }) => {
 
   return (
     <AnimatePresence mode=''>
-      {isOpen &&
+      {isOpen && (
         <LayerPopup
           title={world.name}
           onClose={() => setIsOpen(false)}
@@ -184,9 +181,8 @@ const WorldInfoModal = ({ uuid, isOpen, setIsOpen }) => {
               </ModalGamerulesInnerContainer>
             </ModalGamerulesContainer>
           </PopupSection>
-
         </LayerPopup>
-      }
+      )}
     </AnimatePresence>
   );
 };
@@ -231,7 +227,7 @@ const GameruleDisplayContainer = styled.div`
 
 const GameruleNameDisplay = styled.div`
   font-size: 18px;
-  font-family: ${({theme}) => theme.font.mono};
+  font-family: ${({ theme }) => theme.font.mono};
   font-style: normal;
   font-weight: 400;
   line-height: 100%;
@@ -251,7 +247,7 @@ const GameruleNameDisplay = styled.div`
 const GameruleValueDisplay = styled.div`
   color: ${({ $color }) => $color};
   font-size: 18px;
-  font-family: ${({theme}) => theme.font.mono};
+  font-family: ${({ theme }) => theme.font.mono};
   font-style: normal;
   font-weight: 700;
   line-height: 100%;
@@ -268,7 +264,11 @@ const GameruleDisplay = ({ name, value }) => {
       <GameruleNameDisplay>{name}</GameruleNameDisplay>
       <GameruleValueDisplay
         $color={
-          typeof value === 'boolean' ? (value ? '#338EE2' : '#D04038') : theme.modal.text
+          typeof value === 'boolean'
+            ? value
+              ? '#338EE2'
+              : '#D04038'
+            : theme.modal.text
         }
       >{`${value}`}</GameruleValueDisplay>
     </GameruleDisplayContainer>
@@ -300,8 +300,9 @@ const Worlds = () => {
       <OverviewContainer>
         <DashboardSummary label='세계 개수' value={worlds.length} />
       </OverviewContainer>
+
       <WorldsListContainer>
-        <WorldInfoModal uuid={uuid} isOpen={isOpen} setIsOpen={setIsOpen}/>
+        <WorldInfoModal uuid={uuid} isOpen={isOpen} setIsOpen={setIsOpen} />
         <Searchbar
           selectedValue={selectedFilter}
           setSelectedValue={setSelectedFilter}
@@ -329,8 +330,8 @@ const Worlds = () => {
               uuid={uuid}
               name={name}
               onClick={() => {
-                setUuid(uuid)
-                setIsOpen(true)
+                setUuid(uuid);
+                setIsOpen(true);
               }}
             />
           ))}

@@ -61,7 +61,7 @@ const dark = {
   modal: {
     bg: grey[900],
     text: grey[300],
-    separator: grey[300],
+    separator: grey[800],
     container: {
       bg: grey[800]
     }
@@ -182,7 +182,7 @@ const light = {
   modal: {
     bg: common.white,
     text: common.black,
-    separator: common.black,
+    separator: grey[400],
     container: {
       bg: grey[50]
     }
