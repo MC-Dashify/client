@@ -50,7 +50,7 @@ const WorldContainer = styled.button`
 const UIDDisplay = styled.div`
   color: ${({ theme }) => theme.text};
   font-size: 14px;
-  font-family: 'JetBrains Mono';
+  font-family: ${({theme}) => theme.font.mono};
   line-height: 100%;
   letter-spacing: -0.28px;
   opacity: 0.6;
@@ -231,7 +231,7 @@ const GameruleDisplayContainer = styled.div`
 
 const GameruleNameDisplay = styled.div`
   font-size: 18px;
-  font-family: JetBrains Mono;
+  font-family: ${({theme}) => theme.font.mono};
   font-style: normal;
   font-weight: 400;
   line-height: 100%;
@@ -251,7 +251,7 @@ const GameruleNameDisplay = styled.div`
 const GameruleValueDisplay = styled.div`
   color: ${({ $color }) => $color};
   font-size: 18px;
-  font-family: JetBrains Mono;
+  font-family: ${({theme}) => theme.font.mono};
   font-style: normal;
   font-weight: 700;
   line-height: 100%;

@@ -149,15 +149,13 @@ const TrafficAddress = styled.div`
   font-size: 1.125rem;
   font-weight: 700;
   line-height: 100%;
-  font-family: 'JetBrains Mono';
+  font-family: ${({ theme }) => theme.font.mono};
   letter-spacing: -0.36px;
 `;
 
 const TrafficInfo = ({ address, received, sent, onClick }) => {
   return (
-    <TrafficInfoContainer
-      onClick={onClick}
-    >
+    <TrafficInfoContainer onClick={onClick}>
       <TrafficAddress>{address}</TrafficAddress>
       <ByteInfo icon={<SendIcon />} value={sent} />
       <ByteInfo icon={<ReceiveIcon />} value={received} />
@@ -194,7 +192,7 @@ const ByteInfo = ({ icon, value }) => (
 
 const AddressDisplay = styled.div`
   opacity: 1;
-  font-family: 'JetBrains Mono';
+  font-family: ${({ theme }) => theme.font.mono};
   font-size: 2rem;
   font-weight: 500;
   line-height: 100%;
@@ -226,24 +224,23 @@ const ModalChartContainer = styled.div`
 
 const TrafficInfoModal = ({ address, setAddress }) => {
   const trafficInfo = useRecoilValue(trafficState);
-  
-  if (!address) return (<></>);
+
+  if (!address) return <></>;
   const dataset = trafficInfo.map(({ traffic, timestamp }) => {
     if (!traffic[address]) return [0, 0, timestamp];
-    const send = Math.floor((traffic[address].SentBytes * 8) / 1000 * 100) / 100;
-    const receive = Math.floor((traffic[address].ReceivedBytes * 8) / 1000 * 100) / 100;
+    const send =
+      Math.floor(((traffic[address].SentBytes * 8) / 1000) * 100) / 100;
+    const receive =
+      Math.floor(((traffic[address].ReceivedBytes * 8) / 1000) * 100) / 100;
 
     return [send, receive, timestamp];
-  })
+  });
 
   const lastTraffic = dataset[dataset.length - 1];
 
   return (
     <AnimatePresence mode=''>
-      <LayerPopup
-        title={address}
-        onClose={() => setAddress(null)}
-      >
+      <LayerPopup title={address} onClose={() => setAddress(null)}>
         {trafficInfo ? (
           <ModalBodyContainer>
             <ModalSummaryContainer>
@@ -304,13 +301,15 @@ const Traffic = () => {
     let receive = 0;
 
     for (const key of Object.keys(data.traffic)) {
-      const traffic = data.traffic[key]
-      const SentBytes = Math.floor((traffic.SentBytes * 8) / 1000 * 100) / 100;
-      const ReceivedBytes = Math.floor((traffic.ReceivedBytes * 8) / 1000 * 100) / 100;
+      const traffic = data.traffic[key];
+      const SentBytes =
+        Math.floor(((traffic.SentBytes * 8) / 1000) * 100) / 100;
+      const ReceivedBytes =
+        Math.floor(((traffic.ReceivedBytes * 8) / 1000) * 100) / 100;
 
       const index = entries.findIndex(([address]) => address === key);
       if (index !== -1) {
-        entries[index] = [key, { SentBytes, ReceivedBytes }]
+        entries[index] = [key, { SentBytes, ReceivedBytes }];
       } else {
         entries.push([key, { SentBytes, ReceivedBytes }]);
       }
@@ -336,7 +335,10 @@ const Traffic = () => {
         <DashboardSummary label='커넥션 수' value={entries.length} />
         <ErrorContainer>
           <ErrorContainerTop>
-            <BanIcon color={theme.warning.top} transform='scale(0.666666666666667)' />
+            <BanIcon
+              color={theme.warning.top}
+              transform='scale(0.666666666666667)'
+            />
             <div>경고</div>
           </ErrorContainerTop>
           <ErrorContainerBottom>
@@ -362,9 +364,7 @@ const Traffic = () => {
                   label: '송신'
                 },
                 {
-                  data: totalSendReceives.map(
-                    ([_, receive]) => receive
-                  ),
+                  data: totalSendReceives.map(([_, receive]) => receive),
                   label: '수신'
                 }
               ]}

@@ -69,7 +69,7 @@ const CommandContainer = styled.div`
   align-self: stretch;
 
   div {
-    font-family: 'JetBrains Mono';
+    font-family: ${({ theme }) => theme.font.mono};
     color: #cacaca;
   }
 `;
@@ -100,7 +100,7 @@ const CommandInputContainer = styled.div`
   &::after {
     grid-area: 1 / 1 / 2 / 2;
 
-    font-family: 'JetBrains Mono';
+    font-family: ${({ theme }) => theme.font.mono};
     font-size: 16px;
     font-weight: 400;
     word-break: break-all;
@@ -132,7 +132,7 @@ const LogLine = styled.div`
 
   span {
     color: #cacaca;
-    font-family: 'JetBrains Mono';
+    font-family: ${({ theme }) => theme.font.mono};
     font-size: 14px;
     font-weight: 300;
     line-height: 140%;

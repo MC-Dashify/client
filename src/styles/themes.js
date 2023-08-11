@@ -1,3 +1,5 @@
+/* eslint-disable no-unused-vars */
+
 import {
   red,
   pink,
@@ -20,11 +22,20 @@ import {
   blueGrey,
   common
 } from '@mui/material/colors';
-import { css } from 'styled-components';
+
+/* eslint-enable no-unused-vars */
+
+const commonTheme = {
+  font: {
+    default: `'Pretendard Variable', 'Pretendard', 'Pretendard JP Variable', 'Pretendard JP', -apple-system, BlinkMacSystemFont, system-ui, Roboto, 'Helvetica Neue', 'Segoe UI', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', sans-serif`,
+    mono: 'JetBrains Mono, monospace'
+  }
+};
 
 const primary = blue;
 
 const dark = {
+  ...commonTheme,
   bg: common.black,
   text: grey[300],
 
@@ -52,7 +63,7 @@ const dark = {
     text: grey[300],
     separator: grey[300],
     container: {
-      bg: grey[800],
+      bg: grey[800]
     }
   },
 
@@ -141,6 +152,7 @@ const dark = {
 };
 
 const light = {
+  ...commonTheme,
   bg: common.white,
   text: common.black,
 
@@ -168,7 +180,7 @@ const light = {
     text: common.black,
     separator: common.black,
     container: {
-      bg: grey[50],
+      bg: grey[50]
     }
   },
 
@@ -256,4 +268,4 @@ const light = {
   }
 };
 
-export { dark, light };
+export { commonTheme, dark, light };

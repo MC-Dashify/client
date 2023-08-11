@@ -22,8 +22,8 @@ import { onUpdaterEvent } from '@tauri-apps/api/updater';
 
 import App from './App';
 import AppData from './storage/data';
+import { commonTheme } from './styles/themes';
 
-import { defaultFontFamily } from './components/common/globalstyles';
 import './styles/font-settings.css';
 
 const store = new Store('dashify.dat');
@@ -37,7 +37,7 @@ ChartJS.register(
   PointElement,
   LineElement
 );
-chartDefaults.font.family = defaultFontFamily;
+chartDefaults.font.family = commonTheme.font.default;
 chartDefaults.font.size = 16;
 chartDefaults.animation.duration = 0; // general animation time
 chartDefaults.animations.x = false; // disables all animations
@@ -91,9 +91,9 @@ if (!(hostname === 'localhost' && port === '5173')) {
 }
 
 (async () => {
-  const refreshRate = AppData.get("settings.auto_refresh_rate")
+  const refreshRate = AppData.get('settings.auto_refresh_rate');
   if (refreshRate === null) {
-    AppData.set("settings.auto_refresh_rate", 15000)
+    AppData.set('settings.auto_refresh_rate', 15000);
   }
   await onUpdaterEvent(({ error, status }) => {
     // This will log all updater events, including status updates and errors.

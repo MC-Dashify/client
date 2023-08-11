@@ -62,7 +62,7 @@ const PlayerDataTopDisplay = styled.div`
   letter-spacing: -0.28px;
   opacity: 0.6;
   ${({ $useMonospacedFont }) =>
-    $useMonospacedFont && "font-family: 'JetBrains Mono';"}
+    $useMonospacedFont && 'font-family: ${({theme}) => theme.font.mono};'}
 `;
 
 const PlayerDataBottomDisplay = styled.div`
