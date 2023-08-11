@@ -1,7 +1,15 @@
-import { useEffect, useState } from 'react';
-import { Route, Routes, useLocation } from 'react-router-dom';
+import { useEffect } from 'react';
+import {
+  Route,
+  Routes,
+  useLocation,
+  useNavigationType,
+  createRoutesFromChildren,
+  matchRoutes
+} from 'react-router-dom';
 import { ThemeProvider } from 'styled-components';
 import { useRecoilState } from 'recoil';
+import * as Sentry from '@sentry/react';
 
 import { themeState as _themeState } from './contexts/states';
 import { dark, light } from './styles/themes';
@@ -20,6 +28,27 @@ import Console from './routes/Console';
 import Settings from './routes/Settings';
 import InstallPWA from './hooks/pwa';
 import Update from './routes/Update';
+
+Sentry.init({
+  dsn: import.meta.env.VITE_SENTRY_DSN,
+  integrations: [
+    new Sentry.BrowserTracing({
+      routingInstrumentation: Sentry.reactRouterV6Instrumentation(
+        useEffect,
+        useLocation,
+        useNavigationType,
+        createRoutesFromChildren,
+        matchRoutes
+      )
+    }),
+    new Sentry.Replay()
+  ],
+  tracesSampleRate: 1.0,
+  replaysSessionSampleRate: 0.1,
+  replaysOnErrorSampleRate: 1.0
+});
+
+const SentryRoutes = Sentry.withSentryReactRouterV6Routing(Routes);
 
 const App = () => {
   const location = useLocation();
@@ -40,13 +69,11 @@ const App = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [themeState]);
 
-  console.log(themeState)
-
   return (
     <ThemeProvider theme={themeState === 'dark' ? dark : light}>
       <GlobalStyle />
 
-      <Routes location={background || location}>
+      <SentryRoutes location={background || location}>
         <Route path='/' element={<Root />} errorElement={<ErrorPage />} />
 
         <Route path='/dashboard' element={<DashboardLayout />}>
@@ -61,12 +88,12 @@ const App = () => {
         </Route>
 
         <Route path='/settings' element={<Settings install={install} />} />
-      </Routes>
+      </SentryRoutes>
 
       {background && (
-        <Routes>
+        <SentryRoutes>
           <Route path='/settings' element={<Settings install={install} />} />
-        </Routes>
+        </SentryRoutes>
       )}
 
       <Update silent={true} />
