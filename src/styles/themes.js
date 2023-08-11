@@ -71,6 +71,8 @@ const dark = {
     bg: grey[900],
     focusOutline: primary[500],
     selectBg: blue[700],
+    selectHoverBg: blue[800],
+    selectText: blue[50],
     hoverBg: grey[800]
   },
 
@@ -191,7 +193,9 @@ const light = {
   input: {
     bg: grey[100],
     focusOutline: primary[500],
-    selectBg: blue[500],
+    selectBg: blue[400],
+    selectHoverBg: blue[500],
+    selectText: common.white,
     hoverBg: grey[300]
   },
 
