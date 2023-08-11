@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@mui/material": "^5.14.1",
+    "@sentry/react": "^7.63.0",
     "@tauri-apps/api": "^1.4.0",
     "@vitejs/plugin-react": "^4.0.1",
     "anser": "^2.1.1",
