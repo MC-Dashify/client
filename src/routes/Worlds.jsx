@@ -91,42 +91,15 @@ const ModalStatsContainer = styled.div`
 `;
 
 const ModalGamerulesContainer = styled.div`
-  display: flex;
-  flex-direction: row;
-  gap: 24px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px 48px; // ::before로 만들 가운데 구분선 위해 24px *2
   width: 100%;
 `;
 
-const ModalGamerulesInnerContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 12px;
-  align-self: stretch;
-  ${({ $noFlex }) => !$noFlex && 'flex: 1 0 0'};
-`;
-
-const ModalGamerulesSeparator = styled.div`
-  width: 1px;
-  height: 18px;
-  opacity: 0.2;
-  background-color: ${({ theme }) => theme.modal.separator};
-`;
-
 const WorldInfoModal = ({ uuid, isOpen, setIsOpen }) => {
-  const [rightGamerules, setRightGamerules] = useState([]);
-  const [leftGamerules, setLeftGamerules] = useState([]);
   const worlds = useRecoilValue(worldsState);
   const world = worlds[uuid];
-
-  useEffect(() => {
-    if (!world) return;
-    const right = Object.keys(world.gamerule);
-    const left = right.splice(right.length / 2);
-
-    setLeftGamerules(left);
-    setRightGamerules(right);
-  }, [world]);
 
   return (
     <AnimatePresence mode=''>
@@ -156,29 +129,13 @@ const WorldInfoModal = ({ uuid, isOpen, setIsOpen }) => {
 
           <PopupSection title='게임 규칙' gap='0' titleMargin='18px'>
             <ModalGamerulesContainer>
-              <ModalGamerulesInnerContainer>
-                {leftGamerules.map((gamerule, index) => (
-                  <GameruleDisplay
-                    key={index}
-                    name={gamerule}
-                    value={world.gamerule[gamerule]}
-                  />
-                ))}
-              </ModalGamerulesInnerContainer>
-              <ModalGamerulesInnerContainer $noFlex>
-                {leftGamerules.map((_, index) => (
-                  <ModalGamerulesSeparator key={index} />
-                ))}
-              </ModalGamerulesInnerContainer>
-              <ModalGamerulesInnerContainer>
-                {rightGamerules.map((gamerule, index) => (
-                  <GameruleDisplay
-                    key={index}
-                    name={gamerule}
-                    value={world.gamerule[gamerule]}
-                  />
-                ))}
-              </ModalGamerulesInnerContainer>
+              {Object.keys(world.gamerule).map((i, index) => (
+                <GameruleDisplay
+                  key={index}
+                  name={i}
+                  value={world.gamerule[i]}
+                />
+              ))}
             </ModalGamerulesContainer>
           </PopupSection>
         </LayerPopup>
@@ -223,6 +180,17 @@ const GameruleDisplayContainer = styled.div`
   align-items: flex-start;
   gap: 10px;
   width: 100%;
+  position: relative;
+
+  &:nth-child(even)::before {
+    content: '';
+    display: block;
+    position: absolute;
+    left: -24px;
+    width: 1px;
+    height: 100%;
+    background-color: ${({ theme }) => theme.modal.separator};
+  }
 `;
 
 const GameruleNameDisplay = styled.div`
@@ -262,6 +230,7 @@ const GameruleDisplay = ({ name, value }) => {
   return (
     <GameruleDisplayContainer>
       <GameruleNameDisplay>{name}</GameruleNameDisplay>
+
       <GameruleValueDisplay
         $color={
           typeof value === 'boolean'
