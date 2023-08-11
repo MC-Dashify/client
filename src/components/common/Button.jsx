@@ -37,26 +37,22 @@ const styles = {
   outline: css`
     background: ${({ theme }) => theme.button.outline.bg};
     border: 2px solid ${({ theme }) => theme.button.outline.border};
-    box-shadow: 0px 0px 8px 0px rgba(0, 0, 0, 0.1),
-      0px 0px 8px 0px rgba(0, 0, 0, 0.15) inset;
+    box-shadow: ${({ theme }) => theme.button.outline.shadow.normal};
     transition-property: box-shadow, background-color, transform;
 
     &:hover,
     &:focus-visible {
-      box-shadow: 0px 0px 12px 0px rgba(0, 0, 0, 0.2);
+      box-shadow: ${({ theme }) => theme.button.outline.shadow.hover};
     }
 
     &:active {
       background: ${({ theme }) => theme.button.outline.activeBg};
-      box-shadow: 0px 0px 6px 0px rgba(0, 0, 0, 0.4);
+      box-shadow: ${({ theme }) => theme.button.outline.shadow.normal};
       transform: scale(0.98);
     }
   `,
 
   filled: css`
-    /* background: #e1edff;
-    color: #2255a1; */
-
     background: ${({ theme }) => theme.button.secondary.bg};
     color: ${({ theme }) => theme.button.secondary.text};
 
@@ -86,23 +82,23 @@ const styles = {
   `,
 
   warning: css`
-    background: #ffe1e8;
-    color: #d8413a;
+    background: ${({ theme }) => theme.button.danger.bg};
+    color: ${({ theme }) => theme.button.danger.text};
 
     &:hover,
     &:focus-visible {
-      background-color: rgb(255, 225, 232, 0.7);
+      background-color: ${({ theme }) => theme.button.danger.hoverBg};
     }
 
     &:active {
-      background-color: rgb(255, 225, 232, 0.6);
+      background-color: ${({ theme }) => theme.button.danger.activeBg};
     }
   `,
 
   hidden: css`
     width: 0px;
     height: 0px;
-    
+
     min-width: 0px;
     min-height: 0px;
 

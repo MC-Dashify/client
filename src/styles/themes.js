@@ -112,7 +112,11 @@ const dark = {
       text: grey[300],
       border: grey[300],
       hoverBg: common.black,
-      activeBg: grey[900]
+      activeBg: grey[900],
+      shadow: {
+        normal: `0 0 8px 0 rgba(255, 255, 255, 0.3), 0 0 12px 0 rgba(255, 255, 255, 0.3) inset`,
+        hover: `0 0 18px 0 rgba(255, 255, 255, 0.4)`
+      }
     },
 
     disabled: {
@@ -220,7 +224,7 @@ const light = {
     tertiary: {
       bg: grey[100],
       text: common.black,
-      hoverBg: grey[200], // TODO: hoverBg, activeBg
+      hoverBg: grey[200],
       activeBg: grey[300]
     },
 
@@ -234,7 +238,11 @@ const light = {
       text: common.black,
       border: common.black,
       hoverBg: common.white,
-      activeBg: grey[50]
+      activeBg: grey[50],
+      shadow: {
+        normal: `0 0 8px 0 rgba(0, 0, 0, 0.10), 0 0 12px 0 rgba(0, 0, 0, 0.20) inset`,
+        hover: `0 0 14px 0 rgba(0, 0, 0, 0.20)`
+      }
     },
 
     danger: {
