@@ -2,7 +2,7 @@
 name = "Dashify"
 version = "2.0.0"
 description = "Easily and quickly monitor Minecraft servers."
-authors = ["ppapman"]
+authors = ["aroxu", "ppapman", "dytroc", "underc"]
 license = ""
 repository = ""
 default-run = "Dashify"

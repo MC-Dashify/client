@@ -1,7 +1,6 @@
 {
   "name": "client_rewrite",
-  "version": "0.1.0",
-  "private": true,
+  "version": "2.0.0",
   "scripts": {
     "dev": "next dev",
     "build": "next build",

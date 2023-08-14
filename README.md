@@ -1,38 +1,31 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# 이 리포지토리는 [MC-Dashify/client](https://github.com/MC-Dashify/client)의 리와이트 버전입니다.
 
-## Getting Started
+README.md와 CONTRIBUTING.md, CODE_OF_CONDUCT.md는 일부러 가져오지 않았습니다.
+<!-- XXX README.md, CONTRIBUTING.md, CODE_OF_CONDUCT.md -->
 
-First, run the development server:
+## 코드 규칙
+### import
+import 구문 순서는 다음 기준을 따라 주세요. (주석은 참고용입니다)
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
+```js
+// 1. 리액트 관련 라이브러리
+import React, { useState } from 'react';
+import { ... } from '...';
+
+// 2. 외부 라이브러리
+import axios from 'axios';
+import { ... } from '...';
+
+// 3. 내부 파일(컴포넌트나 테마 등)
+import { Button } from "@/components/Button";
+import { ... } from '...';
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
-
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.js`.
-
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
-
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+각 import는 경로나 이름이 라이브러리끼리 나란히 배치합니다.
+```js
+import Button from "@/components/...";
+import Chart from "@/components/...'";
+import { State } from '@/contexts/...';
+import Image from '@/assets/...';
+import Image from '@/assets/...';
+```
