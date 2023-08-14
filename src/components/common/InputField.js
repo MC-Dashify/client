@@ -16,9 +16,7 @@ const InputLabel = styled.label`
 
 const InputBoxDiv = styled.div`
   display: flex;
-  padding: 12px 20px;
   align-items: center;
-  gap: 14px;
   border-radius: 12px;
   background-color: ${({ theme }) => theme.input.bg};
   outline: 0 solid transparent;
@@ -36,9 +34,8 @@ const InputBoxDiv = styled.div`
   input {
     border: none;
     background-color: transparent;
-    padding: 6px 0;
+    padding: 18px 20px;
     font-size: 16px;
-
     flex: 1;
     color: inherit;
 

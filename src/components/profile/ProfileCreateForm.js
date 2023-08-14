@@ -19,9 +19,10 @@ const FormContainer = styled.div`
 
 const InputDivider = styled.div`
   width: 1px;
-  height: 100%;
   background-color: currentColor;
   opacity: 0.2;
+  margin: 12px 0;
+  align-self: stretch;
 `;
 
 const ButtonContainer = styled.div`
@@ -77,7 +78,7 @@ const ProfileCreateForm = ({ createButtonText }) => {
 
           <input
             placeholder="8080"
-            style={{ width: 60, flex: 0 }}
+            style={{ width: 100, flex: 0 }}
             value={serverPort}
             onChange={handlePortChange}
           />
