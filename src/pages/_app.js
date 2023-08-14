@@ -3,7 +3,7 @@ import GlobalStyle from "@/components/styles/GlobalStyle";
 import { dark as darkTheme, light as lightTheme } from "@/styles/themes";
 
 export default function App({ Component, pageProps }) {
-  const selectedTheme = null; // TODO
+  const selectedTheme = "white"; // TODO
   let theme;
 
   switch (selectedTheme) {

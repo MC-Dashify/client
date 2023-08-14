@@ -15,7 +15,7 @@ const GlobalStyle = styled.createGlobalStyle`
 
   html,
   body,
-  #root {
+  #__next {
     height: 100%;
   }
 
