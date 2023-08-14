@@ -29,3 +29,9 @@ import { State } from '@/contexts/...';
 import Image from '@/assets/...';
 import Image from '@/assets/...';
 ```
+
+
+## 에셋 규칙
+에셋 파일은 `@/assets` 폴더에 저장합니다.
+### SVG 파일
+svg 파일에서 `<svg>` 태그의 width와 height 어트리뷰트는 전부 current로 설정해야 합니다. 특별히 특정 색상으로 표현해야 하는 부분이 아니라면 모든 색상은 currentColor로 설정해야 해요.
