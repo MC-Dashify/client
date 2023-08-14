@@ -200,7 +200,7 @@ const light = {
   },
 
   divider: {
-    primary: grey[900]
+    primary: grey[200]
   },
 
   button: {
