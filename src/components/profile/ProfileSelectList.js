@@ -104,36 +104,6 @@ const ProfileSelectList = () => {
             address="mc.hypixel.netmc.hypixel.netmc.hypixel.netmc.hypixel.netmc.hypixel.netmc.hypixel.net"
             port={25565}
           />
-          <ProfileItem
-            name="아름다운 마크 서버 #2"
-            address="mc.hypixel.net"
-            port={25565}
-          />
-          <ProfileItem
-            name="아름다운 마크 서버 #3"
-            address="mc.hypixel.net"
-            port={25565}
-          />
-          <ProfileItem
-            name="아름다운 마크 서버 #4"
-            address="mc.hypixel.net"
-            port={25565}
-          />
-          <ProfileItem
-            name="아름다운 마크 서버 #5"
-            address="mc.hypixel.net"
-            port={25565}
-          />
-          <ProfileItem
-            name="아름다운 마크 서버 #6"
-            address="mc.hypixel.net"
-            port={25565}
-          />
-          <ProfileItem
-            name="아름다운 마크 서버 #7"
-            address="mc.hypixel.net"
-            port={25565}
-          />
         </ProfileList>
       </ProfileSection>
 
