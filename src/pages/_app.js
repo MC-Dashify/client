@@ -1,6 +1,7 @@
 import { ThemeProvider } from "styled-components";
 import GlobalStyle from "@/components/styles/GlobalStyle";
 import { dark as darkTheme, light as lightTheme } from "@/styles/themes";
+import "@/styles/font-settings.css";
 
 export default function App({ Component, pageProps }) {
   const selectedTheme = "white"; // TODO

@@ -981,13 +981,6 @@ http://scripts.sil.org/OFL */
 
 @font-face {
 	font-family: 'JetBrains Mono';
-	src: local('JetBrainsMono Italic Italic'), url('./jetbrainsmono/JetBrainsMono-ItalicItalic.woff2') format('woff2');
-	font-weight: 400;
-	font-style: italic;
-}
-
-@font-face {
-	font-family: 'JetBrains Mono';
 	src: local('JetBrainsMono Medium'), url('./jetbrainsmono/JetBrainsMono-Medium.woff2') format('woff2');
 	font-weight: 500;
 	font-style: normal;
