@@ -9,7 +9,6 @@
   },
   "dependencies": {
     "@mui/material": "^5.14.4",
-    "babel-plugin-styled-components": "^2.1.4",
     "eslint": "8.47.0",
     "eslint-config-next": "13.4.13",
     "next": "13.4.13",

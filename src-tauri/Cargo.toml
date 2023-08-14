@@ -1,11 +1,11 @@
 [package]
-name = "Dashify"
+name = "dashify"
 version = "2.0.0"
 description = "Easily and quickly monitor Minecraft servers."
 authors = ["aroxu", "ppapman", "dytroc", "underc"]
 license = ""
 repository = ""
-default-run = "Dashify"
+default-run = "dashify"
 edition = "2021"
 rust-version = "1.60"
 
