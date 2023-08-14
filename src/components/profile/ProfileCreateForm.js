@@ -25,6 +25,19 @@ const InputDivider = styled.div`
   align-self: stretch;
 `;
 
+const AddressInputContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+`;
+
+const CheckboxWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  user-select: none;
+`;
+
 const ButtonContainer = styled.div`
   display: flex;
   justify-content: flex-end;
@@ -67,22 +80,29 @@ const ProfileCreateForm = ({ createButtonText }) => {
           />
         </InputBox>
 
-        <InputBox label="서버 주소와 포트">
-          <input
-            placeholder="localhost"
-            value={serverAddress}
-            onChange={(e) => setServerAddress(e.target.value)}
-          />
+        <AddressInputContainer>
+          <InputBox label="서버 주소와 포트">
+            <input
+              placeholder="localhost"
+              value={serverAddress}
+              onChange={(e) => setServerAddress(e.target.value)}
+            />
 
-          <InputDivider />
+            <InputDivider />
 
-          <input
-            placeholder="8080"
-            style={{ width: 100, flex: 0 }}
-            value={serverPort}
-            onChange={handlePortChange}
-          />
-        </InputBox>
+            <input
+              placeholder="8080"
+              style={{ width: 100, flex: 0 }}
+              value={serverPort}
+              onChange={handlePortChange}
+            />
+          </InputBox>
+
+          <CheckboxWrapper>
+            <input type="checkbox" id="secure-connection" />
+            <label htmlFor="secure-connection">보안 연결(HTTPS) 사용</label>
+          </CheckboxWrapper>
+        </AddressInputContainer>
 
         <InputBox label="보안 키">
           <input
