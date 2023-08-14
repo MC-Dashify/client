@@ -1,4 +1,4 @@
-import { createGlobalStyle } from "styled-components";
+import { createGlobalStyle, css } from "styled-components";
 
 // https://github.com/prettier/prettier/issues/11196#issuecomment-951878725
 const styled = { createGlobalStyle };
@@ -29,6 +29,12 @@ const GlobalStyle = styled.createGlobalStyle`
   body {
     background-color: ${({ theme }) => theme.bg};
     color: ${({ theme }) => theme.text};
+
+    ${({ theme }) =>
+      theme.THEME_NAME === "dark" &&
+      css`
+        color-scheme: dark;
+      `};
   }
 
   a {
@@ -37,6 +43,11 @@ const GlobalStyle = styled.createGlobalStyle`
     &:visited {
       color: inherit;
     }
+  }
+
+  input,
+  button {
+    color: inherit;
   }
 `;
 

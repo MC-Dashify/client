@@ -37,7 +37,6 @@ const InputBoxDiv = styled.div`
     padding: 18px 20px;
     font-size: 16px;
     flex: 1;
-    color: inherit;
 
     &:focus {
       outline: none;

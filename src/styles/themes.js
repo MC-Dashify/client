@@ -35,6 +35,8 @@ const commonTheme = {
 const primary = blue;
 
 const dark = {
+  THEME_NAME: "dark",
+
   ...commonTheme,
   bg: common.black,
   text: grey[300],
@@ -158,6 +160,8 @@ const dark = {
 };
 
 const light = {
+  THEME_NAME: "light",
+
   ...commonTheme,
   bg: common.white,
   text: common.black,
