@@ -4,6 +4,7 @@ import LogoSymbol from "@/assets/logo/LogoSymbol.svg";
 import LogoText from "@/assets/logo/LogoText.svg";
 import ProfileCreateForm from "@/components/profile/ProfileCreateForm";
 import ProfileSelectList from "@/components/profile/ProfileSelectList";
+import PageLayout from "@/components/layout/PageLayout";
 
 const Center = styled.div`
   display: flex;
@@ -37,24 +38,26 @@ const LogoContainer = styled.div`
 
 const Home = () => {
   return (
-    <Center>
-      <Container>
-        <Section>
-          <LogoContainer>
-            <LogoSymbol width={40} height={40} />
-            <LogoText width={142} height={40} />
-          </LogoContainer>
+    <PageLayout>
+      <Center>
+        <Container>
+          <Section>
+            <LogoContainer>
+              <LogoSymbol width={40} height={40} />
+              <LogoText width={142} height={40} />
+            </LogoContainer>
 
-          <ProfileCreateForm />
-        </Section>
+            <ProfileCreateForm />
+          </Section>
 
-        <Divider />
+          <Divider />
 
-        <Section>
-          <ProfileSelectList />
-        </Section>
-      </Container>
-    </Center>
+          <Section>
+            <ProfileSelectList />
+          </Section>
+        </Container>
+      </Center>
+    </PageLayout>
   );
 };
 

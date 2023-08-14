@@ -1,9 +1,11 @@
 import { ThemeProvider } from "styled-components";
+import { AnimatePresence } from "framer-motion";
+
 import GlobalStyle from "@/components/styles/GlobalStyle";
 import { dark as darkTheme, light as lightTheme } from "@/styles/themes";
 import "@/styles/font-settings.css";
 
-export default function App({ Component, pageProps }) {
+export default function App({ Component, pageProps, router }) {
   const selectedTheme = "white"; // TODO
   let theme;
 
@@ -21,7 +23,10 @@ export default function App({ Component, pageProps }) {
   return (
     <ThemeProvider theme={theme}>
       <GlobalStyle />
-      <Component {...pageProps} />
+
+      <AnimatePresence mode="wait" initial={false}>
+        <Component {...pageProps} key={router.asPath} />
+      </AnimatePresence>
     </ThemeProvider>
   );
 }
