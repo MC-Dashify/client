@@ -11,6 +11,7 @@ const GlobalStyle = styled.createGlobalStyle`
     letter-spacing: -0.014em;
     font-feature-settings: "calt", "case", "ss06", "ss01", "ss03", "ss07",
       "ss02", "ss08";
+    font-weight: 500;
   }
 
   html,

@@ -61,7 +61,6 @@ const ProfileCreateForm = ({ createButtonText }) => {
       <FormContainer>
         <InputBox label="프로필 이름">
           <input
-            placeholder="공민증"
             value={profileName}
             onChange={(e) => setProfileName(e.target.value)}
           />
@@ -95,10 +94,11 @@ const ProfileCreateForm = ({ createButtonText }) => {
       </FormContainer>
 
       <ButtonContainer>
-        <Button>
+        <Button size="medium">
           <CogIcon width={24} height={24} />
-          설정
+          클라이언트 설정
         </Button>
+
         <Button variant="primary">{createButtonText || "프로필 생성"}</Button>
       </ButtonContainer>
     </Container>

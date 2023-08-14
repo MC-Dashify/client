@@ -38,7 +38,7 @@ const InputBoxDiv = styled.div`
     background-color: transparent;
     padding: 6px 0;
     font-size: 16px;
-    font-weight: 500;
+
     flex: 1;
     color: inherit;
 

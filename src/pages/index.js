@@ -3,6 +3,7 @@ import styled from "styled-components";
 import LogoSymbol from "@/assets/logo/LogoSymbol.svg";
 import LogoText from "@/assets/logo/LogoText.svg";
 import ProfileCreateForm from "@/components/profile/ProfileCreateForm";
+import ProfileSelectList from "@/components/profile/ProfileSelectList";
 
 const Center = styled.div`
   display: flex;
@@ -49,7 +50,9 @@ const Home = () => {
 
         <Divider />
 
-        <Section>샌즈티비유튜브</Section>
+        <Section>
+          <ProfileSelectList />
+        </Section>
       </Container>
     </Center>
   );

@@ -3,6 +3,7 @@ import styled, { css } from "styled-components";
 const ButtonBox = styled.button`
   /* 모든 VARIANT 공통 style */
   display: flex;
+  justify-content: center;
   align-items: center;
   gap: 8px;
   font-weight: 700;
