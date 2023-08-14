@@ -11,6 +11,7 @@ const InputLabel = styled.label`
   font-size: 14px;
   font-weight: 700;
   opacity: 0.6;
+  user-select: none;
 `;
 
 const InputBoxDiv = styled.div`
@@ -43,6 +44,10 @@ const InputBoxDiv = styled.div`
 
     &:focus {
       outline: none;
+    }
+
+    &::placeholder {
+      user-select: none;
     }
   }
 `;
