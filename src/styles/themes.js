@@ -39,6 +39,16 @@ const dark = {
   bg: common.black,
   text: grey[300],
 
+  hover: {
+    primary: grey[900],
+    secondary: grey[800],
+  },
+
+  active: {
+    primary: grey[800],
+    secondary: grey[700],
+  },
+
   aside: {
     bg: grey[900],
 
@@ -151,6 +161,16 @@ const light = {
   ...commonTheme,
   bg: common.white,
   text: common.black,
+
+  hover: {
+    primary: grey[50],
+    secondary: grey[100],
+  },
+
+  active: {
+    primary: grey[100],
+    secondary: grey[200],
+  },
 
   aside: {
     bg: grey[50],
