@@ -38,20 +38,36 @@ const ProfileItemBox = styled.button`
   font-size: inherit;
   gap: 6px;
   border: none;
-  border-bottom: 1px solid ${({ theme }) => theme.divider.primary};
   cursor: pointer;
   text-align: left;
   background-color: transparent;
+  border-radius: 12px;
+  position: relative;
 
   transition: background-color 0.1s ease-in-out;
 
   &:hover,
   &:focus-visible {
     background-color: ${({ theme }) => theme.hover.primary};
+
+    &::after {
+      opacity: 0;
+    }
   }
 
   &:active {
     background-color: ${({ theme }) => theme.active.primary};
+  }
+
+  &::after {
+    content: "";
+    background-color: ${({ theme }) => theme.divider.primary};
+    width: 100%;
+    height: 1px;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    transition: opacity 0.1s ease-in-out;
   }
 `;
 
