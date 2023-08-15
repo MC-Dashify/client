@@ -6,6 +6,8 @@ import { dark as darkTheme, light as lightTheme } from "@/styles/themes";
 import "@/styles/font-settings.css";
 
 export default function App({ Component, pageProps, router }) {
+  const getLayout = Component.getLayout || ((page) => page);
+
   const selectedTheme = "white"; // TODO
   let theme;
 
@@ -25,7 +27,7 @@ export default function App({ Component, pageProps, router }) {
       <GlobalStyle />
 
       <AnimatePresence mode="wait" initial={false}>
-        <Component {...pageProps} key={router.asPath} />
+        {getLayout(<Component {...pageProps} key={router.asPath} />)}
       </AnimatePresence>
     </ThemeProvider>
   );

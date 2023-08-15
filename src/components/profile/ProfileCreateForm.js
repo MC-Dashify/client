@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import styled from "styled-components";
 import InputBox from "@/components/common/InputField";
 import Button from "@/components/common/Button";
@@ -49,6 +50,8 @@ const ButtonContainer = styled.div`
 `;
 
 const ProfileCreateForm = ({ createButtonText }) => {
+  const router = useRouter();
+
   const [profileName, setProfileName] = useState("");
   const [serverAddress, setServerAddress] = useState("");
   const [serverPort, setServerPort] = useState("");
@@ -120,7 +123,14 @@ const ProfileCreateForm = ({ createButtonText }) => {
           클라이언트 설정
         </Button>
 
-        <Button variant="primary">{createButtonText || "프로필 생성"}</Button>
+        <Button
+          variant="primary"
+          onClick={() => {
+            router.push("/dashboard/overview"); // XXX For test
+          }}
+        >
+          {createButtonText || "프로필 생성"}
+        </Button>
       </ButtonContainer>
     </Container>
   );

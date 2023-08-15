@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 
-const PageLayout = ({ children }) => (
+const LayoutForTransition = ({ children }) => (
   <motion.div
     initial={{ opacity: 0 }}
     animate={{ opacity: 1 }}
@@ -17,4 +17,4 @@ const PageLayout = ({ children }) => (
   </motion.div>
 );
 
-export default PageLayout;
+export default LayoutForTransition;
