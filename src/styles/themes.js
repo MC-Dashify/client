@@ -41,31 +41,20 @@ const dark = {
   bg: common.black,
   text: grey[300],
 
-  hover: {
-    primary: grey[900],
-    secondary: grey[800],
-  },
-
-  active: {
-    primary: grey[800],
-    secondary: grey[700],
-  },
+  hover: "rgba(255, 255, 255, 0.05)",
+  active: "rgba(255, 255, 255, 0.1)",
 
   aside: {
     bg: grey[900],
+    border: grey[800],
 
-    logo: {
-      bg: "white",
-      fg: "black",
-      text: "white",
-    },
-
-    link: primary[700],
+    menu: { bg: primary[700], text: grey[300] },
 
     profile: {
       bg: grey[800],
+      hoverBg: grey[700],
+      activeBg: grey[600],
       icon: grey[50],
-      text: grey[300],
       address: grey[500],
     },
   },
@@ -166,32 +155,21 @@ const light = {
   bg: common.white,
   text: common.black,
 
-  hover: {
-    primary: grey[50],
-    secondary: grey[100],
-  },
-
-  active: {
-    primary: grey[100],
-    secondary: grey[200],
-  },
+  hover: "rgba(0, 0, 0, 0.05)",
+  active: "rgba(0, 0, 0, 0.1)",
 
   aside: {
     bg: grey[50],
+    border: grey[200],
 
-    logo: {
-      bg: "black",
-      fg: "white",
-      text: "black",
-    },
-
-    link: primary[300],
+    menu: { bg: primary[300], text: common.white },
 
     profile: {
       bg: primary[50],
-      text: common.black,
+      hoverBg: primary[100],
+      activeBg: primary[200],
       icon: primary[900],
-      address: primary[300],
+      address: primary[400],
     },
   },
 

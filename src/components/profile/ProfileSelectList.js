@@ -48,7 +48,7 @@ const ProfileItemBox = styled.button`
 
   &:hover,
   &:focus-visible {
-    background-color: ${({ theme }) => theme.hover.primary};
+    background-color: ${({ theme }) => theme.hover};
 
     &::after {
       opacity: 0;
@@ -56,7 +56,7 @@ const ProfileItemBox = styled.button`
   }
 
   &:active {
-    background-color: ${({ theme }) => theme.active.primary};
+    background-color: ${({ theme }) => theme.active};
   }
 
   &::after {

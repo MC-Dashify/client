@@ -28,7 +28,8 @@ const Section = styled.section`
   flex-direction: column;
   align-items: center;
   gap: 32px;
-  width: 400px;
+  width: 420px;
+  // FIXME width가 작아지면 레이아웃 깨짐
 `;
 
 const LogoContainer = styled.div`
@@ -47,7 +48,7 @@ const Home = () => {
               <LogoText width={142} height={40} />
             </LogoContainer>
 
-            <ProfileCreateForm />
+            <ProfileCreateForm createButtonText="프로필 생성 및 연결" />
           </Section>
 
           <Divider />

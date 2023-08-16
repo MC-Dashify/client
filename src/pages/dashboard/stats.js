@@ -4,7 +4,7 @@ import LayoutForTransition from "@/components/layout/LayoutForTransition";
 
 const StatsPage = () => {
   return (
-    <LayoutForTransition>
+    <LayoutForTransition key="stats">
       <h1>Stats Page</h1>
 
       <Link href="/dashboard/overview">overview</Link>
