@@ -27,7 +27,6 @@ const ProfileList = styled.div`
   display: flex;
   flex-direction: column;
   flex: 1 0 0;
-  width: 400px;
   overflow: auto;
 `;
 

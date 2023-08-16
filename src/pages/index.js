@@ -28,8 +28,9 @@ const Section = styled.section`
   flex-direction: column;
   align-items: center;
   gap: 32px;
-  width: 420px;
-  // FIXME width가 작아지면 레이아웃 깨짐
+  min-width: 300px;
+  max-width: 600px;
+  width: 28vw;
 `;
 
 const LogoContainer = styled.div`
