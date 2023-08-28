@@ -208,7 +208,7 @@ const ProfileItem = ({
         {isEditing && currentProfile.uuid !== uuid && (
           <>
             <EditModeButton
-              onClick={(uuid) => {
+              onClick={() => {
                 Profile.delete(uuid);
                 toast.success('성공적으로 프로필을 삭제했습니다!');
                 updateProfile();
