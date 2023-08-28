@@ -283,7 +283,7 @@ const ProfileCreateForm = ({
         <Connection
           profile={{
             uuid: uuid4(),
-            name: profileName,
+            name: profileName.trim() || '로컬호스트',
             address: serverAddress || 'localhost',
             port: Number.parseInt(serverPort) || 8080,
             key: securityKey,
