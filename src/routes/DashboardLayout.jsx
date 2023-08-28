@@ -8,6 +8,7 @@ import {
   ServerIcon,
   EarthIcon,
   PeopleIcon,
+  HammerIcon,
   ConsoleIcon,
   TopBottomArrowIcon,
   CogIcon
@@ -28,7 +29,8 @@ import {
   statsState,
   worldsState,
   playersState,
-  trafficState
+  trafficState,
+  banListState
 } from '../contexts/states';
 import AppData from '../storage/data';
 import Profile from '../storage/profile';
@@ -36,6 +38,7 @@ import { showModal } from '../utils/modal';
 import ProfileList from '../components/common/ProfileList';
 import { Toaster, toast } from 'react-hot-toast';
 import {
+  getBanList,
   getPlayers,
   getStatus,
   getTraffic,
@@ -268,6 +271,7 @@ const Sidebar = (props) => {
     { path: '/dashboard/stats', label: '서버 상태', icon: <ServerIcon /> },
     { path: '/dashboard/world', label: '월드', icon: <EarthIcon /> },
     { path: '/dashboard/player', label: '플레이어', icon: <PeopleIcon /> },
+    { path: '/dashboard/banlist', label: '밴 목록', icon: <HammerIcon /> },
     {
       path: '/dashboard/traffic',
       label: '트래픽 (αlpha)',
@@ -349,6 +353,7 @@ const DashboardLayout = () => {
   const setStats = useSetRecoilState(statsState);
   const setWorlds = useSetRecoilState(worldsState);
   const setPlayers = useSetRecoilState(playersState);
+  const setBanList = useSetRecoilState(banListState);
   const setTraffic = useSetRecoilState(trafficState);
 
   const location = useLocation();
@@ -381,6 +386,11 @@ const DashboardLayout = () => {
         if (!firstLoadComplete || location.pathname === '/dashboard/player') {
           const players = await getPlayers(profile);
           setPlayers(players);
+        }
+
+        if (!firstLoadComplete || location.pathname === '/dashboard/banlist') {
+          const players = await getBanList(profile);
+          setBanList(players);
         }
 
         if (location.pathname === '/dashboard/traffic') {

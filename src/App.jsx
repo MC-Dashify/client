@@ -23,6 +23,7 @@ import Overview from './routes/Overview';
 import Stats from './routes/Stats';
 import Worlds from './routes/Worlds';
 import Players from './routes/Players';
+import BanList from './routes/BanList';
 import Traffic from './routes/Traffic';
 import Console from './routes/Console';
 import Settings from './routes/Settings';
@@ -82,6 +83,7 @@ const App = () => {
             <Route path='stats' element={<Stats />} />
             <Route path='world' element={<Worlds />} />
             <Route path='player' element={<Players />} />
+            <Route path='banlist' element={<BanList />} />
             <Route path='traffic' element={<Traffic />} />
             <Route path='console' element={<Console />} />
           </Route>
