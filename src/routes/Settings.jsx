@@ -194,7 +194,7 @@ const themeOptions = [
   { value: 'light', label: '라이트' }
 ];
 
-const Modal = ({ install }) => {
+const Modal = () => {
   const theme = useContext(ThemeContext);
 
   const [isModalOpen, setIsModalOpen] = useState(true);
