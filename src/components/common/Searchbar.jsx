@@ -60,6 +60,7 @@ const Searchbar = ({
             styles={{
               control: (baseStyles) => ({
                 ...baseStyles,
+                cursor: 'pointer',
                 backgroundColor: 'transparent',
                 border: 'none',
                 borderRadius: '12px',

@@ -102,6 +102,7 @@ const SettingOption = ({
       <Select
         styles={{
           control: () => ({
+            cursor: 'pointer',
             color: theme.text,
             display: 'flex',
             border: 'none',
@@ -109,6 +110,7 @@ const SettingOption = ({
           }),
           option: (styles) => ({
             ...styles,
+            cursor: 'pointer',
             '&:hover, &:focus-visible': {
               background: theme.input.hoverBg
             },
@@ -118,6 +120,7 @@ const SettingOption = ({
           }),
           menu: (styles) => ({
             ...styles,
+            cursor: 'pointer',
             background: theme.input.bg
           }),
           singleValue: (styles) => ({
