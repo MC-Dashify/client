@@ -229,10 +229,15 @@ const Modal = () => {
           width={'50rem'}
           title='설정'
           onClose={() => setIsModalOpen(false)}
-          footer={<div> © 2023 "Dashify" Development Team</div>}
+          footer={
+            <div> © {new Date().getFullYear()} "Dashify" Development Team</div>
+          }
         >
           <WebsiteInfoContainer>
-            <Logo80 background={theme.aside.logo.bg} foreground={theme.aside.logo.fg} />
+            <Logo80
+              background={theme.aside.logo.bg}
+              foreground={theme.aside.logo.fg}
+            />
             <WebsiteInfo>
               <LogoText />
               <WebsiteVersion>v{appVersion}</WebsiteVersion>
