@@ -118,11 +118,6 @@ const ProfileCreateForm = ({ createButtonText }) => {
       </FormContainer>
 
       <ButtonContainer>
-        <Button size="medium">
-          <CogIcon width={24} height={24} />
-          클라이언트 설정
-        </Button>
-
         <Button
           variant="primary"
           onClick={() => {
