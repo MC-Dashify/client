@@ -26,8 +26,6 @@ export default function RootLayout({ children }) {
 
   children.key = pathname;
 
-  console.log(children);
-
   return (
     <html lang="ko">
       {/* XXX 언어 변경 시 lang 어트리뷰트 수정 */}{" "}

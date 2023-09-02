@@ -1,9 +1,6 @@
 "use client";
 
-import { AnimatePresence } from "framer-motion";
 import styled from "styled-components";
-
-import PageTransition from "@/components/layout/PageTransition";
 import Aside from "@/components/layout/Aside";
 
 const LayoutWrapper = styled.div`
