@@ -68,13 +68,13 @@ const Home = () => {
           v{version}
           {" | "}
           {/*
-            THE PHRASE BELOW IS THE LEGAL SYNTAX for copyright notices
+            THE PHRASE BELOW IS THE LEGAL PHRASE for copyright notices
             and MUST NOT BE MODIFIED w/o full consultation with a team
             member on the project. Modifications made w/o consultation
             will force the change to be retracted.
 
-            아래 문구는 저작권 표시를 위한 법적 구문이며, 프로젝트 팀원과의
-            충분한 상의 없이 수정될 수 없습니다. 상의 없이 수정됐을 경우
+            아래 문구는 저작권 표시를 위한 법적 문구이며, 프로젝트 팀원과의
+            충분한 상의 없이 수정되어선 안 됩니다. 상의 없이 수정됐을 경우
             변경 사항이 강제로 철회됩니다.
           */}
           © 2023 Dashify.
