@@ -1,3 +1,5 @@
+"use client";
+
 import styled from "styled-components";
 const { version } = require("@/../package.json");
 
@@ -5,7 +7,6 @@ import LogoSymbol from "@/assets/logo/LogoSymbol.svg";
 import LogoText from "@/assets/logo/LogoText.svg";
 import ProfileCreateForm from "@/components/profile/ProfileCreateForm";
 import ProfileSelectList from "@/components/profile/ProfileSelectList";
-import LayoutForTransition from "@/components/layout/LayoutForTransition";
 import IconButton from "@/components/common/IconButton";
 import CogIcon from "@/assets/icons-24x/Cog.svg";
 
@@ -47,8 +48,8 @@ const Section = styled.section`
   align-items: center;
   gap: 32px;
   min-width: 300px;
-  max-width: 600px;
-  width: 28vw;
+  max-width: 512px;
+  width: 38vw;
 `;
 
 const LogoContainer = styled.div`
@@ -58,7 +59,7 @@ const LogoContainer = styled.div`
 
 const Home = () => {
   return (
-    <LayoutForTransition>
+    <>
       <Footer>
         <IconButton>
           <CogIcon width={18} height={18} />
@@ -99,7 +100,7 @@ const Home = () => {
           </Section>
         </Container>
       </Center>
-    </LayoutForTransition>
+    </>
   );
 };
 

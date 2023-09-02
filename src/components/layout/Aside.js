@@ -1,5 +1,7 @@
+"use client";
+
 import { useEffect, useState } from "react";
-import { useRouter } from "next/router";
+import { usePathname } from "next/navigation";
 import Link from "next/link";
 import styled, { css } from "styled-components";
 import { motion, AnimatePresence } from "framer-motion";
@@ -146,7 +148,7 @@ const MenuItemBox = styled.div`
 
 const MenuItem = ({ Icon, text, isExpanded, href }) => {
   const [disabled, setDisabled] = useState(false);
-  const router = useRouter();
+  const pathname = usePathname();
 
   useEffect(() => {
     /* XXX 페이지가 Unmount되어 exit 애니메이션이 진행 중일 때 다른
@@ -158,11 +160,11 @@ const MenuItem = ({ Icon, text, isExpanded, href }) => {
     setTimeout(() => {
       setDisabled(false);
     }, 200);
-  }, [router.pathname]);
+  }, [pathname]);
 
   return (
     <MenuItemLink href={href} $disabled={disabled}>
-      <MenuItemBox $enabled={href === router.pathname}>
+      <MenuItemBox $enabled={href === pathname}>
         <Icon width={24} height={24} />
 
         <AnimatePresence>
