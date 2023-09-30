@@ -1,6 +1,5 @@
-"use client";
-
 import Link from "next/link";
+import DashboardLayout from "@/components/layout/DashboardLayout";
 
 const StatsPage = () => {
   return (
@@ -12,5 +11,7 @@ const StatsPage = () => {
     </>
   );
 };
+
+StatsPage.getLayout = (page) => <DashboardLayout>{page}</DashboardLayout>;
 
 export default StatsPage;

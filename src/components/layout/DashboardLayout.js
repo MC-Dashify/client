@@ -1,5 +1,3 @@
-"use client";
-
 import styled from "styled-components";
 import Aside from "@/components/layout/Aside";
 

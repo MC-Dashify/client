@@ -1,6 +1,4 @@
-"use client";
-
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import styled, { css } from "styled-components";
@@ -56,15 +54,6 @@ const MenuList = styled.div`
   display: flex;
   flex-direction: column;
   gap: 4px;
-`;
-
-const MenuItemLink = styled(Link)`
-  ${({ $disabled }) =>
-    $disabled &&
-    css`
-      pointer-events: none;
-      cursor: pointer;
-    `}
 `;
 
 const MenuItemBox = styled.div`
@@ -147,23 +136,10 @@ const MenuItemBox = styled.div`
 `;
 
 const MenuItem = ({ Icon, text, isExpanded, href }) => {
-  const [disabled, setDisabled] = useState(false);
   const pathname = usePathname();
 
-  useEffect(() => {
-    /* XXX 페이지가 Unmount되어 exit 애니메이션이 진행 중일 때 다른
-     * 페이지로 이동하면 페이지가 서로 교체되거나 사라지는 문제가 발생할
-     * 수 있습니다. 임시 방편으로 페이지 전환 시 200ms(exit 애니메이션
-     * 시간) 동안 페이지 전환을 막습니다. */
-    setDisabled(true);
-
-    setTimeout(() => {
-      setDisabled(false);
-    }, 200);
-  }, [pathname]);
-
   return (
-    <MenuItemLink href={href} $disabled={disabled}>
+    <Link href={href}>
       <MenuItemBox $enabled={href === pathname}>
         <Icon width={24} height={24} />
 
@@ -179,7 +155,7 @@ const MenuItem = ({ Icon, text, isExpanded, href }) => {
           )}
         </AnimatePresence>
       </MenuItemBox>
-    </MenuItemLink>
+    </Link>
   );
 };
 
