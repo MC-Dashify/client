@@ -7,7 +7,7 @@ import ProfileCreateForm from '../components/common/ProfileCreateForm';
 import ProfileList from '../components/common/ProfileList';
 import { currentProfileState } from '../contexts/states';
 
-const RootContainer = styled.div`
+const RootWrapper = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -45,7 +45,7 @@ const Root = () => {
   });
 
   return (
-    <RootContainer>
+    <RootWrapper>
       <Content>
         <ProfileCreateForm
           hasSettingButton
@@ -57,7 +57,7 @@ const Root = () => {
 
         <ProfileList theme={theme} />
       </Content>
-    </RootContainer>
+    </RootWrapper>
   );
 };
 
