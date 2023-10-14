@@ -15,6 +15,11 @@ const playersState = atom({
   default: {}
 });
 
+const banListState = atom({
+  key: 'banList',
+  default: {}
+});
+
 const profilesState = atom({
   key: 'profiles',
   default: []
@@ -63,6 +68,7 @@ export {
   hideAddressState,
   worldsState,
   playersState,
+  banListState,
   lastSentCommandsState,
   trafficState,
   trapPauseState,

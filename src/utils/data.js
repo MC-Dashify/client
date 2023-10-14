@@ -94,6 +94,25 @@ const getPlayers = async (profile) => {
   return players;
 };
 
+const getBanList = async (profile) => {
+  const players = {}
+  const playerResults = (
+    await Network.get(
+      profile.address,
+      profile.port,
+      profile.key,
+      profile.isSecureConnection,
+      'players/bans'
+    )
+  ).data.players;
+
+  for (const player of playerResults) {
+    players[player.uuid] = player;
+  }
+
+  return players;
+};
+
 const getTraffic = async (profile) => {
   const trafficData = (
     await Network.get(
@@ -111,4 +130,11 @@ const getTraffic = async (profile) => {
   return trafficData;
 };
 
-export { ping, getStatus, getWorlds, getPlayers, getTraffic };
+export {
+  ping,
+  getStatus,
+  getWorlds,
+  getPlayers,
+  getBanList,
+  getTraffic
+};

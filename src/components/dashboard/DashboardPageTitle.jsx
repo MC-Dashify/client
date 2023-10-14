@@ -120,7 +120,7 @@ const DashboardPageTitle = ({ reloadTask }) => {
     autoRefreshOptions.find((option) => option.value === refreshRate) ??
     autoRefreshOptions[4];
 
-  const theme = useContext(ThemeContext)
+  const theme = useContext(ThemeContext);
 
   return (
     <Section>
@@ -157,18 +157,23 @@ const DashboardPageTitle = ({ reloadTask }) => {
           styles={{
             control: (style) => ({
               ...style,
+              cursor: 'pointer',
               background: 'transparent',
               border: 'none',
               height: '24px'
             }),
             menu: (style) => ({
               ...style,
+              cursor: 'pointer',
               background: theme.input.bg
             }),
             option: (styles, { isFocused, isSelected }) => ({
               ...styles,
+              cursor: 'pointer',
               color: theme.text,
-              backgroundColor: isSelected ? theme.input.selectBg : theme.input.bg,
+              backgroundColor: isSelected
+                ? theme.input.selectBg
+                : theme.input.bg,
               '&:hover, &:active': { backgroundColor: theme.input.hoverBg }
             }),
             indicatorSeparator: () => ({

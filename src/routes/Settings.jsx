@@ -102,6 +102,7 @@ const SettingOption = ({
       <Select
         styles={{
           control: () => ({
+            cursor: 'pointer',
             color: theme.text,
             display: 'flex',
             border: 'none',
@@ -109,6 +110,7 @@ const SettingOption = ({
           }),
           option: (styles) => ({
             ...styles,
+            cursor: 'pointer',
             '&:hover, &:focus-visible': {
               background: theme.input.hoverBg
             },
@@ -118,6 +120,7 @@ const SettingOption = ({
           }),
           menu: (styles) => ({
             ...styles,
+            cursor: 'pointer',
             background: theme.input.bg
           }),
           singleValue: (styles) => ({
@@ -194,7 +197,7 @@ const themeOptions = [
   { value: 'light', label: '라이트' }
 ];
 
-const Modal = ({ install }) => {
+const Modal = () => {
   const theme = useContext(ThemeContext);
 
   const [isModalOpen, setIsModalOpen] = useState(true);
@@ -229,10 +232,15 @@ const Modal = ({ install }) => {
           width={'50rem'}
           title='설정'
           onClose={() => setIsModalOpen(false)}
-          footer={<div> © 2023 "Dashify" Development Team</div>}
+          footer={
+            <div> © {new Date().getFullYear()} "Dashify" Development Team</div>
+          }
         >
           <WebsiteInfoContainer>
-            <Logo80 background={theme.aside.logo.bg} foreground={theme.aside.logo.fg} />
+            <Logo80
+              background={theme.aside.logo.bg}
+              foreground={theme.aside.logo.fg}
+            />
             <WebsiteInfo>
               <LogoText />
               <WebsiteVersion>v{appVersion}</WebsiteVersion>

@@ -23,10 +23,10 @@ import Overview from './routes/Overview';
 import Stats from './routes/Stats';
 import Worlds from './routes/Worlds';
 import Players from './routes/Players';
+import BanList from './routes/BanList';
 import Traffic from './routes/Traffic';
 import Console from './routes/Console';
 import Settings from './routes/Settings';
-import InstallPWA from './hooks/pwa';
 import Update from './routes/Update';
 
 Sentry.init({
@@ -53,7 +53,6 @@ const SentryRoutes = Sentry.withSentryReactRouterV6Routing(Routes);
 const App = () => {
   const location = useLocation();
   const background = location.state?.background;
-  const install = InstallPWA();
 
   const [themeState, setThemeState] = useRecoilState(_themeState);
 
@@ -82,17 +81,18 @@ const App = () => {
             <Route path='stats' element={<Stats />} />
             <Route path='world' element={<Worlds />} />
             <Route path='player' element={<Players />} />
+            <Route path='banlist' element={<BanList />} />
             <Route path='traffic' element={<Traffic />} />
             <Route path='console' element={<Console />} />
           </Route>
         </Route>
 
-        <Route path='/settings' element={<Settings install={install} />} />
+        <Route path='/settings' element={<Settings />} />
       </SentryRoutes>
 
       {background && (
         <SentryRoutes>
-          <Route path='/settings' element={<Settings install={install} />} />
+          <Route path='/settings' element={<Settings />} />
         </SentryRoutes>
       )}
 

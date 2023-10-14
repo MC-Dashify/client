@@ -106,6 +106,33 @@ const PeopleIcon = (props) => (
   </svg>
 );
 
+const HammerIcon = (props) => (
+  <svg
+    width='24'
+    height='24'
+    viewBox='0 0 24 24'
+    fill='none'
+    xmlns='http://www.w3.org/2000/svg'
+    {...props}
+  >
+    <rect x='-1.41421' width='12' height='7.00133' rx='1' transform='matrix(-0.707107 -0.707107 -0.707107 0.707107 20.5858 9.89941)' stroke='currentColor' stroke-width={2}/>
+    <path
+      opacity='0.4'
+      d='M10 14L3 21'
+      stroke='currentColor'
+      stroke-width={2}
+      stroke-linecap='round'
+    />
+    <path
+      opacity='0.4'
+      d='M18.5 3.5L20.5 5.5'
+      stroke='currentColor'
+      stroke-width={2}
+      stroke-linecap='round'
+    />
+  </svg>
+);
+
 const ConsoleIcon = (props) => (
   <svg
     xmlns='http://www.w3.org/2000/svg'
@@ -394,6 +421,44 @@ const BanIcon = (props) => (
   </svg>
 );
 
+const PardonIcon = (props) => (
+  <svg
+    width='24'
+    height='24'
+    viewBox='0 0 24 24'
+    fill='none'
+    xmlns='http://www.w3.org/2000/svg'
+    {...props}
+  >
+    <path
+      fill-rule='evenodd'
+      clip-rule='evenodd'
+      d='M19.2937 14.293C19.6842 13.9024 20.3173 13.9023 20.7079 14.2928C21.0984 14.6833 21.0985 15.3165 20.708 15.707L18.9142 17.5012L20.708 19.2954C21.0985 19.686 21.0985 20.3191 20.7079 20.7096C20.3173 21.1001 19.6842 21.1 19.2937 20.7095L17.5001 18.9156L15.7066 20.7095C15.3161 21.1 14.6829 21.1001 14.2924 20.7096C13.9018 20.3191 13.9017 19.686 14.2922 19.2954L16.086 17.5012L14.2922 15.707C13.9017 15.3165 13.9018 14.6833 14.2924 14.2928C14.6829 13.9023 15.3161 13.9024 15.7066 14.293L17.5001 16.0869L19.2937 14.293Z'
+      fill='currentColor'
+    />
+    <path
+      opacity='0.4'
+      d='M10.5 13.5L3 21'
+      stroke='currentColor'
+      stroke-width={2}
+      stroke-linecap='round'
+    />
+    <path
+      opacity='0.4'
+      d='M18.5 3.5L20.5 5.5'
+      stroke='currentColor'
+      stroke-width={2}
+      stroke-linecap='round'
+    />
+    <path
+      fill-rule='evenodd'
+      clip-rule='evenodd'
+      d='M21.842 11.9998C22.3547 11.2235 22.2693 10.1684 21.5858 9.48498L14.5147 2.41391C13.7337 1.63286 12.4674 1.63286 11.6863 2.41391L8.85788 5.24234C8.07683 6.02339 8.07683 7.28972 8.85788 8.07077L12.7869 11.9998H21.842Z'
+      fill='currentColor'
+    />
+  </svg>
+);
+
 const SendAndReceiveIcon = (props) => (
   <svg
     xmlns='http://www.w3.org/2000/svg'
@@ -438,6 +503,7 @@ export {
   ServerIcon,
   EarthIcon,
   PeopleIcon,
+  HammerIcon,
   ConsoleIcon,
   TopBottomArrowIcon,
   CogIcon,
@@ -447,6 +513,7 @@ export {
   TimerIcon,
   KickIcon,
   BanIcon,
+  PardonIcon,
   SendAndReceiveIcon,
   SendIcon,
   ReceiveIcon
