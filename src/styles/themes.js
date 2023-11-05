@@ -27,8 +27,12 @@ import {
 
 const commonTheme = {
   font: {
-    default: `'Pretendard Variable', 'Pretendard', 'Pretendard JP Variable', 'Pretendard JP', -apple-system, BlinkMacSystemFont, system-ui, Roboto, 'Helvetica Neue', 'Segoe UI', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', sans-serif`,
-    mono: "JetBrains Mono, monospace",
+    default:
+      "var(--pretendard-font)," +
+      "'Pretendard Variable', 'Pretendard', 'Pretendard JP Variable', 'Pretendard JP', -apple-system," +
+      "BlinkMacSystemFont, system-ui, Roboto, 'Helvetica Neue', 'Segoe UI', 'Apple SD Gothic Neo'," +
+      "'Noto Sans KR', 'Malgun Gothic', 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', sans-serif",
+    mono: "var(--jetbrains-mono-font), 'JetBrains Mono', monospace",
   },
 };
 

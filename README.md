@@ -35,3 +35,12 @@ import Image from '@/assets/...';
 에셋 파일은 `@/assets` 폴더에 저장합니다.
 ### SVG 파일
 svg 파일에서 `<svg>` 태그의 width와 height 어트리뷰트는 전부 current로 설정해야 합니다. 특별히 특정 색상으로 표현해야 하는 부분이 아니라면 모든 색상은 currentColor로 설정해야 해요.
+
+# 폰트 라이선스
+```
+Copyright (c) 2021 Kil Hyung-jin, with Reserved Font Name Pretendard.
+https://github.com/orioncactus/pretendard
+This Font Software is licensed under the SIL Open Font License, Version 1.1.
+This license is copied below, and is also available with a FAQ at:
+http://scripts.sil.org/OFL
+```

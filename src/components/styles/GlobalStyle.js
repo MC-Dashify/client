@@ -16,7 +16,8 @@ const GlobalStyle = styled.createGlobalStyle`
 
   html,
   body,
-  #__next {
+  #__next,
+  #font-provider {
     height: 100%;
   }
 

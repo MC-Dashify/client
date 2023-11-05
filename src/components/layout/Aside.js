@@ -143,7 +143,7 @@ const MenuItem = ({ Icon, text, isExpanded, href }) => {
       <MenuItemBox $enabled={href === pathname}>
         <Icon width={24} height={24} />
 
-        <AnimatePresence>
+        <AnimatePresence initial={false}>
           {isExpanded && (
             <motion.span
               initial={{ opacity: 0, x: -20 }}
@@ -243,7 +243,7 @@ const Aside = () => {
     <AsideBox animate={{ width: isExpanded ? SIDEBAR_WIDTH : 92 }}>
       <Top>
         <Header>
-          <AnimatePresence>
+          <AnimatePresence initial={false}>
             {isExpanded && (
               <LogoSection
                 initial={{ opacity: 0, x: -20, width: 0 }}
@@ -284,7 +284,7 @@ const Aside = () => {
 
       <Bottom>
         <ProfileChanger.Box>
-          <AnimatePresence>
+          <AnimatePresence initial={false}>
             {isExpanded && (
               <ProfileChanger.Info
                 initial={{ opacity: 0, x: -20, height: 0, marginRight: 0 }}
