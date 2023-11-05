@@ -17,7 +17,7 @@ const GlobalStyle = styled.createGlobalStyle`
   html,
   body,
   #__next,
-  #font-provider {
+  #__next > div:first-child {
     height: 100%;
   }
 

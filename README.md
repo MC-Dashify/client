@@ -3,6 +3,9 @@
 README.md와 CONTRIBUTING.md, CODE_OF_CONDUCT.md는 일부러 가져오지 않았습니다.
 <!-- XXX README.md, CONTRIBUTING.md, CODE_OF_CONDUCT.md -->
 
+## Tailwind CSS에 대해
+리포지토리에 [NextUI](https://nextui.org/)를 사용하게 되면서 Tailwind CSS 환경을 구축했습니다. 본 코드에는 Tailwind CSS를 사용하지 않습니다.
+
 ## 코드 규칙
 ### import
 import 구문 순서는 다음 기준을 따라 주세요. (주석은 참고용입니다)

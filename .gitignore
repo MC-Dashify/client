@@ -36,3 +36,5 @@ next-env.d.ts
 
 # tauri
 /src-tauri/target
+
+/src/styles/dist/tailwindOutput.css

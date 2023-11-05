@@ -7,15 +7,10 @@ import { motion, AnimatePresence } from "framer-motion";
 import IconButton from "@/components/common/IconButton";
 import LogoSymbol from "@/assets/logo/LogoSymbol.svg";
 import LogoText from "@/assets/logo/LogoText.svg";
-import ChartIcon from "@/assets/icons-24x/Chart.svg";
-import ConsoleIcon from "@/assets/icons-24x/Console.svg";
-import EarthIcon from "@/assets/icons-24x/Earth.svg";
-import PeopleIcon from "@/assets/icons-24x/People.svg";
-import ServerIcon from "@/assets/icons-24x/Server.svg";
-import UpDownArrowIcon from "@/assets/icons-24x/UpDownArrow.svg";
 import CogIcon from "@/assets/icons-24x/Cog.svg";
 import DoubleLeftArrowIcon from "@/assets/icons-16x/DoubleLeftArrow.svg";
 import RightAndLeftArrowIcon from "@/assets/icons-16x/RightAndLeftArrow.svg";
+import routes from "@/constants/routes";
 
 const SIDEBAR_WIDTH = 260;
 
@@ -166,7 +161,7 @@ const Bottom = styled.div`
   align-self: stretch;
 `;
 
-/** 컴포넌트 이름이 너무 길어서 시인성을 높이기 위해 점으로 구별해 보려고 했어요. */
+/** 컴포넌트 이름이 너무 길어서 시인성을 높이기 위해 구두점으로 구별해 보려고 했습니다 */
 const ProfileChanger = {};
 
 ProfileChanger.Box = styled(motion.button)`
@@ -226,15 +221,6 @@ ProfileChanger.Address = styled.div`
   white-space: nowrap;
 `;
 
-const routes = [
-  { Icon: ChartIcon, text: "개요", href: "/dashboard/overview" },
-  { Icon: ServerIcon, text: "서버 상태", href: "/dashboard/stats" },
-  { Icon: EarthIcon, text: "세계", href: "/dashboard/worlds" },
-  { Icon: PeopleIcon, text: "플레이어", href: "/dashboard/players" },
-  { Icon: UpDownArrowIcon, text: "트래픽", href: "/dashboard/traffic" },
-  { Icon: ConsoleIcon, text: "콘솔 / 로그", href: "/dashboard/console" },
-];
-
 const Aside = () => {
   const [isExpanded, setIsExpanded] = useState(true);
   // XXX isExpanded 로컬 스토리지 저장
@@ -270,9 +256,9 @@ const Aside = () => {
         </Header>
 
         <MenuList>
-          {routes.map(({ Icon, text, href }) => (
+          {Object.values(routes).map(({ iconComponent, text, href }) => (
             <MenuItem
-              Icon={Icon}
+              Icon={iconComponent}
               text={text}
               href={href}
               isExpanded={isExpanded}

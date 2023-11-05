@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import Aside from "@/components/layout/Aside";
+import Header from "@/components/layout/Header";
 
 const LayoutWrapper = styled.div`
   display: flex;
@@ -19,6 +20,7 @@ const DashboardLayout = ({ children }) => {
       <Aside />
 
       <ContentWrapper>
+        <Header />
         {/* TODO header */}
 
         {children}

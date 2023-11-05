@@ -1,18 +1,18 @@
-import { ThemeProvider } from "styled-components";
+import { NextUIProvider } from "@nextui-org/react";
 import { JetBrains_Mono } from "next/font/google";
 import localFont from "next/font/local";
+import { ThemeProvider } from "styled-components";
 
+import "@/styles/dist/tailwindOutput.css";
 import GlobalStyle from "@/components/styles/GlobalStyle";
 import { dark as darkTheme, light as lightTheme } from "@/styles/themes";
 
 const pretendardFont = localFont({
   src: "../styles/font/PretendardVariable.ttf",
-  variable: "--pretendard-font",
   display: "swap",
 });
 
 const jetBrainsMonoFont = JetBrains_Mono({
-  variable: "--jetbrains-mono-font",
   subsets: [
     "latin",
     "latin-ext",
@@ -45,15 +45,19 @@ export default function RootLayout({ Component, pageProps, router }) {
   }
 
   return (
-    <div
-      className={`${pretendardFont.variable} ${jetBrainsMonoFont.variable}`}
-      id="font-provider"
-    >
+    <NextUIProvider>
+      <style jsx global>{`
+        :root {
+          --pretendard-font: ${pretendardFont.style.fontFamily};
+          --jetbrains-mono-font: ${jetBrainsMonoFont.style.fontFamily};
+        }
+      `}</style>
+
       <ThemeProvider theme={theme}>
         <GlobalStyle />
 
         {getLayout(<Component {...pageProps} key={router.asPath} />)}
       </ThemeProvider>
-    </div>
+    </NextUIProvider>
   );
 }
