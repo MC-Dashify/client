@@ -51,7 +51,7 @@ const MenuList = styled.div`
   gap: 4px;
 `;
 
-const MenuItemBox = styled.div`
+const MenuItemLink = styled(Link)`
   @property --overlay-gradient {
     syntax: "<color>";
     initial-value: transparent;
@@ -134,23 +134,21 @@ const MenuItem = ({ Icon, text, isExpanded, href }) => {
   const pathname = usePathname();
 
   return (
-    <Link href={href}>
-      <MenuItemBox $enabled={href === pathname}>
-        <Icon width={24} height={24} />
+    <MenuItemLink href={href} $enabled={href === pathname}>
+      <Icon width={24} height={24} />
 
-        <AnimatePresence initial={false}>
-          {isExpanded && (
-            <motion.span
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -20 }}
-            >
-              {text}
-            </motion.span>
-          )}
-        </AnimatePresence>
-      </MenuItemBox>
-    </Link>
+      <AnimatePresence initial={false}>
+        {isExpanded && (
+          <motion.span
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -20 }}
+          >
+            {text}
+          </motion.span>
+        )}
+      </AnimatePresence>
+    </MenuItemLink>
   );
 };
 
@@ -245,6 +243,7 @@ const Aside = () => {
           <IconButton
             style={{ margin: -6 }}
             onClick={() => setIsExpanded(!isExpanded)}
+            aria-label={isExpanded ? "사이드 바 접기" : "사이드 바 펼치기"}
           >
             <motion.div
               animate={{ rotate: isExpanded ? 0 : 180 }}
