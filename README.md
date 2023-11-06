@@ -6,6 +6,12 @@ README.md와 CONTRIBUTING.md, CODE_OF_CONDUCT.md는 일부러 가져오지 않�
 ## Tailwind CSS에 대해
 리포지토리에 [NextUI](https://nextui.org/)를 사용하게 되면서 Tailwind CSS 환경을 구축했습니다. 본 코드에는 Tailwind CSS를 사용하지 않습니다.
 
+다음 명령어로 구동에 필요한 tailwindOutput.css 파일을 생성할 수 있습니다.
+```bash
+npx tailwindcss -i .\src\styles\forTailwind.css -o .\src\styles\dist\tailwindOutput.css
+```
+
+
 ## 코드 규칙
 ### import
 import 구문 순서는 다음 기준을 따라 주세요. (주석은 참고용입니다)

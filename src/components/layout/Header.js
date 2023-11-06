@@ -115,7 +115,7 @@ const Header = () => {
 
           <Dropdown>
             <DropdownTrigger>
-              <DropdownSelect>
+              <DropdownSelect tabIndex={0}>
                 {
                   refreshDropdownOptions.find(
                     (i) => i.key === Number(refreshPeriod)
