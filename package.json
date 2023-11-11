@@ -8,7 +8,7 @@
     "@tauri-apps/api": "^1.4.0",
     "@vitejs/plugin-react": "^4.0.1",
     "anser": "^2.1.1",
-    "axios": "^1.4.0",
+    "axios": "^1.6.0",
     "chart.js": "^4.3.0",
     "dayjs": "^1.11.9",
     "focus-trap-react": "^10.1.4",
