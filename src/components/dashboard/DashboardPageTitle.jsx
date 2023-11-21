@@ -84,7 +84,7 @@ const AutoRefreshLabel = styled.span`
   opacity: 0.6;
 `;
 
-const DashboardPageTitle = ({ reloadTask }) => {
+const DashboardPageTitle = ({ reloadTask, refreshFn }) => {
   const autoRefreshOptions = [
     { label: '1초', value: 1000 },
     { label: '3초', value: 3000 },
@@ -191,7 +191,10 @@ const DashboardPageTitle = ({ reloadTask }) => {
       <Button
         styleType='outline'
         padding='8px 18px'
-        onClick={() => reloadTask()}
+        onClick={() => {
+          reloadTask();
+          refreshFn && refreshFn();
+        }}
       >
         지금 새로 고침하기
       </Button>

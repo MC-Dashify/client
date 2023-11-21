@@ -154,6 +154,20 @@ const dark = {
 
   traffic: {
     hoverBg: grey[900]
+  },
+
+  files: {
+    breadcrumbs: {
+      border: grey[800],
+      item: {
+        hover: grey[900],
+        active: grey[800]
+      }
+    },
+    iconButton: {
+      hover: grey[900],
+      active: grey[800]
+    }
   }
 };
 
@@ -277,6 +291,32 @@ const light = {
 
   traffic: {
     hoverBg: grey[100]
+  },
+
+  files: {
+    breadcrumbs: {
+      border: grey[300],
+      item: {
+        hover: grey[100],
+        active: grey[200]
+      }
+    },
+    iconButton: {
+      hover: grey[100],
+      active: grey[200]
+    },
+    file: {
+      hover: grey[100],
+      active: grey[200],
+      folder: primary[500],
+      selected: primary[50],
+      selectedHover: primary[100]
+    },
+    modal: {
+      delete: {
+        accent: primary[700],
+      }
+    }
   }
 };
 

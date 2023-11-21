@@ -11,7 +11,8 @@ import {
   HammerIcon,
   ConsoleIcon,
   TopBottomArrowIcon,
-  CogIcon
+  CogIcon,
+  FolderIcon
 } from '../assets/24x-icons';
 import { ArrowRightAndLeftIcon } from '../assets/16x-icons';
 import DashboardPageTitle from '../components/dashboard/DashboardPageTitle';
@@ -119,7 +120,12 @@ const AsideMenuLink = styled(Link)`
     width: 100%;
     height: 100%;
     z-index: -1;
-    background: linear-gradient(135deg, rgba(0, 0, 0, 0.20) 0%, rgba(0, 0, 0, 0.00) 100%), ${({ theme }) => theme.aside.link};
+    background: linear-gradient(
+        135deg,
+        rgba(0, 0, 0, 0.2) 0%,
+        rgba(0, 0, 0, 0) 100%
+      ),
+      ${({ theme }) => theme.aside.link};
     background-blend-mode: overlay, normal;
     opacity: 0;
     transition: opacity 0.4s var(--transition-timing-function);
@@ -152,11 +158,19 @@ const AsideMenuLink = styled(Link)`
     `}
 `;
 
-const AsidePageMenu = ({ to, label, icon, ...props }) => {
+const AsidePageMenu = ({ path, label, icon, checkByStartWith, ...props }) => {
   const location = useLocation();
 
   return (
-    <AsideMenuLink to={to} $activated={location.pathname === to} {...props}>
+    <AsideMenuLink
+      to={path}
+      $activated={
+        checkByStartWith
+          ? location.pathname.startsWith(path)
+          : location.pathname === path
+      }
+      {...props}
+    >
       {icon}
       <span>{label}</span>
     </AsideMenuLink>
@@ -273,6 +287,12 @@ const Sidebar = (props) => {
     { path: '/dashboard/player', label: '플레이어', icon: <PeopleIcon /> },
     { path: '/dashboard/banlist', label: '밴 목록', icon: <HammerIcon /> },
     {
+      path: '/dashboard/files',
+      label: '파일 관리',
+      icon: <FolderIcon />,
+      checkByStartWith: true
+    },
+    {
       path: '/dashboard/traffic',
       label: '트래픽 (αlpha)',
       icon: <TopBottomArrowIcon />
@@ -285,18 +305,16 @@ const Sidebar = (props) => {
       <AsideTopContainer>
         <Link to='/'>
           <AsideLogoContainer>
-            <Logo background={theme.aside.logo.bg} foreground={theme.aside.logo.fg} />
+            <Logo
+              background={theme.aside.logo.bg}
+              foreground={theme.aside.logo.fg}
+            />
             <LogoText color={theme.aside.logo.text} />
           </AsideLogoContainer>
         </Link>
         <AsideMenuContainer>
           {menus.map((menu, index) => (
-            <AsidePageMenu
-              to={menu.path}
-              label={menu.label}
-              icon={menu.icon}
-              key={`aside-menu-${index}`}
-            />
+            <AsidePageMenu {...menu} key={`aside-menu-${index}`} />
           ))}
         </AsideMenuContainer>
       </AsideTopContainer>
@@ -361,7 +379,7 @@ const DashboardLayout = () => {
   const reloadTask = useCallback(
     async (profile = currentProfile) => {
       try {
-        if (!profile?.address) return
+        if (!profile?.address) return;
         await ping(profile);
 
         // TODO: 개선 필요
@@ -452,7 +470,8 @@ const DashboardLayout = () => {
         refreshFn={refreshFn}
       />
       <OutletContainer>
-        <DashboardPageTitle reloadTask={reloadTask} />
+        <DashboardPageTitle reloadTask={reloadTask} refreshFn={refreshFn} />
+
         {connected ? (
           <Outlet context={[refreshFn, setRefreshFn]} />
         ) : (

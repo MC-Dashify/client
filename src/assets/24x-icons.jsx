@@ -115,7 +115,15 @@ const HammerIcon = (props) => (
     xmlns='http://www.w3.org/2000/svg'
     {...props}
   >
-    <rect x='-1.41421' width='12' height='7.00133' rx='1' transform='matrix(-0.707107 -0.707107 -0.707107 0.707107 20.5858 9.89941)' stroke='currentColor' stroke-width={2}/>
+    <rect
+      x='-1.41421'
+      width='12'
+      height='7.00133'
+      rx='1'
+      transform='matrix(-0.707107 -0.707107 -0.707107 0.707107 20.5858 9.89941)'
+      stroke='currentColor'
+      stroke-width={2}
+    />
     <path
       opacity='0.4'
       d='M10 14L3 21'
@@ -467,34 +475,278 @@ const SendAndReceiveIcon = (props) => (
     fill='none'
     {...props}
   >
-    <path d='M4 7L8 3L12 7' stroke='currentColor' strokeWidth={2} strokeLinecap='round' strokeLinejoin='round'/>
-    <path d='M8 16L8 3' stroke='currentColor' strokeWidth={2} strokeLinecap='round' strokeLinejoin='round'/>
+    <path
+      d='M4 7L8 3L12 7'
+      stroke='currentColor'
+      strokeWidth={2}
+      strokeLinecap='round'
+      strokeLinejoin='round'
+    />
+    <path
+      d='M8 16L8 3'
+      stroke='currentColor'
+      strokeWidth={2}
+      strokeLinecap='round'
+      strokeLinejoin='round'
+    />
     <g opacity={0.4}>
-      <path d='M12 17L16 21L20 17' stroke='currentColor' strokeWidth={2} strokeLinecap='round' strokeLinejoin='round'/>
-      <path d='M16 8L16 21' stroke='currentColor' strokeWidth={2} strokeLinecap='round' strokeLinejoin='round'/>
+      <path
+        d='M12 17L16 21L20 17'
+        stroke='currentColor'
+        strokeWidth={2}
+        strokeLinecap='round'
+        strokeLinejoin='round'
+      />
+      <path
+        d='M16 8L16 21'
+        stroke='currentColor'
+        strokeWidth={2}
+        strokeLinecap='round'
+        strokeLinejoin='round'
+      />
     </g>
   </svg>
 );
 
 const SendIcon = (props) => (
-  <svg xmlns='http://www.w3.org/2000/svg' width={24} height={24} fill='none' {...props}>
-    <rect opacity={0.4} x={6} y={6} width={8} height={2} fill='currentColor'/>
-    <rect opacity={0.4} x={6} y={10} width={8} height={2} fill='currentColor'/>
-    <circle opacity={0.4} cx={10} cy={16} r={2} fill='currentColor'/>
-    <path fillRule='evenodd' clipRule='evenodd' d='M4 4H16V9H18V4C18 2.89543 17.1046 2 16 2H4C2.89543 2 2 2.89543 2 4V20C2 21.1046 2.89543 22 4 22H14V20H4V4Z' fill='currentColor'/>
-    <path d='M15 15L18 12L21 15' stroke='#3B86F8' strokeWidth={2} strokeLinecap='round' strokeLinejoin='round'/>
-    <path d='M18 13V21' stroke='#3B86F8' strokeWidth={2} strokeLinecap='round' strokeLinejoin='round'/>
+  <svg
+    xmlns='http://www.w3.org/2000/svg'
+    width={24}
+    height={24}
+    fill='none'
+    {...props}
+  >
+    <rect opacity={0.4} x={6} y={6} width={8} height={2} fill='currentColor' />
+    <rect opacity={0.4} x={6} y={10} width={8} height={2} fill='currentColor' />
+    <circle opacity={0.4} cx={10} cy={16} r={2} fill='currentColor' />
+    <path
+      fillRule='evenodd'
+      clipRule='evenodd'
+      d='M4 4H16V9H18V4C18 2.89543 17.1046 2 16 2H4C2.89543 2 2 2.89543 2 4V20C2 21.1046 2.89543 22 4 22H14V20H4V4Z'
+      fill='currentColor'
+    />
+    <path
+      d='M15 15L18 12L21 15'
+      stroke='#3B86F8'
+      strokeWidth={2}
+      strokeLinecap='round'
+      strokeLinejoin='round'
+    />
+    <path
+      d='M18 13V21'
+      stroke='#3B86F8'
+      strokeWidth={2}
+      strokeLinecap='round'
+      strokeLinejoin='round'
+    />
   </svg>
 );
 
 const ReceiveIcon = (props) => (
-  <svg xmlns='http://www.w3.org/2000/svg' width={24} height={24} fill='none' {...props}>
-    <rect opacity={0.4} x={7} y={6} width={8} height={2} fill='currentColor'/>
-    <rect opacity={0.4} x={7} y={10} width={8} height={2} fill='currentColor'/>
-    <circle opacity={0.4} cx={11} cy={16} r={2} fill='currentColor'/>
-    <path fillRule='evenodd' clipRule='evenodd' d='M5 4H17V9H19V4C19 2.89543 18.1046 2 17 2H5C3.89543 2 3 2.89543 3 4V20C3 21.1046 3.89543 22 5 22H13V20H5V4Z' fill='black'/>
-    <path d='M15 18L18 21L21 18' stroke='#389287' strokeWidth={2} strokeLinecap='round' strokeLinejoin='round'/>
-    <path d='M18 20V12' stroke='#389287' strokeWidth={2} strokeLinecap='round' strokeLinejoin='round'/>
+  <svg
+    xmlns='http://www.w3.org/2000/svg'
+    width={24}
+    height={24}
+    fill='none'
+    {...props}
+  >
+    <rect opacity={0.4} x={7} y={6} width={8} height={2} fill='currentColor' />
+    <rect opacity={0.4} x={7} y={10} width={8} height={2} fill='currentColor' />
+    <circle opacity={0.4} cx={11} cy={16} r={2} fill='currentColor' />
+    <path
+      fillRule='evenodd'
+      clipRule='evenodd'
+      d='M5 4H17V9H19V4C19 2.89543 18.1046 2 17 2H5C3.89543 2 3 2.89543 3 4V20C3 21.1046 3.89543 22 5 22H13V20H5V4Z'
+      fill='black'
+    />
+    <path
+      d='M15 18L18 21L21 18'
+      stroke='#389287'
+      strokeWidth={2}
+      strokeLinecap='round'
+      strokeLinejoin='round'
+    />
+    <path
+      d='M18 20V12'
+      stroke='#389287'
+      strokeWidth={2}
+      strokeLinecap='round'
+      strokeLinejoin='round'
+    />
+  </svg>
+);
+
+const FolderIcon = (props) => (
+  <svg
+    xmlns='http://www.w3.org/2000/svg'
+    width={24}
+    height={24}
+    fill='none'
+    {...props}
+  >
+    <path
+      stroke='currentColor'
+      strokeWidth={2}
+      d='M3 4v5h7.5l3-3a2 2 0 0 0-2-2H3Z'
+      opacity={0.4}
+    />
+    <path
+      stroke='currentColor'
+      strokeWidth={2}
+      d='M10 9h.414l.293-.293L13.414 6H18a3 3 0 0 1 3 3v11H3V9h7Z'
+    />
+  </svg>
+);
+
+const FilledFolderIcon = (props) => (
+  <svg
+    xmlns='http://www.w3.org/2000/svg'
+    width={24}
+    height={24}
+    fill='none'
+    {...props}
+  >
+    <path
+      stroke='currentColor'
+      strokeWidth={2}
+      d='M3 4v5h7.5l3-3a2 2 0 0 0-2-2H3Z'
+      opacity={0.4}
+    />
+    <path fill='currentColor' d='M18 5h-5l-3 3H2v13h20V9a4 4 0 0 0-4-4Z' />
+  </svg>
+);
+
+const FileIcon = (props) => (
+  <svg
+    xmlns='http://www.w3.org/2000/svg'
+    fill='none'
+    width={24}
+    height={24}
+    {...props}
+  >
+    <path
+      fill='currentColor'
+      fillRule='evenodd'
+      d='M18 11v9H6V4h6V2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-9h-2Z'
+      clipRule='evenodd'
+    />
+    <path fill='currentColor' d='M14 9h6l-6-7v7Z' opacity={0.4} />
+  </svg>
+);
+
+const ArrowLeftIcon = (props) => (
+  <svg
+    xmlns='http://www.w3.org/2000/svg'
+    width={24}
+    height={24}
+    fill='none'
+    {...props}
+  >
+    <path
+      stroke='currentColor'
+      strokeLinecap='round'
+      strokeWidth={2}
+      d='m9 6-5.704 5.265a1 1 0 0 0 0 1.47L9 18'
+    />
+    <rect width={19} height={2} x={3} y={11} fill='currentColor' rx={1} />
+  </svg>
+);
+
+const ArrowRightIcon = (props) => (
+  <svg
+    xmlns='http://www.w3.org/2000/svg'
+    width={24}
+    height={24}
+    fill='none'
+    {...props}
+  >
+    <path
+      stroke='currentColor'
+      strokeLinecap='round'
+      strokeWidth={2}
+      d='m16 18 5.704-5.265a1 1 0 0 0 0-1.47L16 6'
+    />
+    <rect
+      width={19}
+      height={2}
+      x={22}
+      y={13}
+      fill='currentColor'
+      rx={1}
+      transform='rotate(-180 22 13)'
+    />
+  </svg>
+);
+
+const PlusInCircleIcon = (props) => (
+  <svg
+    xmlns='http://www.w3.org/2000/svg'
+    width={24}
+    height={24}
+    fill='none'
+    {...props}
+  >
+    <circle
+      cx={12}
+      cy={12}
+      r={10}
+      stroke='currentColor'
+      strokeWidth={2}
+      opacity={0.4}
+    />
+    <rect width={12} height={2} x={6} y={11} fill='currentColor' rx={1} />
+    <rect
+      width={12}
+      height={2}
+      x={13}
+      y={6}
+      fill='currentColor'
+      rx={1}
+      transform='rotate(90 13 6)'
+    />
+  </svg>
+);
+
+const RenameIcon = (props) => (
+  <svg
+    xmlns='http://www.w3.org/2000/svg'
+    width={24}
+    height={24}
+    fill='none'
+    {...props}
+  >
+    <path
+      fill='currentColor'
+      fillRule='evenodd'
+      d='M13 6H3a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h10v-2H3V8h10V6Zm6 10h2V8h-2V6h2a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2h-2v-2Z'
+      clipRule='evenodd'
+      opacity={0.4}
+    />
+    <path fill='currentColor' d='M15 4h2v16h-2zM19 2v2h-6V2zM19 20v2h-6v-2z' />
+  </svg>
+);
+
+const TrashCanIcon = (props) => (
+  <svg
+    xmlns='http://www.w3.org/2000/svg'
+    width={24}
+    height={24}
+    fill='none'
+    {...props}
+  >
+    <rect width={18} height={2} x={3} y={3} fill='currentColor' rx={1} />
+    <rect width={4} height={4} x={10} y={1} fill='currentColor' rx={2} />
+    <path
+      fill='currentColor'
+      fillRule='evenodd'
+      d='M19 20V8H5v12h14ZM5 6H3v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6H5Z'
+      clipRule='evenodd'
+    />
+    <path
+      fill='currentColor'
+      d='M7 10h2v8H7v-8ZM11 10h2v8h-2zM15 10h2v8h-2z'
+      opacity={0.4}
+    />
   </svg>
 );
 
@@ -516,5 +768,13 @@ export {
   PardonIcon,
   SendAndReceiveIcon,
   SendIcon,
-  ReceiveIcon
+  ReceiveIcon,
+  FolderIcon,
+  FilledFolderIcon,
+  FileIcon,
+  ArrowLeftIcon,
+  ArrowRightIcon,
+  PlusInCircleIcon,
+  RenameIcon,
+  TrashCanIcon
 };

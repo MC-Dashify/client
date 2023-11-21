@@ -27,6 +27,7 @@ import BanList from './routes/BanList';
 import Traffic from './routes/Traffic';
 import Console from './routes/Console';
 import Settings from './routes/Settings';
+import Files from './routes/Files';
 import Update from './routes/Update';
 
 Sentry.init({
@@ -84,6 +85,7 @@ const App = () => {
             <Route path='banlist' element={<BanList />} />
             <Route path='traffic' element={<Traffic />} />
             <Route path='console' element={<Console />} />
+            <Route path='files/*' element={<Files />} />
           </Route>
         </Route>
 

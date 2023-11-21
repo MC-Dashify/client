@@ -95,7 +95,7 @@ const getPlayers = async (profile) => {
 };
 
 const getBanList = async (profile) => {
-  const players = {}
+  const players = {};
   const playerResults = (
     await Network.get(
       profile.address,
@@ -130,11 +130,4 @@ const getTraffic = async (profile) => {
   return trafficData;
 };
 
-export {
-  ping,
-  getStatus,
-  getWorlds,
-  getPlayers,
-  getBanList,
-  getTraffic
-};
+export { ping, getStatus, getWorlds, getPlayers, getBanList, getTraffic };
