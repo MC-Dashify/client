@@ -12,12 +12,15 @@
   },
   "tauri": {
     "allowlist": {
-      "all": false
+      "all": false,
+      "http": {
+        "all": true
+      }
     },
     "bundle": {
       "active": true,
       "category": "DeveloperTool",
-      "copyright": "",
+      "copyright": "Dashify Development Team",
       "deb": {
         "depends": []
       },
@@ -29,8 +32,8 @@
         "icons/icon.icns",
         "icons/icon.ico"
       ],
-      "identifier": "com.tauri.dev",
-      "longDescription": "",
+      "identifier": "cc.dashify.client",
+      "longDescription": "Easily and quickly monitor Minecraft servers.",
       "macOS": {
         "entitlements": null,
         "exceptionDomain": "",
@@ -40,27 +43,36 @@
       },
       "resources": [],
       "shortDescription": "",
-      "targets": "all",
+      "targets": [
+        "deb",
+        "appimage",
+        "msi",
+        "app",
+        "dmg",
+        "updater"
+      ],
       "windows": {
         "certificateThumbprint": null,
         "digestAlgorithm": "sha256",
-        "timestampUrl": ""
-      }
+        "timestampUrl": "",
+        "allowDowngrades": false
+      },
+      "publisher": "Dashify Development Team"
     },
     "security": {
       "csp": null
     },
     "updater": {
-      "active": false
-    },
-    "windows": [
-      {
-        "fullscreen": false,
-        "height": 600,
-        "resizable": true,
-        "title": "Dashify",
-        "width": 800
+      "active": true,
+      "endpoints": [
+        "https://update.dashify.cc"
+      ],
+      "dialog": false,
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDUxODJDNkQ2NzA5ODRFMUQKUldRZFRwaHcxc2FDVWFGaU9Cei9FVFlwWnlENWNuQllsZTdrRXFqZVpwOURleHVhUmhLNUhKcW0K",
+      "windows": {
+        "installMode": "passive"
       }
-    ]
+    },
+    "windows": []
   }
 }
