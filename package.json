@@ -5,7 +5,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "upgradesync": "yarn global add syncyarnlock && syncyarnlock -s -k && yarn install",
+    "gentailwind": "npx tailwindcss -i .\\src\\styles\\forTailwind.css -o .\\src\\styles\\dist\\tailwindOutput.css"
   },
   "dependencies": {
     "@mui/material": "^5.14.4",
