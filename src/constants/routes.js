@@ -24,14 +24,14 @@ const routes = {
     iconComponent: EarthIcon,
     text: "세계",
     href: "/dashboard/worlds",
-    hasAutoRefresh: false,
+    hasAutoRefresh: true,
     hasRefresh: true,
   },
   players: {
     iconComponent: PeopleIcon,
     text: "플레이어",
     href: "/dashboard/players",
-    hasAutoRefresh: false,
+    hasAutoRefresh: true,
     hasRefresh: true,
   },
   traffic: {

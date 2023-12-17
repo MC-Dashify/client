@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import styled from "styled-components";
 import { usePathname } from "next/navigation";
 import {
@@ -11,6 +11,7 @@ import {
 import Button from "@/components/common/Button";
 import routes from "@/constants/routes";
 import BottomArrowWithoutShaftIcon from "@/assets/icons-16x/BottomArrowWithoutShaft.svg";
+import LocalStorage from "@/lib/localstorage";
 
 const HeaderBox = styled.header`
   display: flex;
@@ -74,21 +75,68 @@ const exampleData = {
 
 const Header = () => {
   const { name, domain } = exampleData;
-
-  const [selectedRefreshPeriod, setSelectedRefreshPeriod] = useState(
-    new Set(["15"])
-  );
+  const INITIAL_REFRESH_PERIOD = 15;
 
   const pathname = usePathname();
-  const currentRoute = routes[pathname.split("/")[2]]; // /dashboard/overview에서 overview
-  const { hasAutoRefresh, hasRefresh } = currentRoute;
+  const currentRoute = pathname.split("/")[2]; // /dashboard/overview에서 overview
+  const { hasAutoRefresh, hasRefresh } = routes[currentRoute];
 
-  const refreshPeriod = useMemo(
+  const [selectedRefreshPeriod, setSelectedRefreshPeriod] = useState(
+    new Set([INITIAL_REFRESH_PERIOD])
+  );
+
+  // 로컬 스토리지를 관장하는 useEffect들은 hooks/useLocalStorage.js와 생김새가 유사한데,
+  // 굳이 hook을 쓰지 않은 이유는 스토리지 key 이름을 currentRoute에 맞춰 동적으로 관리해야
+  // 하기 때문입니다. hook을 쓰면 useRefreshPerid(page) 꼴로 사용해야 하는데,
+  // currentRoute가 바뀌어도 hook에는 변화가 없기 때문에 새로고침 주기에 이상이 생깁니다.
+
+  useEffect(() => {
+    // Next.js에서는 window 객체가 서버에서는 존재하지 않기 때문에
+    // 존재 여부를 먼저 확인해야 합니다.
+
+    !hasAutoRefresh && setSelectedRefreshPeriod(new Set([]));
+
+    const fromLocal = () => {
+      if (typeof window === "undefined") {
+        return INITIAL_REFRESH_PERIOD;
+      }
+
+      try {
+        const item = LocalStorage.getItem(
+          `settings.refreshPeriod.${currentRoute}`
+        );
+
+        return item !== null ? item : INITIAL_REFRESH_PERIOD;
+      } catch (error) {
+        console.error(error);
+
+        return INITIAL_REFRESH_PERIOD;
+      }
+    };
+
+    setSelectedRefreshPeriod(new Set([fromLocal()]));
+  }, [currentRoute, hasAutoRefresh]);
+
+  useEffect(() => {
+    // Next.js에서는 window 객체가 서버에서는 존재하지 않기 때문에
+    // 존재 여부를 먼저 확인해야 합니다.
+
+    try {
+      if (typeof window !== "undefined" && hasAutoRefresh) {
+        LocalStorage.setItem(
+          `settings.refreshPeriod.${currentRoute}`,
+          Array.from(selectedRefreshPeriod)[0]
+        );
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }, [selectedRefreshPeriod, currentRoute, hasAutoRefresh]);
+
+  const memoedRefreshPeriod = useMemo(
     () => Array.from(selectedRefreshPeriod)[0],
     [selectedRefreshPeriod]
   );
-
-  // TODO 새로 고침 주기 반영
 
   // 추후 i18n을 위해 Header 컴포넌트에서 안으로 넣었습니다.
   const refreshDropdownOptions = [
@@ -118,7 +166,7 @@ const Header = () => {
               <DropdownSelect tabIndex={0}>
                 {
                   refreshDropdownOptions.find(
-                    (i) => i.key === Number(refreshPeriod)
+                    (i) => i.key === Number(memoedRefreshPeriod)
                   ).label
                 }
 
