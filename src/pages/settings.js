@@ -139,6 +139,7 @@ const SectionItemBox = styled.div`
     opacity: 0.6;
     font-weight: 400;
     line-height: 120%;
+    word-break: keep-all;
   }
 `;
 
