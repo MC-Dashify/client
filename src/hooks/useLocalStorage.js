@@ -42,3 +42,12 @@ export const useLocalStorage = (key, initialValue) => {
 
   return [storedValue, setStoredValue];
 };
+
+export const useAsideExpanded = () => {
+  const [isExpanded, setIsExpanded] = useLocalStorage(
+    "settings.aside.isExpanded",
+    true
+  );
+
+  return [isExpanded, setIsExpanded];
+};

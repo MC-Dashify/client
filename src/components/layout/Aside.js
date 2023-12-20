@@ -11,6 +11,7 @@ import CogIcon from "@/assets/icons-24x/Cog.svg";
 import DoubleLeftArrowIcon from "@/assets/icons-16x/DoubleLeftArrow.svg";
 import RightAndLeftArrowIcon from "@/assets/icons-16x/RightAndLeftArrow.svg";
 import { dashboardRoutes as routes, commonRoutes } from "@/constants/routes";
+import { useAsideExpanded } from "@/hooks/useLocalStorage";
 
 const SIDEBAR_WIDTH = 260;
 
@@ -220,8 +221,7 @@ ProfileChanger.Address = styled.div`
 `;
 
 const Aside = () => {
-  const [isExpanded, setIsExpanded] = useState(true);
-  // XXX isExpanded 로컬 스토리지 저장
+  const [isExpanded, setIsExpanded] = useAsideExpanded();
 
   const { settings: settingsRoute } = commonRoutes;
 
