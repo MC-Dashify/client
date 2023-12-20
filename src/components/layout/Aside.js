@@ -231,14 +231,16 @@ const Aside = () => {
         <Header>
           <AnimatePresence initial={false}>
             {isExpanded && (
-              <LogoSection
-                initial={{ opacity: 0, x: -20, width: 0 }}
-                animate={{ opacity: 1, x: 0, width: "auto" }}
-                exit={{ opacity: 0, x: -20, width: 0 }}
-              >
-                <LogoSymbol width={20} height={20} />
-                <LogoText width={73} height={20} />
-              </LogoSection>
+              <Link href="/">
+                <LogoSection
+                  initial={{ opacity: 0, x: -20, width: 0 }}
+                  animate={{ opacity: 1, x: 0, width: "auto" }}
+                  exit={{ opacity: 0, x: -20, width: 0 }}
+                >
+                  <LogoSymbol width={20} height={20} />
+                  <LogoText width={73} height={20} />
+                </LogoSection>
+              </Link>
             )}
           </AnimatePresence>
 
