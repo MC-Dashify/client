@@ -209,7 +209,7 @@ const SettingDropdown = ({
   );
 
   return (
-    <Dropdown>
+    <Dropdown shouldBlockScroll={false}>
       <DropdownTrigger>
         <DropdownSelect tabIndex={0}>
           {options.find(({ key }) => key === selectedOption)?.label}
