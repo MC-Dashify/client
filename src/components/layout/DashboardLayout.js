@@ -14,14 +14,13 @@ const ContentWrapper = styled.div`
   padding: 42px;
 `;
 
-const DashboardLayout = ({ children }) => {
+const DashboardLayout = ({ children, hasHeader = true }) => {
   return (
     <LayoutWrapper>
       <Aside />
 
       <ContentWrapper>
-        <Header />
-        {/* TODO header */}
+        {hasHeader && <Header />}
 
         {children}
       </ContentWrapper>

@@ -10,7 +10,7 @@ import LogoText from "@/assets/logo/LogoText.svg";
 import CogIcon from "@/assets/icons-24x/Cog.svg";
 import DoubleLeftArrowIcon from "@/assets/icons-16x/DoubleLeftArrow.svg";
 import RightAndLeftArrowIcon from "@/assets/icons-16x/RightAndLeftArrow.svg";
-import routes from "@/constants/routes";
+import { dashboardRoutes as routes, commonRoutes } from "@/constants/routes";
 
 const SIDEBAR_WIDTH = 260;
 
@@ -223,6 +223,8 @@ const Aside = () => {
   const [isExpanded, setIsExpanded] = useState(true);
   // XXX isExpanded 로컬 스토리지 저장
 
+  const { settings: settingsRoute } = commonRoutes;
+
   return (
     <AsideBox animate={{ width: isExpanded ? SIDEBAR_WIDTH : 92 }}>
       <Top>
@@ -300,10 +302,10 @@ const Aside = () => {
         </ProfileChanger.Box>
 
         <MenuItem
-          Icon={CogIcon}
-          text="설정"
+          Icon={settingsRoute.iconComponent}
+          text={settingsRoute.text}
           isExpanded={isExpanded}
-          href="/settings"
+          href={settingsRoute.href}
         />
       </Bottom>
     </AsideBox>

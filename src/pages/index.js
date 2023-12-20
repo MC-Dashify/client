@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import Link from "next/link";
 const { version } = require("@/../package.json");
 
 import LogoSymbol from "@/assets/logo/LogoSymbol.svg";
@@ -7,6 +8,7 @@ import ProfileCreateForm from "@/components/profile/ProfileCreateForm";
 import ProfileSelectList from "@/components/profile/ProfileSelectList";
 import IconButton from "@/components/common/IconButton";
 import CogIcon from "@/assets/icons-24x/Cog.svg";
+import { commonRoutes } from "@/constants/routes";
 
 const Footer = styled.footer`
   display: flex;
@@ -56,12 +58,16 @@ const LogoContainer = styled.div`
 `;
 
 const Home = () => {
+  const { settings: settingsRoute } = commonRoutes;
+
   return (
     <>
       <Footer>
-        <IconButton>
-          <CogIcon width={18} height={18} />
-        </IconButton>
+        <Link href={settingsRoute.href}>
+          <IconButton>
+            <CogIcon width={18} height={18} />
+          </IconButton>
+        </Link>
 
         <AdditionalInfo>
           v{version}

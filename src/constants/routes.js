@@ -4,8 +4,17 @@ import EarthIcon from "@/assets/icons-24x/Earth.svg";
 import PeopleIcon from "@/assets/icons-24x/People.svg";
 import ServerIcon from "@/assets/icons-24x/Server.svg";
 import UpDownArrowIcon from "@/assets/icons-24x/UpDownArrow.svg";
+import CogIcon from "@/assets/icons-24x/Cog.svg";
 
-const routes = {
+const commonRoutes = {
+  settings: {
+    iconComponent: CogIcon,
+    text: "설정",
+    href: "/settings",
+  },
+};
+
+const dashboardRoutes = {
   overview: {
     iconComponent: ChartIcon,
     text: "개요",
@@ -50,4 +59,10 @@ const routes = {
   },
 };
 
+const routes = {
+  ...commonRoutes,
+  ...dashboardRoutes,
+};
+
+export { commonRoutes, dashboardRoutes };
 export default routes;
