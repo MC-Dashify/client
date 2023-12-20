@@ -51,3 +51,39 @@ export const useAsideExpanded = () => {
 
   return [isExpanded, setIsExpanded];
 };
+
+export const useLaungage = () => {
+  const [language, setLanguage] = useLocalStorage(
+    "settings.appearance.language",
+    "ko" // XXX dropdown options를 contants 폴더로 옮겨서 여기로 import하면 key를 쓸 수 있지 않을까
+  );
+
+  return [language, setLanguage];
+};
+
+export const useTheme = () => {
+  const [theme, setTheme] = useLocalStorage(
+    "settings.appearance.theme",
+    "system" // XXX dropdown options를 contants 폴더로 옮겨서 여기로 import하면 key를 쓸 수 있지 않을까
+  );
+
+  return [theme, setTheme];
+};
+
+export const usePointColor = () => {
+  const [pointColor, setPointColor] = useLocalStorage(
+    "settings.appearance.pointcolor",
+    "blue" // XXX dropdown options를 contants 폴더로 옮겨서 여기로 import하면 key를 쓸 수 있지 않을까
+  );
+
+  return [pointColor, setPointColor];
+};
+
+export const useHideDomain = () => {
+  const [isDomainHidden, setIsDomainHidden] = useLocalStorage(
+    "settings.security.hidedomain",
+    false // XXX dropdown options를 contants 폴더로 옮겨서 여기로 import하면 key를 쓸 수 있지 않을까
+  );
+
+  return [isDomainHidden, setIsDomainHidden];
+};

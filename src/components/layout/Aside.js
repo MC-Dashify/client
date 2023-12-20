@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import styled, { css } from "styled-components";
@@ -7,7 +6,6 @@ import { motion, AnimatePresence } from "framer-motion";
 import IconButton from "@/components/common/IconButton";
 import LogoSymbol from "@/assets/logo/LogoSymbol.svg";
 import LogoText from "@/assets/logo/LogoText.svg";
-import CogIcon from "@/assets/icons-24x/Cog.svg";
 import DoubleLeftArrowIcon from "@/assets/icons-16x/DoubleLeftArrow.svg";
 import RightAndLeftArrowIcon from "@/assets/icons-16x/RightAndLeftArrow.svg";
 import { dashboardRoutes as routes, commonRoutes } from "@/constants/routes";
