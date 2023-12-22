@@ -4,11 +4,7 @@ class LocalStorage {
   static setItem(key, item) {
     if (typeof window === "undefined") return;
 
-    const data = JSON.stringify({
-      data: item,
-    });
-
-    localStorage.setItem(key, Buffer.from(data).toString("base64"));
+    localStorage.setItem(key, String(item));
   }
 
   static getItem(key) {
@@ -17,22 +13,19 @@ class LocalStorage {
     const data = localStorage.getItem(key);
     if (!data) return null;
 
-    try {
-      const decoded = Buffer.from(data, "base64").toString("utf-8");
-      const { data: item } = JSON.parse(decoded);
-
-      return item;
-    } catch (err) {
-      console.error(err);
-
-      return null;
-    }
+    return data;
   }
 
   static removeItem(key) {
     if (typeof window === "undefined") return;
 
     localStorage.removeItem(key);
+  }
+
+  static clear() {
+    if (typeof window === "undefined") return;
+
+    localStorage.clear();
   }
 }
 

@@ -43,6 +43,14 @@ export default function RootLayout({ Component, pageProps, router }) {
     setTheme(isDarkThemeUsed ? "dark" : "light");
   }, [selectedTheme]);
 
+  useEffect(() => {
+    // nextui 테마 적용을 위해 html 태그에 data-theme 속성을 추가합니다.
+    // 문서상으로 <main> 태그에 className을 적용하면 되지만 어째서인지 작동하지 않네요.
+    const html = document.querySelector("html");
+
+    html.setAttribute("data-theme", theme);
+  }, [theme]);
+
   return (
     <NextUIProvider>
       <style jsx global>{`

@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import { useState, useMemo, useEffect } from "react";
+import { useMemo } from "react";
 import styled from "styled-components";
 import {
   red,
@@ -45,6 +45,7 @@ import {
   usePointColor,
   useTheme,
 } from "@/hooks/useLocalStorage";
+import LocalStorage from "@/lib/localstorage";
 
 const PageWrapper = styled.div`
   display: flex;
@@ -466,7 +467,7 @@ const SettingsPage = () => {
               variant="danger"
               size="medium"
               onClick={() => {
-                localStorage.clear();
+                LocalStorage.clear();
                 router.push("/");
               }}
             >
