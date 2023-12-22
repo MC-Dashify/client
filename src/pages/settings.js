@@ -204,10 +204,7 @@ const SettingDropdown = ({
   onSelectionChange,
   ...props
 }) => {
-  const selectedOptionSet = useMemo(
-    () => new Set(selectedOption),
-    [selectedOption]
-  );
+  const selectedOptionSet = new Set([selectedOption]);
 
   return (
     <Dropdown shouldBlockScroll={false}>
