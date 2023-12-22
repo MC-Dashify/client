@@ -376,7 +376,7 @@ const SettingsPage = () => {
         <PageTitle>설정</PageTitle>
 
         <IconButton onClick={() => router.back()}>
-          <XIcon />
+          <XIcon width={16} height={16} />
         </IconButton>
       </Header>
 
