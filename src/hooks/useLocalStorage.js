@@ -114,5 +114,5 @@ export const useHideDomain = () => {
     false // XXX dropdown options를 contants 폴더로 옮겨서 여기로 import하면 key를 쓸 수 있지 않을까
   );
 
-  return [Boolean(isDomainHidden), setIsDomainHidden];
+  return [isDomainHidden, setIsDomainHidden];
 };

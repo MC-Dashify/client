@@ -1,19 +1,28 @@
 class LocalStorage {
   constructor() {}
 
+  /**
+   * 데이터를 {"data": 데이터} 형식으로 저장하는 것은 타입을 최대한
+   * 보존하기 위함입니다.
+   */
+
   static setItem(key, item) {
     if (typeof window === "undefined") return;
 
-    localStorage.setItem(key, String(item));
+    localStorage.setItem(key, JSON.stringify({ data: item }));
   }
 
   static getItem(key) {
     if (typeof window === "undefined") return null;
 
-    const data = localStorage.getItem(key);
-    if (!data) return null;
+    const item = localStorage.getItem(key);
+    if (!item) return null;
 
-    return data;
+    try {
+      return JSON.parse(item).data;
+    } catch (e) {
+      return null;
+    }
   }
 
   static removeItem(key) {
