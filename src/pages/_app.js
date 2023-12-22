@@ -6,8 +6,8 @@ import { ThemeProvider } from "styled-components";
 
 import "@/styles/dist/tailwindOutput.css";
 import GlobalStyle from "@/components/styles/GlobalStyle";
-import { dark as darkTheme, light as lightTheme } from "@/styles/themes";
-import { useTheme } from "@/hooks/useLocalStorage";
+import { getDarkTheme, getLightTheme, pointcolorDict } from "@/styles/themes";
+import { usePointColor, useTheme } from "@/hooks/useLocalStorage";
 
 const pretendardFont = localFont({
   src: "../styles/font/PretendardVariable.ttf",
@@ -28,6 +28,7 @@ const jetBrainsMonoFont = JetBrains_Mono({
 
 export default function RootLayout({ Component, pageProps, router }) {
   const [selectedTheme, setSelectedTheme] = useTheme();
+  const [pointColor, setPointColor] = usePointColor();
   const [theme, setTheme] = useState("light");
 
   /** getLayout은 페이지에서 반환되는 함수입니다(`./dashboard/overview.js` 등 참고).
@@ -60,7 +61,13 @@ export default function RootLayout({ Component, pageProps, router }) {
         }
       `}</style>
 
-      <ThemeProvider theme={theme === "dark" ? darkTheme : lightTheme}>
+      <ThemeProvider
+        theme={
+          theme === "dark"
+            ? getDarkTheme(pointcolorDict[pointColor])
+            : getLightTheme(pointcolorDict[pointColor])
+        }
+      >
         <GlobalStyle />
 
         {getLayout(<Component {...pageProps} key={router.asPath} />)}

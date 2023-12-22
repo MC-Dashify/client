@@ -14,11 +14,11 @@ import {
   green,
   lightGreen,
   lime,
-  yellow,
   amber,
   orange,
   deepOrange,
   brown,
+  blueGrey,
 } from "@mui/material/colors";
 import { open } from "@tauri-apps/api/shell";
 import {
@@ -335,11 +335,6 @@ const pointColorOptions = {
       startContent: <ColorPreview color={lime[500]} />,
     },
     {
-      label: "노란색",
-      key: "yellow",
-      startContent: <ColorPreview color={yellow[500]} />,
-    },
-    {
       label: "호박색",
       key: "amber",
       startContent: <ColorPreview color={amber[500]} />,
@@ -358,6 +353,11 @@ const pointColorOptions = {
       label: "갈색",
       key: "brown",
       startContent: <ColorPreview color={brown[500]} />,
+    },
+    {
+      label: "청회색",
+      key: "blueGrey",
+      startContent: <ColorPreview color={blueGrey[500]} />,
     },
   ],
 };
@@ -431,7 +431,14 @@ const SettingsPage = () => {
 
           <SectionItem
             title="포인트 컬러"
-            memo="화면에서 강조해서 표시되는 요소의 색상을 변경합니다. 일부 요소는 색상이 변경되면 혼란이 생길 수 있기 때문에 설정이 적용되지 않습니다."
+            memo={
+              <>
+                화면에서 강조해서 표시되는 요소의 색상을 변경합니다.{" "}
+                <strong>특정 색상은 가독성을 해칠할 수 있습니다. </strong> 일부
+                요소는 색상이 변경되면 혼란이 생길 수 있기 때문에 설정이
+                적용되지 않습니다.
+              </>
+            }
           >
             <SettingDropdown
               aria-label="포인트 컬러 선택"
@@ -471,6 +478,7 @@ const SettingsPage = () => {
                 router.push("/");
               }}
             >
+              {/* TODO 모달로 확인 창 띄우는 게 좋을 듯 */}
               데이터 삭제
             </Button>
           </SectionItem>

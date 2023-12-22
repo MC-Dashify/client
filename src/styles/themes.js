@@ -36,9 +36,27 @@ const commonTheme = {
   },
 };
 
-const primary = blue;
+const pointcolorDict = {
+  red,
+  pink,
+  purple,
+  deepPurple,
+  indigo,
+  blue,
+  lightBlue,
+  cyan,
+  teal,
+  green,
+  lightGreen,
+  lime,
+  amber,
+  orange,
+  deepOrange,
+  brown,
+  blueGrey,
+};
 
-const dark = {
+const getDarkTheme = (primary) => ({
   THEME_NAME: "dark",
 
   ...commonTheme,
@@ -150,9 +168,9 @@ const dark = {
   traffic: {
     hoverBg: grey[900],
   },
-};
+});
 
-const light = {
+const getLightTheme = (primary) => ({
   THEME_NAME: "light",
 
   ...commonTheme,
@@ -264,6 +282,6 @@ const light = {
   traffic: {
     hoverBg: grey[100],
   },
-};
+});
 
-export { commonTheme, dark, light };
+export { commonTheme, pointcolorDict, getDarkTheme, getLightTheme };
