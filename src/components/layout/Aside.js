@@ -1,8 +1,8 @@
-import { usePathname } from "next/navigation";
-import Link from "next/link";
+import { useRouter } from "next/router";
 import styled, { css } from "styled-components";
 import { motion, AnimatePresence } from "framer-motion";
 
+import Link from "@/components/common/Link";
 import IconButton from "@/components/common/IconButton";
 import LogoSymbol from "@/assets/logo/LogoSymbol.svg";
 import LogoText from "@/assets/logo/LogoText.svg";
@@ -130,10 +130,13 @@ const MenuItemLink = styled(Link)`
 `;
 
 const MenuItem = ({ Icon, text, isExpanded, href }) => {
-  const pathname = usePathname();
+  const router = useRouter();
 
   return (
-    <MenuItemLink href={href} $enabled={href === pathname}>
+    <MenuItemLink
+      href={href}
+      $enabled={href === router.pathname.replace("[locale]/", "")}
+    >
       <Icon width={24} height={24} />
 
       <AnimatePresence initial={false}>

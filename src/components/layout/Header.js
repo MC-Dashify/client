@@ -78,7 +78,7 @@ const Header = () => {
   const INITIAL_REFRESH_PERIOD = 15;
 
   const pathname = usePathname();
-  const currentRoute = pathname.split("/")[2]; // /dashboard/overview에서 overview
+  const currentRoute = pathname.split("/")[3]; // /[locale]/dashboard/overview에서 overview
   const { hasAutoRefresh, hasRefresh } = routes[currentRoute];
 
   const [selectedRefreshPeriod, setSelectedRefreshPeriod] = useState(
@@ -87,7 +87,7 @@ const Header = () => {
 
   // 로컬 스토리지를 관장하는 useEffect들은 hooks/useLocalStorage.js와 생김새가 유사한데,
   // 굳이 hook을 쓰지 않은 이유는 스토리지 key 이름을 currentRoute에 맞춰 동적으로 관리해야
-  // 하기 때문입니다. hook을 쓰면 useRefreshPerid(page) 꼴로 사용해야 하는데,
+  // 하기 때문입니다. hook을 쓰면 useRefreshPeriod(page) 꼴로 사용해야 하는데,
   // currentRoute가 바뀌어도 hook에는 변화가 없기 때문에 새로고침 주기에 이상이 생깁니다.
 
   useEffect(() => {

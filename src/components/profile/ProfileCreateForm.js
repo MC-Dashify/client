@@ -1,9 +1,11 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import styled from "styled-components";
+
 import InputBox from "@/components/common/InputField";
 import Button from "@/components/common/Button";
 import CogIcon from "@/assets/icons-24x/Cog.svg";
+import { useRouteRedirect } from "@/hooks/useRouteRedirect";
 
 const Container = styled.div`
   display: flex;
@@ -51,6 +53,7 @@ const ButtonContainer = styled.div`
 
 const ProfileCreateForm = ({ createButtonText }) => {
   const router = useRouter();
+  const { redirect } = useRouteRedirect();
 
   const [profileName, setProfileName] = useState("");
   const [serverAddress, setServerAddress] = useState("");
@@ -121,7 +124,7 @@ const ProfileCreateForm = ({ createButtonText }) => {
         <Button
           variant="primary"
           onClick={() => {
-            router.push("/dashboard/overview"); // XXX For test
+            redirect("/dashboard/overview"); // XXX For test
           }}
         >
           {createButtonText || "프로필 생성"}

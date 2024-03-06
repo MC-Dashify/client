@@ -1,5 +1,4 @@
 import { useRouter } from "next/router";
-import { useMemo } from "react";
 import styled from "styled-components";
 import {
   red,
@@ -45,7 +44,10 @@ import {
   usePointColor,
   useTheme,
 } from "@/hooks/useLocalStorage";
+import { useI18n } from "@/hooks/useI18n";
+import { useRouteRedirect } from "@/hooks/useRouteRedirect";
 import LocalStorage from "@/lib/localstorage";
+import { languageDetector } from "@/lib/languageDetector";
 
 const PageWrapper = styled.div`
   display: flex;
@@ -361,12 +363,30 @@ const pointColorOptions = {
 
 const SettingsPage = () => {
   const router = useRouter();
+  const { t, lang } = useI18n();
+  const { redirect } = useRouteRedirect();
 
-  const [language, setLanguage] = useLaungage();
   const [theme, setTheme] = useTheme();
   const [pointColor, setPointColor] = usePointColor();
 
   const [isDomainHidden, setIsDomainHidden] = useHideDomain();
+
+  const handleChangeLanguage = (afterLang) => {
+    let _pathname = router.pathname;
+
+    Object.keys(router.query).forEach((slug) => {
+      if (slug === "locale") {
+        _pathname = _pathname.replace(`[${slug}]`, afterLang);
+        return;
+      }
+
+      _pathname = _pathname.replace(`[${slug}]`, router.query[slug]);
+    });
+
+    languageDetector.cache && languageDetector.cache(afterLang);
+    router.replace(_pathname);
+    // useRouteRedirect를 사용하지 않는 이유는 _pathname 자체에 [locale]이 담겨 있기 때문입니다.
+  };
 
   return (
     <Content>
@@ -408,8 +428,8 @@ const SettingsPage = () => {
             <SettingDropdown
               aria-label="표시 언어 선택"
               options={languageOptions.data}
-              selectedOption={language}
-              onSelectionChange={setLanguage}
+              selectedOption={lang}
+              onSelectionChange={(value) => handleChangeLanguage(value)}
             />
           </SectionItem>
 
@@ -431,7 +451,7 @@ const SettingsPage = () => {
             memo={
               <>
                 화면에서 강조해서 표시되는 요소의 색상을 변경합니다.{" "}
-                <strong>특정 색상은 가독성을 해칠할 수 있습니다. </strong> 일부
+                <strong>특정 색상은 가독성을 해칠할 수 있습니다.</strong> 일부
                 요소는 색상이 변경되면 혼란이 생길 수 있기 때문에 설정이
                 적용되지 않습니다.
               </>
@@ -472,7 +492,7 @@ const SettingsPage = () => {
               size="medium"
               onClick={() => {
                 LocalStorage.clear();
-                router.push("/");
+                redirect("/");
               }}
             >
               {/* TODO 모달로 확인 창 띄우는 게 좋을 듯 */}

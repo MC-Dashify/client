@@ -3,11 +3,16 @@ import { JetBrains_Mono } from "next/font/google";
 import localFont from "next/font/local";
 import { NextUIProvider } from "@nextui-org/react";
 import { ThemeProvider } from "styled-components";
+import I18nProvider from "next-translate/I18nProvider";
 
 import "@/styles/dist/tailwindOutput.css";
-import GlobalStyle from "@/components/styles/GlobalStyle";
 import { getDarkTheme, getLightTheme, pointcolorDict } from "@/styles/themes";
+import { LanguageWrapper } from "@/components/wrappers/LanguageWrapper";
+import GlobalStyle from "@/components/styles/GlobalStyle";
 import { usePointColor, useTheme } from "@/hooks/useLocalStorage";
+import commonKO from "@/locales/ko/common.json";
+import commonEN from "@/locales/en/common.json";
+import { i18nConfig } from "@/../i18n";
 
 const pretendardFont = localFont({
   src: "../styles/font/PretendardVariable.ttf",
@@ -31,6 +36,10 @@ export default function RootLayout({ Component, pageProps, router }) {
   const [pointColor, setPointColor] = usePointColor();
   const [theme, setTheme] = useState("light");
 
+  const lang = i18nConfig.locales.includes(router.query.locale)
+    ? router.query.locale
+    : i18nConfig.defaultLocale;
+
   /** getLayout은 페이지에서 반환되는 함수입니다(`./dashboard/overview.js` 등 참고).
    * getLayout으로 반환되는 내용은 페이지를 전환해도 바뀌지 않습니다. */
   const getLayout = Component.getLayout || ((page) => page);
@@ -53,25 +62,32 @@ export default function RootLayout({ Component, pageProps, router }) {
   }, [theme]);
 
   return (
-    <NextUIProvider>
-      <style jsx global>{`
-        :root {
-          --pretendard-font: ${pretendardFont.style.fontFamily};
-          --jetbrains-mono-font: ${jetBrainsMonoFont.style.fontFamily};
-        }
-      `}</style>
+    <I18nProvider
+      lang={lang}
+      namespaces={{ common: lang === "ko" ? commonKO : commonEN }}
+    >
+      <LanguageWrapper>
+        <NextUIProvider>
+          <style jsx global>{`
+            :root {
+              --pretendard-font: ${pretendardFont.style.fontFamily};
+              --jetbrains-mono-font: ${jetBrainsMonoFont.style.fontFamily};
+            }
+          `}</style>
 
-      <ThemeProvider
-        theme={
-          theme === "dark"
-            ? getDarkTheme(pointcolorDict[pointColor])
-            : getLightTheme(pointcolorDict[pointColor])
-        }
-      >
-        <GlobalStyle />
+          <ThemeProvider
+            theme={
+              theme === "dark"
+                ? getDarkTheme(pointcolorDict[pointColor])
+                : getLightTheme(pointcolorDict[pointColor])
+            }
+          >
+            <GlobalStyle />
 
-        {getLayout(<Component {...pageProps} key={router.asPath} />)}
-      </ThemeProvider>
-    </NextUIProvider>
+            {getLayout(<Component {...pageProps} key={router.asPath} />)}
+          </ThemeProvider>
+        </NextUIProvider>
+      </LanguageWrapper>
+    </I18nProvider>
   );
 }

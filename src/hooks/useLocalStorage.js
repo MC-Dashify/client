@@ -80,14 +80,7 @@ export const useAsideExpanded = () => {
   return [isExpanded, setIsExpanded];
 };
 
-export const useLaungage = () => {
-  const [language, setLanguage] = useLocalStorage(
-    "settings.appearance.language",
-    "ko" // XXX dropdown options를 contants 폴더로 옮겨서 여기로 import하면 key를 쓸 수 있지 않을까
-  );
-
-  return [language, setLanguage];
-};
+// settings.appearance.language는 nextLanuageDetector에 의해 관리됩니다.
 
 export const useTheme = () => {
   // light / dark / system
