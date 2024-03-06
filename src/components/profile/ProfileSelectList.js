@@ -2,6 +2,7 @@ import styled from "styled-components";
 import Button from "@/components/common/Button";
 import CogIcon from "@/assets/icons-24x/Cog.svg";
 import PlusInCircleIcon from "@/assets/icons-24x/PlusInCircle.svg";
+import { useI18n } from "@/hooks/useI18n";
 
 const Container = styled.div`
   display: flex;
@@ -108,15 +109,17 @@ const ButtonContainer = styled.div`
 `;
 
 const ProfileSelectList = () => {
+  const { t } = useI18n();
+
   return (
     <Container>
       <ProfileSection>
-        <SectionTitle>기존 프로필로 연결</SectionTitle>
+        <SectionTitle>{t`profileSelect.title`}</SectionTitle>
 
         <ProfileList>
           <ProfileItem
-            name="아름다운 마크 서버 #1아름다운 마크 서버 #1아름다운 마크 서버 #1"
-            address="mc.hypixel.netmc.hypixel.netmc.hypixel.netmc.hypixel.netmc.hypixel.netmc.hypixel.net"
+            name="Minecraft Server"
+            address="mc.hypixel.net"
             port={25565}
           />
         </ProfileList>
@@ -131,10 +134,11 @@ const ProfileSelectList = () => {
           }}
         >
           <PlusInCircleIcon height={24} width={24} />
-          프로필 추가
+          {t`profileSelect.addBtn`}
         </Button>
 
         <Button variant="tertiary" size="medium">
+          {/* TODO 프로필 관리 */}
           <CogIcon height={24} width={24} />
         </Button>
       </ButtonContainer>

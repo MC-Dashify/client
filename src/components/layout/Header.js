@@ -12,6 +12,8 @@ import Button from "@/components/common/Button";
 import routes from "@/constants/routes";
 import BottomArrowWithoutShaftIcon from "@/assets/icons-16x/BottomArrowWithoutShaft.svg";
 import LocalStorage from "@/lib/localstorage";
+import Trans from "next-translate/Trans";
+import { useI18n } from "@/hooks/useI18n";
 
 const HeaderBox = styled.header`
   display: flex;
@@ -73,7 +75,44 @@ const exampleData = {
   port: 8080,
 };
 
+const TimeTrans = ({ number, type }) => (
+  <Trans i18nKey={`units.${type}`} values={{ number }} ns="common" />
+);
+
+const refreshDropdownOptions = [
+  {
+    label: <TimeTrans type="seconds" number={1} />,
+    key: 1,
+  },
+  {
+    label: <TimeTrans type="seconds" number={3} />,
+    key: 3,
+  },
+  {
+    label: <TimeTrans type="seconds" number={5} />,
+    key: 5,
+  },
+  {
+    label: <TimeTrans type="seconds" number={10} />,
+    key: 10,
+  },
+  {
+    label: <TimeTrans type="seconds" number={15} />,
+    key: 15,
+  },
+  {
+    label: <TimeTrans type="seconds" number={30} />,
+    key: 30,
+  },
+  {
+    label: <TimeTrans type="minutes" number={1} />,
+    key: 60,
+  },
+];
+
 const Header = () => {
+  const { t } = useI18n();
+
   const { name, domain } = exampleData;
   const INITIAL_REFRESH_PERIOD = 15;
 
@@ -138,17 +177,6 @@ const Header = () => {
     [selectedRefreshPeriod]
   );
 
-  // 추후 i18n을 위해 Header 컴포넌트에서 안으로 넣었습니다.
-  const refreshDropdownOptions = [
-    { label: "1초", key: 1 },
-    { label: "3초", key: 3 },
-    { label: "5초", key: 5 },
-    { label: "10초", key: 10 },
-    { label: "15초", key: 15 },
-    { label: "30초", key: 30 },
-    { label: "1분", key: 60 },
-  ];
-
   return (
     <HeaderBox>
       <TitleContainer>
@@ -159,7 +187,7 @@ const Header = () => {
 
       {hasAutoRefresh && (
         <DropdownSelectWrapper>
-          <DropdownSelectLabel>새로 고침 주기</DropdownSelectLabel>
+          <DropdownSelectLabel>{t`header.refresh.label`}</DropdownSelectLabel>
 
           <Dropdown>
             <DropdownTrigger>
@@ -175,14 +203,16 @@ const Header = () => {
             </DropdownTrigger>
 
             <DropdownMenu
-              aria-label="새로 고침 주기 선택"
+              aria-label={t`header.refresh.aria-label`}
               selectionMode="single"
               disallowEmptySelection={true}
               selectedKeys={selectedRefreshPeriod}
               onSelectionChange={setSelectedRefreshPeriod}
             >
               {refreshDropdownOptions.map(({ label, key }) => (
-                <DropdownItem key={key}>{label}</DropdownItem>
+                <DropdownItem key={key} textValue={key + "Seconds"}>
+                  {label}
+                </DropdownItem>
               ))}
             </DropdownMenu>
           </Dropdown>
@@ -197,7 +227,7 @@ const Header = () => {
             // TODO 새로고침
           }}
         >
-          지금 새로 고침
+          {t`header.refresh.refreshNow`}
         </Button>
       )}
     </HeaderBox>

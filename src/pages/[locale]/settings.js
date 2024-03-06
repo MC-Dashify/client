@@ -27,6 +27,7 @@ import {
   DropdownItem,
   Checkbox,
 } from "@nextui-org/react";
+import Trans from "next-translate/Trans";
 const { version } = require("@/../package.json");
 
 import Button from "@/components/common/Button";
@@ -40,7 +41,6 @@ import LockIcon from "@/assets/icons-24x/Lock.svg";
 import BottomArrowWithoutShaftIcon from "@/assets/icons-16x/BottomArrowWithoutShaft.svg";
 import {
   useHideDomain,
-  useLaungage,
   usePointColor,
   useTheme,
 } from "@/hooks/useLocalStorage";
@@ -206,13 +206,14 @@ const SettingDropdown = ({
   onSelectionChange,
   ...props
 }) => {
+  const { t } = useI18n();
   const selectedOptionSet = new Set([selectedOption]);
 
   return (
     <Dropdown shouldBlockScroll={false}>
       <DropdownTrigger>
         <DropdownSelect tabIndex={0}>
-          {options.find(({ key }) => key === selectedOption)?.label}
+          {t(options.find(({ key }) => key === selectedOption)?.label)}
 
           <BottomArrowWithoutShaftIcon width={16} height={16} />
         </DropdownSelect>
@@ -228,7 +229,7 @@ const SettingDropdown = ({
       >
         {options.map(({ label, key, startContent }) => (
           <DropdownItem startContent={startContent} key={key}>
-            {label}
+            {t(label)}
           </DropdownItem>
         ))}
       </DropdownMenu>
@@ -252,21 +253,20 @@ const Footer = styled.footer`
   opacity: 0.4;
 `;
 
-// XXX label에 i18n 문자열 키를 넣고 constants 폴더로 옮기는 건 어떨까
 const languageOptions = {
   initialKey: "ko",
   data: [
-    { label: "한국어", key: "ko" },
-    { label: "English", key: "en" },
+    { label: "settings.appearance.language.ko", key: "ko" },
+    { label: "settings.appearance.language.en", key: "en" },
   ],
 };
 
 const themeOptions = {
   initialKey: "system",
   data: [
-    { label: "시스템 설정과 연동", key: "system" },
-    { label: "라이트 테마", key: "light" },
-    { label: "다크 테마", key: "dark" },
+    { label: "settings.appearance.theme.system", key: "system" },
+    { label: "settings.appearance.theme.light", key: "light" },
+    { label: "settings.appearance.theme.dark", key: "dark" },
   ],
 };
 
@@ -274,87 +274,87 @@ const pointColorOptions = {
   initialKey: "system",
   data: [
     {
-      label: "빨간색",
+      label: "settings.appearance.pointColor.red",
       key: "red",
       startContent: <ColorPreview color={red[500]} />,
     },
     {
-      label: "분홍색",
+      label: "settings.appearance.pointColor.pink",
       key: "pink",
       startContent: <ColorPreview color={pink[500]} />,
     },
     {
-      label: "보라색",
+      label: "settings.appearance.pointColor.purple",
       key: "purple",
       startContent: <ColorPreview color={purple[500]} />,
     },
     {
-      label: "짙은 보라색",
+      label: "settings.appearance.pointColor.deepPurple",
       key: "deepPurple",
       startContent: <ColorPreview color={deepPurple[500]} />,
     },
     {
-      label: "남색",
+      label: "settings.appearance.pointColor.indigo",
       key: "indigo",
       startContent: <ColorPreview color={indigo[500]} />,
     },
     {
-      label: "파란색(기본)",
+      label: "settings.appearance.pointColor.blue",
       key: "blue",
       startContent: <ColorPreview color={blue[500]} />,
     },
     {
-      label: "하늘색",
+      label: "settings.appearance.pointColor.lightBlue",
       key: "lightBlue",
       startContent: <ColorPreview color={lightBlue[500]} />,
     },
     {
-      label: "청록색",
+      label: "settings.appearance.pointColor.cyan",
       key: "cyan",
       startContent: <ColorPreview color={cyan[500]} />,
     },
     {
-      label: "옥빛 청록색",
+      label: "settings.appearance.pointColor.teal",
       key: "teal",
       startContent: <ColorPreview color={teal[500]} />,
     },
     {
-      label: "초록색",
+      label: "settings.appearance.pointColor.green",
       key: "green",
       startContent: <ColorPreview color={green[500]} />,
     },
     {
-      label: "연두색",
+      label: "settings.appearance.pointColor.lightGreen",
       key: "lightGreen",
       startContent: <ColorPreview color={lightGreen[500]} />,
     },
     {
-      label: "라임색",
+      label: "settings.appearance.pointColor.lime",
       key: "lime",
       startContent: <ColorPreview color={lime[500]} />,
     },
     {
-      label: "호박색",
+      label: "settings.appearance.pointColor.amber",
       key: "amber",
       startContent: <ColorPreview color={amber[500]} />,
     },
     {
-      label: "주황색",
+      label: "settings.appearance.pointColor.orange",
       key: "orange",
       startContent: <ColorPreview color={orange[500]} />,
     },
     {
-      label: "짙은 주황색",
+      label: "settings.appearance.pointColor.deepOrange",
       key: "deepOrange",
       startContent: <ColorPreview color={deepOrange[500]} />,
     },
     {
-      label: "갈색",
+      label: "settings.appearance.pointColor.brown",
       key: "brown",
       startContent: <ColorPreview color={brown[500]} />,
     },
     {
-      label: "청회색",
+      label: "settings.appearance.pointColor.blueGrey",
       key: "blueGrey",
       startContent: <ColorPreview color={blueGrey[500]} />,
     },
@@ -391,9 +391,14 @@ const SettingsPage = () => {
   return (
     <Content>
       <Header>
-        <PageTitle>설정</PageTitle>
+        <PageTitle>{t`settings.title`}</PageTitle>
 
-        <IconButton onClick={() => router.back()}>
+        <IconButton
+          onClick={
+            () =>
+              router.back() /* FIXME 언어 변경 후 뒤로 갈 경우 언어 변경이 적용되지 않음 */
+          }
+        >
           <XIcon width={16} height={16} />
         </IconButton>
       </Header>
@@ -414,19 +419,22 @@ const SettingsPage = () => {
               open(process.env.NEXT_PUBLIC_GITHUB_REPO_LINK);
             }}
           >
-            GitHub 리포지토리 방문
+            {t`settings.github`}
           </Button>
 
           <Button variant="primary" size="medium">
-            업데이트 확인
+            {t`settings.update`}
             {/* TODO 업데이트 확인 버튼 */}
           </Button>
         </ApplicationInfo>
 
-        <Section title="외관" icon={<PaintRollerIcon width={24} height={24} />}>
-          <SectionItem title="표시 언어(Language)">
+        <Section
+          title={t`settings.appearance.title`}
+          icon={<PaintRollerIcon width={24} height={24} />}
+        >
+          <SectionItem title={t`settings.appearance.language.title`}>
             <SettingDropdown
-              aria-label="표시 언어 선택"
+              aria-label={t`settings.appearance.language.aria-label`}
               options={languageOptions.data}
               selectedOption={lang}
               onSelectionChange={(value) => handleChangeLanguage(value)}
@@ -435,9 +443,9 @@ const SettingsPage = () => {
 
           <ItemDivider />
 
-          <SectionItem title="테마">
+          <SectionItem title={t`settings.appearance.theme.title`}>
             <SettingDropdown
-              aria-label="테마 선택"
+              aria-label={t`settings.appearance.theme.aria-label`}
               options={themeOptions.data}
               selectedOption={theme}
               onSelectionChange={setTheme}
@@ -447,18 +455,18 @@ const SettingsPage = () => {
           <ItemDivider />
 
           <SectionItem
-            title="포인트 컬러"
+            title={t`settings.appearance.pointColor.title`}
             memo={
-              <>
-                화면에서 강조해서 표시되는 요소의 색상을 변경합니다.{" "}
-                <strong>특정 색상은 가독성을 해칠할 수 있습니다.</strong> 일부
-                요소는 색상이 변경되면 혼란이 생길 수 있기 때문에 설정이
-                적용되지 않습니다.
-              </>
+              <Trans
+                i18nKey="settings.appearance.pointColor.memo"
+                // eslint-disable-next-line react/jsx-key
+                components={[<strong />]}
+                ns="common"
+              />
             }
           >
             <SettingDropdown
-              aria-label="포인트 컬러 선택"
+              aria-label={t`settings.appearance.pointColor.aria-label`}
               options={pointColorOptions.data}
               selectedOption={pointColor}
               onSelectionChange={setPointColor}
@@ -466,10 +474,13 @@ const SettingsPage = () => {
           </SectionItem>
         </Section>
 
-        <Section title="보안" icon={<LockIcon width={24} height={24} />}>
+        <Section
+          title={t`settings.secure.title`}
+          icon={<LockIcon width={24} height={24} />}
+        >
           <SectionItem
-            title="화면에서 서버 주소 모두 숨기기"
-            memo="서버 주소가 유출되는 일을 방지하기 위해 화면에서 서버 주소를 모두 숨깁니다. 서버 주소가 꼭 표시되어야 하는 페이지에서는 진입 전 경고 창이 표시됩니다."
+            title={t`settings.secure.hideDomain.title`}
+            memo={t`settings.secure.hideDomain.memo`}
           >
             <Checkbox
               isSelected={isDomainHidden}
@@ -480,12 +491,12 @@ const SettingsPage = () => {
         </Section>
 
         <Section
-          title="애플리케이션"
+          title={t`settings.app.title`}
           icon={<Grid4SquaresIcon width={24} height={24} />}
         >
           <SectionItem
-            title="모든 데이터 삭제 및 초기화"
-            memo="애플리케이션에 저장된 모든 로컬 데이터(프로필, 설정 등)를 삭제 및 초기화합니다. 한번 삭제하면 복구할 수 없습니다."
+            title={t`settings.app.reset.title`}
+            memo={t`settings.app.reset.memo`}
           >
             <Button
               variant="danger"
@@ -496,7 +507,7 @@ const SettingsPage = () => {
               }}
             >
               {/* TODO 모달로 확인 창 띄우는 게 좋을 듯 */}
-              데이터 삭제
+              {t`settings.app.reset.btn`}
             </Button>
           </SectionItem>
         </Section>

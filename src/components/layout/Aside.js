@@ -10,6 +10,7 @@ import DoubleLeftArrowIcon from "@/assets/icons-16x/DoubleLeftArrow.svg";
 import RightAndLeftArrowIcon from "@/assets/icons-16x/RightAndLeftArrow.svg";
 import { dashboardRoutes as routes, commonRoutes } from "@/constants/routes";
 import { useAsideExpanded } from "@/hooks/useLocalStorage";
+import { useI18n } from "@/hooks/useI18n";
 
 const SIDEBAR_WIDTH = 260;
 
@@ -222,6 +223,7 @@ ProfileChanger.Address = styled.div`
 `;
 
 const Aside = () => {
+  const { t } = useI18n();
   const [isExpanded, setIsExpanded] = useAsideExpanded();
 
   const { settings: settingsRoute } = commonRoutes;
@@ -248,7 +250,7 @@ const Aside = () => {
           <IconButton
             style={{ margin: -6 }}
             onClick={() => setIsExpanded(!isExpanded)}
-            aria-label={isExpanded ? "사이드 바 접기" : "사이드 바 펼치기"}
+            aria-label={isExpanded ? t`aside.collapse` : t`aside.expand`}
           >
             <motion.div
               animate={{ rotate: isExpanded ? 0 : 180 }}
@@ -263,7 +265,7 @@ const Aside = () => {
           {Object.values(routes).map(({ iconComponent, text, href }) => (
             <MenuItem
               Icon={iconComponent}
-              text={text}
+              text={t(text)}
               href={href}
               isExpanded={isExpanded}
               key={href}
@@ -306,7 +308,7 @@ const Aside = () => {
 
         <MenuItem
           Icon={settingsRoute.iconComponent}
-          text={settingsRoute.text}
+          text={t(settingsRoute.text)}
           isExpanded={isExpanded}
           href={settingsRoute.href}
         />

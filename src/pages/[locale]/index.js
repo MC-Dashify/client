@@ -9,6 +9,7 @@ import LogoSymbol from "@/assets/logo/LogoSymbol.svg";
 import LogoText from "@/assets/logo/LogoText.svg";
 import CogIcon from "@/assets/icons-24x/Cog.svg";
 import { commonRoutes } from "@/constants/routes";
+import { useI18n } from "@/hooks/useI18n";
 
 const Footer = styled.footer`
   display: flex;
@@ -58,6 +59,7 @@ const LogoContainer = styled.div`
 `;
 
 const Home = () => {
+  const { t } = useI18n();
   const { settings: settingsRoute } = commonRoutes;
 
   return (
@@ -94,7 +96,9 @@ const Home = () => {
               <LogoText width={142} height={40} />
             </LogoContainer>
 
-            <ProfileCreateForm createButtonText="프로필 생성 및 연결" />
+            <ProfileCreateForm
+              createButtonText={t`profileCreate.btn.withConnect`}
+            />
           </Section>
 
           <Divider />

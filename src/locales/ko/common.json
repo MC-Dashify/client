@@ -1,3 +1,101 @@
 {
-  "key": "ko"
+  "units": {
+    "seconds": "{{number}}초",
+    "minutes": "{{number}}분"
+  },
+  "profileCreate": {
+    "name": "프로필 이름",
+    "address": "서버 주소와 포트",
+    "secure": "보안 연결(HTTPS) 사용",
+    "key": {
+      "label": "보안 키",
+      "placeholder": "서버에서 발급받은 보안 키 입력"
+    },
+    "btn": {
+      "default": "프로필 생성",
+      "withConnect": "프로필 생성 및 연결"
+    }
+  },
+  "profileSelect": {
+    "title": "기존 프로필로 연결",
+    "addBtn": "프로필 추가"
+  },
+  "settings": {
+    "title": "설정",
+    "github": "GitHub 리포지토리 방문",
+    "update": "업데이트 확인",
+    "appearance": {
+      "title": "외관",
+      "language": {
+        "title": "표시 언어(Language)",
+        "aria-label": "표시 언어 선택",
+        "ko": "한국어",
+        "en": "영어(English)"
+      },
+      "theme": {
+        "title": "테마",
+        "aria-label": "테마 선택",
+        "system": "시스템 설정과 연동",
+        "light": "라이트 테마",
+        "dark": "다크 테마"
+      },
+      "pointColor": {
+        "title": "포인트 컬러",
+        "memo": "화면에서 강조해서 표시되는 요소의 색상을 변경합니다. <0>특정 색상은 가독성을 해칠할 수 있습니다.</0> 일부 요소는 색상이 변경되면 혼란이 생길 수 있기 때문에 설정이 적용되지 않습니다.",
+        "aria-label": "포인트 컬러 선택",
+        "red": "빨간색",
+        "pink": "분홍색",
+        "purple": "보라색",
+        "deepPurple": "짙은 보라색",
+        "indigo": "남색",
+        "blue": "파란색(기본)",
+        "lightBlue": "하늘색",
+        "cyan": "청록색",
+        "teal": "옥빛 청록색",
+        "green": "초록색",
+        "lightGreen": "연두색",
+        "lime": "라임색",
+        "amber": "호박색",
+        "orange": "주황색",
+        "deepOrange": "짙은 주황색",
+        "brown": "갈색",
+        "blueGrey": "청회색"
+      }
+    },
+    "secure": {
+      "title": "보안",
+      "hideDomain": {
+        "title": "화면에서 서버 주소 모두 숨기기",
+        "memo": "서버 주소가 유출되는 일을 방지하기 위해 화면에서 서버 주소를 모두 숨깁니다. 서버 주소가 꼭 표시되어야 하는 페이지에서는 진입 전 경고 창이 표시됩니다."
+      }
+    },
+    "app": {
+      "title": "애플리케이션",
+      "reset": {
+        "title": "모든 데이터 삭제 및 초기화",
+        "memo": "애플리케이션에 저장된 모든 로컬 데이터(프로필, 설정 등)를 삭제 및 초기화합니다. 한번 삭제하면 복구할 수 없습니다.",
+        "btn": "데이터 삭제"
+      }
+    }
+  },
+  "aside": {
+    "expand": "사이드 바 펼치기",
+    "collapse": "사이드 바 접기"
+  },
+  "routes": {
+    "settings": "설정",
+    "overview": "개요",
+    "stats": "서버 상태",
+    "worlds": "세계",
+    "players": "플레이어",
+    "traffic": "트래픽",
+    "console": "콘솔 / 로그"
+  },
+  "header": {
+    "refresh": {
+      "label": "새로 고침 주기",
+      "aria-label": "새로 고침 주기 선택",
+      "refreshNow": "지금 새로 고침"
+    }
+  }
 }

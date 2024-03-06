@@ -6,6 +6,7 @@ import InputBox from "@/components/common/InputField";
 import Button from "@/components/common/Button";
 import CogIcon from "@/assets/icons-24x/Cog.svg";
 import { useRouteRedirect } from "@/hooks/useRouteRedirect";
+import { useI18n } from "@/hooks/useI18n";
 
 const Container = styled.div`
   display: flex;
@@ -52,7 +53,7 @@ const ButtonContainer = styled.div`
 `;
 
 const ProfileCreateForm = ({ createButtonText }) => {
-  const router = useRouter();
+  const { t } = useI18n();
   const { redirect } = useRouteRedirect();
 
   const [profileName, setProfileName] = useState("");
@@ -79,7 +80,7 @@ const ProfileCreateForm = ({ createButtonText }) => {
   return (
     <Container>
       <FormContainer>
-        <InputBox label="프로필 이름">
+        <InputBox label={t`profileCreate.name`}>
           <input
             value={profileName}
             onChange={(e) => setProfileName(e.target.value)}
@@ -87,7 +88,7 @@ const ProfileCreateForm = ({ createButtonText }) => {
         </InputBox>
 
         <AddressInputContainer>
-          <InputBox label="서버 주소와 포트">
+          <InputBox label={t`profileCreate.address`}>
             <input
               placeholder="localhost"
               value={serverAddress}
@@ -106,13 +107,13 @@ const ProfileCreateForm = ({ createButtonText }) => {
 
           <CheckboxWrapper>
             <input type="checkbox" id="secure-connection" />
-            <label htmlFor="secure-connection">보안 연결(HTTPS) 사용</label>
+            <label htmlFor="secure-connection">{t`profileCreate.secure`}</label>
           </CheckboxWrapper>
         </AddressInputContainer>
 
-        <InputBox label="보안 키">
+        <InputBox label={t`profileCreate.key.label`}>
           <input
-            placeholder="서버에서 발급받은 보안 키 입력"
+            placeholder={t`profileCreate.key.placeholder`}
             value={securityKey}
             type="password"
             onChange={(e) => setSecurityKey(e.target.value)}
@@ -127,7 +128,7 @@ const ProfileCreateForm = ({ createButtonText }) => {
             redirect("/dashboard/overview"); // XXX For test
           }}
         >
-          {createButtonText || "프로필 생성"}
+          {createButtonText || t`profileCreate.btn.default`}
         </Button>
       </ButtonContainer>
     </Container>

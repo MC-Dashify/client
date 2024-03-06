@@ -9,7 +9,7 @@ import CogIcon from "@/assets/icons-24x/Cog.svg";
 const commonRoutes = {
   settings: {
     iconComponent: CogIcon,
-    text: "설정",
+    text: "routes.settings",
     href: "/settings",
   },
 };
@@ -17,42 +17,42 @@ const commonRoutes = {
 const dashboardRoutes = {
   overview: {
     iconComponent: ChartIcon,
-    text: "개요",
+    text: "routes.overview",
     href: "/dashboard/overview",
     hasAutoRefresh: true,
     hasRefresh: true,
   },
   stats: {
     iconComponent: ServerIcon,
-    text: "서버 상태",
+    text: "routes.stats",
     href: "/dashboard/stats",
     hasAutoRefresh: true,
     hasRefresh: true,
   },
   worlds: {
     iconComponent: EarthIcon,
-    text: "세계",
+    text: "routes.worlds",
     href: "/dashboard/worlds",
     hasAutoRefresh: true,
     hasRefresh: true,
   },
   players: {
     iconComponent: PeopleIcon,
-    text: "플레이어",
+    text: "routes.players",
     href: "/dashboard/players",
     hasAutoRefresh: true,
     hasRefresh: true,
   },
   traffic: {
     iconComponent: UpDownArrowIcon,
-    text: "트래픽",
+    text: "routes.traffic",
     href: "/dashboard/traffic",
     hasAutoRefresh: true,
     hasRefresh: true,
   },
   console: {
     iconComponent: ConsoleIcon,
-    text: "콘솔 / 로그",
+    text: "routes.console",
     href: "/dashboard/console",
     hasAutoRefresh: false,
     hasRefresh: false,

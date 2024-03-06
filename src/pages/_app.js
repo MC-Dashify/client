@@ -10,9 +10,8 @@ import { getDarkTheme, getLightTheme, pointcolorDict } from "@/styles/themes";
 import { LanguageWrapper } from "@/components/wrappers/LanguageWrapper";
 import GlobalStyle from "@/components/styles/GlobalStyle";
 import { usePointColor, useTheme } from "@/hooks/useLocalStorage";
-import commonKO from "@/locales/ko/common.json";
-import commonEN from "@/locales/en/common.json";
 import { i18nConfig } from "@/../i18n";
+import getNamespaces from "@/locales";
 
 const pretendardFont = localFont({
   src: "../styles/font/PretendardVariable.ttf",
@@ -62,10 +61,7 @@ export default function RootLayout({ Component, pageProps, router }) {
   }, [theme]);
 
   return (
-    <I18nProvider
-      lang={lang}
-      namespaces={{ common: lang === "ko" ? commonKO : commonEN }}
-    >
+    <I18nProvider lang={lang} namespaces={getNamespaces(lang)}>
       <LanguageWrapper>
         <NextUIProvider>
           <style jsx global>{`
